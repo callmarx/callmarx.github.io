@@ -6,8 +6,8 @@ categories: jekyll update
 ---
 
 Criei vergonha na cara e parei de apenas **invejar** os inúmeros blogs sobre programação que
-encontramos pela imensidão da internet do gênero “*What I Learned Today*”. Vamos ver se consigo
-manter isso aqui, pelo menos para algo como “*What I've Learned This Week*”.
+encontramos pela imensidão da internet do gênero “*What I Learned Today*”. Vamos ver se
+consigo manter isso aqui, pelo menos para algo como “*What I've Learned This Week*”.
 
 
 <p align="center">
