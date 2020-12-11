@@ -2,7 +2,14 @@
 layout: post
 title:  "Meu primeiro post"
 date:   2020-12-10 10:36:29 -0300
-categories: jekyll update
+description: >-
+  Criei vergonha na cara e parei de ficar apenas babando nos inúmeros blogs sobre programação que
+  encontramos pela imensidão da internet do gênero “What I Learned Today”.
+categories: blog
+image:
+  path: assets/brain/meditation.png
+  width: 500
+  height: 500
 ---
 
 Criei vergonha na cara e parei de ficar apenas babando nos inúmeros blogs sobre programação que
@@ -13,5 +20,5 @@ consigo manter isso aqui, pelo menos para algo como “*What I've Learned This W
 
 
 <p align="center">
-<img src="/assets/brain-meditation.png">
+<img src="/assets/brain/meditation.png">
 </p>
