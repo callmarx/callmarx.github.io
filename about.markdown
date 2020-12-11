@@ -2,6 +2,13 @@
 layout: page
 title: Sobre mim
 permalink: /sobre-mim/
+description: >-
+  Nerd, dislexico, linux fanboy, computeiro programador, esquerdopata convicto, viciado/hipster
+  em café e paulistano nato.
+image:
+  path: assets/eu-e-nila-57.jpeg
+  width: 500
+  height: 500
 ---
 
 Nerd, dislexico, linux *fanboy*, computeiro programador, esquerdopata convicto, viciado/*hipster*
