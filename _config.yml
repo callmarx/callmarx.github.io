@@ -22,7 +22,7 @@ author: "Eugenio A. Jimenes"
 title: CallMarx
 email: eugeniojimenes@gmail.com
 description: >- # this means to ignore newlines until "baseurl:"
-  Nerd, esquerdopata, dislexico, viciado-hipster em café, desenvolvedor e linux fanboy.
+  Nerd, dislexico, esquerdopata convicto, viciado-hipster em café, desenvolvedor e linux fanboy.
 baseurl: "" # the subpath of your site, e.g. /blog
 url: "" # the base hostname & protocol for your site, e.g. http://example.com
 linkedin_username: eugenio-augusto-jimenes
