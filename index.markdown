@@ -3,4 +3,8 @@
 # To modify the layout, see https://jekyllrb.com/docs/themes/#overriding-theme-defaults
 
 layout: home
+image:
+  path: assets/eu-e-nila-57.jpeg
+  width: 500
+  height: 500
 ---
