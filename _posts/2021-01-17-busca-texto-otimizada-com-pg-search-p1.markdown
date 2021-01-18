@@ -37,8 +37,8 @@ exemplo, entidades como usuário, produto, conta, perfil etc são intuitivamente
 classes dentro de uma programação orientada à objetos e, mais comumente armazenadas como tabelas.
 Afinal, quando falamos de PostgreSQL, MySQL ou SejaláoqueforSQL, estamos tratando de um
 [sistema gerenciador de banco de dados objeto-relacional (SGBD)](https://pt.wikipedia.org/wiki/Sistema_de_gerenciamento_de_banco_de_dados){:target="_blank"}.
-Objeto-relacional, né?! Mas vamos ao que interessa, apesar de encher meu coração tecer meus
-receios ~~ódio à modinha~~ de NoSQL. Meu foco aqui será mais sobre o uso e vantagens dessa Gem.
+Objeto-relacional, né?! Mas vamos ao que interessa, apesar de encher meu coração tecer ~~meu ódio
+à modinha~~ meus receios à NoSQL. Meu foco aqui será mais sobre o uso e vantagens dessa Gem.
 
 
 # PostgreSQL, seu lindo!
@@ -184,7 +184,7 @@ importantes que outras como o título em relação ao conteúdo de um post, por 
 
 Bem, isso foi apenas uma introdução das funcionalidades de
 [Full Text Searching do PostgreSQL](https://www.postgresql.org/docs/current/textsearch-intro.html){:target="_blank"},
-na próxima parte vou mostrar como aplicar com a
+na próxima parte vou mostrar como aplicá-las com a
 [Gem PgSearch](https://github.com/Casecommons/pg_search){:target="_blank"} em projetinho Ruby on
 Rails.
 
