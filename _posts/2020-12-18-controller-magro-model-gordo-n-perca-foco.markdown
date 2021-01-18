@@ -12,13 +12,14 @@ image:
   height: 500
 ---
 
+<!-- excerpt-start -->
 Jamis Buck escreveu em 2006 o famoso post
-[Skinny Controller, Fat Model](http://weblog.jamisbuck.org/2006/10/18/skinny-controller-fat-model),
+[Skinny Controller, Fat Model](http://weblog.jamisbuck.org/2006/10/18/skinny-controller-fat-model){:target="_blank"},
 tornando-se quase que um mantra para seguir o padrão MVC -
 ***M****odel-****V****iew-****C****ontroller*. No caso, toda lógica não relacionada à resposta ao
 usuário/cliente (View-Controller) deve entrar no model, mantendo assim a comunicação simples, ou
 melhor dizendo, “magra”.
-
+<!-- excerpt-end -->
 
 Por que disso? Simples, por conta dos testes e da organização. Se uma parte do seu código é
 responsável pela comunicação, ou parte dela, é esperado que, e somente que, testes de comunicação
@@ -97,11 +98,12 @@ sobre o contexto de postagens - validação, busca, ranqueamento etc - sob o mes
 executá-las para o controller. O exemplo também rompia o padrão MVC, o controller detinha lógica
 de chamadas ao banco quando isso é de responsabilidade do model.
 
-> Não vou entrar no mérito quanto à performance da busca em si, que por sinal está horrível
-> com todos esses ORs na query SQL, não considera erros de digitação, coesão da frase buscada,
-> enfim, apenas remove os acentos com unaccent do PostgreSQL. Existem inúmeras técnicas de Full
-> Text Searching, como indexação léxica, caracteres-coringa, ranqueamento de palavras etc. Mas
-> isso é tema para outro momento, quem sabe.
+<u>OBS</u>: Não vou entrar no mérito quanto à performance da busca em si, que por sinal está horrível com
+todos esses *OR*s na query SQL, não considera erros de digitação, coesão da frase buscada, enfim,
+apenas remove os acentos com *unaccent* do PostgreSQL. Existem inúmeras técnicas de *Full Text
+Searching*, como indexação léxica, caracteres-coringa, ranqueamento de palavras etc. Mas isso é
+tema para outro momento, quem sabe.
+
 
 # Sempre bom controlar o colesterol
 
