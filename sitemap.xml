@@ -1,0 +1,21 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<urlset xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.sitemaps.org/schemas/sitemap/0.9 http://www.sitemaps.org/schemas/sitemap/0.9/sitemap.xsd" xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
+<url>
+<loc>/blog/2020/12/10/meu-primeiro-post.html</loc>
+<lastmod>2020-12-10T10:36:29-03:00</lastmod>
+</url>
+<url>
+<loc>/blog/2020/12/17/controller-magro-model-gordo-n-perca-foco.html</loc>
+<lastmod>2020-12-17T09:46:13-03:00</lastmod>
+</url>
+<url>
+<loc>/blog/2021/01/17/busca-texto-otimizada-com-pg-search-p1.html</loc>
+<lastmod>2021-01-17T22:58:53-03:00</lastmod>
+</url>
+<url>
+<loc>/sobre-mim/</loc>
+</url>
+<url>
+<loc>/</loc>
+</url>
+</urlset>

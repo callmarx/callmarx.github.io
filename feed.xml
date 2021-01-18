@@ -1,0 +1,295 @@
+<?xml version="1.0" encoding="utf-8"?><feed xmlns="http://www.w3.org/2005/Atom" ><generator uri="https://jekyllrb.com/" version="4.1.1">Jekyll</generator><link href="/feed.xml" rel="self" type="application/atom+xml" /><link href="/" rel="alternate" type="text/html" /><updated>2021-01-17T23:35:01-03:00</updated><id>/feed.xml</id><title type="html">CallMarx</title><subtitle>Nerd, dislexico, esquerdopata convicto, viciado-hipster em café, desenvolvedor e linux fanboy.</subtitle><author><name>Eugenio Augusto Jimenes</name></author><entry><title type="html">Busca em texto otimizada com a Gem pg_search - Parte I</title><link href="/blog/2021/01/17/busca-texto-otimizada-com-pg-search-p1.html" rel="alternate" type="text/html" title="Busca em texto otimizada com a Gem pg_search - Parte I" /><published>2021-01-17T22:58:53-03:00</published><updated>2021-01-17T22:58:53-03:00</updated><id>/blog/2021/01/17/busca-texto-otimizada-com-pg-search-p1</id><content type="html" xml:base="/blog/2021/01/17/busca-texto-otimizada-com-pg-search-p1.html">&lt;p&gt;&lt;img src=&quot;/assets/posts/text-search.jpeg&quot; alt=&quot;Full Text Searching&quot; /&gt;&lt;/p&gt;
+
+&lt;!-- excerpt-start --&gt;
+&lt;p&gt;Naufragando pela internet me deparei com a &lt;a href=&quot;https://github.com/Casecommons/pg_search&quot; target=&quot;_blank&quot;&gt;Gem PgSearch&lt;/a&gt;
+que tira proveito das funcionalidades de
+&lt;a href=&quot;https://www.postgresql.org/docs/current/textsearch-intro.html&quot; target=&quot;_blank&quot;&gt;Full Text Searching do PostgreSQL&lt;/a&gt;.
+O conceito &lt;a href=&quot;https://en.wikipedia.org/wiki/Full-text_search&quot; target=&quot;_blank&quot;&gt;Full Text Searching&lt;/a&gt;
+refere a técnicas e estrateǵias computacionais para otimizar a pesquisa de palavras, e até frases,
+em longos e múltiplos textos armazenados em bancos de dados. Trata-se de uma ampla área de estudo
+e pesquisa dentro da Ciências da Computação, desde de 1990.
+&lt;!-- excerpt-end --&gt;&lt;/p&gt;
+
+&lt;p&gt;Mas confesso: tenho preconceitos com NoSQL.&lt;/p&gt;
+
+&lt;p&gt;A proposta do banco de dados relacional é bem intuitiva, como diz na
+&lt;a href=&quot;https://pt.wikipedia.org/wiki/Banco_de_dados_relacional&quot; target=&quot;_blank&quot;&gt;wikipédia brazuca&lt;/a&gt;:&lt;/p&gt;
+&lt;blockquote&gt;
+  &lt;p&gt;“é um banco de dados que modela os dados de uma forma que eles sejam percebidos pelo usuário
+como tabelas, ou mais formalmente relações”&lt;/p&gt;
+&lt;/blockquote&gt;
+
+&lt;p&gt;Na democracia das planilhas de excel gigantes, abstrair o conceito de tabelas é bem complicado.
+Quando traduzimos a lógica de negócio a uma aplicação, atender as demandas de uma empresa, por
+exemplo, entidades como usuário, produto, conta, perfil etc são intuitivamente aplicadas como
+classes dentro de uma programação orientada à objetos e, mais comumente armazenadas como tabelas.
+Afinal, quando falamos de PostgreSQL, MySQL ou SejaláoqueforSQL, estamos tratando de um
+&lt;a href=&quot;https://pt.wikipedia.org/wiki/Sistema_de_gerenciamento_de_banco_de_dados&quot; target=&quot;_blank&quot;&gt;sistema gerenciador de banco de dados objeto-relacional (SGBD)&lt;/a&gt;.
+Objeto-relacional, né?! Mas vamos ao que interessa, apesar de encher meu coração tecer meus
+receios &lt;del&gt;ódio à modinha&lt;/del&gt; de NoSQL. Meu foco aqui será mais sobre o uso e vantagens dessa Gem.&lt;/p&gt;
+
+&lt;h1 id=&quot;postgresql-seu-lindo&quot;&gt;PostgreSQL, seu lindo!&lt;/h1&gt;
+
+&lt;p&gt;&lt;img src=&quot;/assets/posts/elephants-love.webp&quot; alt=&quot;PostgreSQL, seu lindo!&quot; /&gt;&lt;/p&gt;
+
+&lt;p&gt;Fanboy que sou desse SGBD, qualquer desculpa é válida para estudar e aproveitar ainda mais essa
+poderosa ferramenta. Vamos então explorar as funcionalidades que ele nos oferece para &lt;em&gt;Full Text
+Searching&lt;/em&gt;.&lt;/p&gt;
+
+&lt;p&gt;Os códigos a seguir foram executados em um Docker de PostgreSQL, para fazer o mesmo utilize os
+seguintes comandos:&lt;/p&gt;
+
+&lt;div class=&quot;language-bash highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;&lt;span class=&quot;nv&quot;&gt;$ &lt;/span&gt;docker run &lt;span class=&quot;nt&quot;&gt;--rm&lt;/span&gt; &lt;span class=&quot;nt&quot;&gt;--name&lt;/span&gt; testing-textsearch &lt;span class=&quot;nt&quot;&gt;-p&lt;/span&gt; 5432:5432 &lt;span class=&quot;se&quot;&gt;\&lt;/span&gt;
+&lt;span class=&quot;nt&quot;&gt;-e&lt;/span&gt; &lt;span class=&quot;nv&quot;&gt;POSTGRES_USER&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;=&lt;/span&gt;&lt;span class=&quot;nb&quot;&gt;test&lt;/span&gt; &lt;span class=&quot;nt&quot;&gt;-e&lt;/span&gt; &lt;span class=&quot;nv&quot;&gt;POSTGRES_PASSWORD&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;=&lt;/span&gt;&lt;span class=&quot;nb&quot;&gt;test&lt;/span&gt; &lt;span class=&quot;se&quot;&gt;\&lt;/span&gt;
+&lt;span class=&quot;nt&quot;&gt;-e&lt;/span&gt; &lt;span class=&quot;nv&quot;&gt;POSTGRES_DB&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;=&lt;/span&gt;textsearchdb &lt;span class=&quot;se&quot;&gt;\&lt;/span&gt;
+&lt;span class=&quot;nt&quot;&gt;-d&lt;/span&gt; postgres:latest
+
+&lt;span class=&quot;nv&quot;&gt;$ &lt;/span&gt;docker &lt;span class=&quot;nb&quot;&gt;exec&lt;/span&gt; &lt;span class=&quot;nt&quot;&gt;-it&lt;/span&gt; testing-textsearch psql &lt;span class=&quot;nt&quot;&gt;-d&lt;/span&gt; textsearchdb &lt;span class=&quot;nt&quot;&gt;-U&lt;/span&gt; &lt;span class=&quot;nb&quot;&gt;test&lt;/span&gt;
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
+
+&lt;p&gt;Você deve obter o terminal psql com algo como:&lt;/p&gt;
+
+&lt;div class=&quot;language-sql highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;&lt;span class=&quot;n&quot;&gt;psql&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;mi&quot;&gt;13&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;mi&quot;&gt;1&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;Debian&lt;/span&gt; &lt;span class=&quot;mi&quot;&gt;13&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;mi&quot;&gt;1&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;-&lt;/span&gt;&lt;span class=&quot;mi&quot;&gt;1&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;pgdg100&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;+&lt;/span&gt;&lt;span class=&quot;mi&quot;&gt;1&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;))&lt;/span&gt;
+&lt;span class=&quot;k&quot;&gt;Type&lt;/span&gt; &lt;span class=&quot;nv&quot;&gt;&quot;help&quot;&lt;/span&gt; &lt;span class=&quot;k&quot;&gt;for&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;help&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;.&lt;/span&gt;
+
+&lt;span class=&quot;n&quot;&gt;textsearchdb&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;=#&lt;/span&gt;
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
+
+&lt;p&gt;Vamos começar com a função ts_vector&lt;/p&gt;
+
+&lt;div class=&quot;language-sql highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;&lt;span class=&quot;n&quot;&gt;textsearchdb&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;=#&lt;/span&gt; &lt;span class=&quot;k&quot;&gt;SELECT&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;to_tsvector&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;s1&quot;&gt;'english'&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt; &lt;span class=&quot;s1&quot;&gt;'Life is like riding a bicycle.
+To keep your balance, you must keep moving.'&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;);&lt;/span&gt;
+                                    &lt;span class=&quot;n&quot;&gt;to_tsvector&lt;/span&gt;
+&lt;span class=&quot;c1&quot;&gt;-----------------------------------------------------------------------------------&lt;/span&gt;
+ &lt;span class=&quot;s1&quot;&gt;'balanc'&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;:&lt;/span&gt;&lt;span class=&quot;mi&quot;&gt;10&lt;/span&gt; &lt;span class=&quot;s1&quot;&gt;'bicycl'&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;:&lt;/span&gt;&lt;span class=&quot;mi&quot;&gt;6&lt;/span&gt; &lt;span class=&quot;s1&quot;&gt;'keep'&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;:&lt;/span&gt;&lt;span class=&quot;mi&quot;&gt;8&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt;&lt;span class=&quot;mi&quot;&gt;13&lt;/span&gt; &lt;span class=&quot;s1&quot;&gt;'life'&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;:&lt;/span&gt;&lt;span class=&quot;mi&quot;&gt;1&lt;/span&gt; &lt;span class=&quot;s1&quot;&gt;'like'&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;:&lt;/span&gt;&lt;span class=&quot;mi&quot;&gt;3&lt;/span&gt; &lt;span class=&quot;s1&quot;&gt;'move'&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;:&lt;/span&gt;&lt;span class=&quot;mi&quot;&gt;14&lt;/span&gt; &lt;span class=&quot;s1&quot;&gt;'must'&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;:&lt;/span&gt;&lt;span class=&quot;mi&quot;&gt;12&lt;/span&gt; &lt;span class=&quot;s1&quot;&gt;'ride'&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;:&lt;/span&gt;&lt;span class=&quot;mi&quot;&gt;4&lt;/span&gt;
+&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;mi&quot;&gt;1&lt;/span&gt; &lt;span class=&quot;k&quot;&gt;row&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt;
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
+
+&lt;p&gt;Temos o texto “&lt;em&gt;Life is like riding a bicycle. To keep your balance, you must keep moving&lt;/em&gt;”,
+normalmente referido como &lt;em&gt;document&lt;/em&gt; dentro da área de &lt;em&gt;Full Text Searching&lt;/em&gt;. Esse documento é
+analisado e convertido em um tipo de dados especial chamado de &lt;em&gt;tsvector&lt;/em&gt;, que é basicamente
+&lt;a href=&quot;https://radames.manosso.nom.br/linguagem/gramatica/morfologia/lexema/&quot; target=&quot;_blank&quot;&gt;lexemas&lt;/a&gt;,
+palavras-chave normalizadas contidas no documento. No caso, usamos o dicionário do idioma inglês
+para normalizar as palavras, minimizando-as em sua raiz. Por isso a palavra “&lt;em&gt;balance&lt;/em&gt;” foi
+reduzida à “&lt;em&gt;balanc&lt;/em&gt;”, “&lt;em&gt;riding&lt;/em&gt;” à “&lt;em&gt;ride&lt;/em&gt;”, “&lt;em&gt;moving&lt;/em&gt;” à “&lt;em&gt;move&lt;/em&gt;” etc. A numeração ao lado de
+cada lexema é a sua posição no texto (documento), termos e palavras muito comuns como ‘&lt;em&gt;is&lt;/em&gt;’,
+‘&lt;em&gt;to&lt;/em&gt;’, ‘&lt;em&gt;you&lt;/em&gt;’ etc, são removidos para reduzir o tamanho dos dados e a chance de falsos positivos.&lt;/p&gt;
+
+&lt;p&gt;Para verificar se uma ou mais palavras existem dentro de um documento utilizamos a função
+&lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;to_tsquery&lt;/code&gt;. Da mesma forma que &lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;to_tsvector&lt;/code&gt;, ela também normaliza o que será buscando
+antes de fazer a busca.&lt;/p&gt;
+
+&lt;div class=&quot;language-sql highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;&lt;span class=&quot;n&quot;&gt;textsearchdb&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;=#&lt;/span&gt; &lt;span class=&quot;k&quot;&gt;SELECT&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;to_tsquery&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;s1&quot;&gt;'english'&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt; &lt;span class=&quot;s1&quot;&gt;'keep &amp;amp; moves'&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;);&lt;/span&gt;
+   &lt;span class=&quot;n&quot;&gt;to_tsquery&lt;/span&gt;
+&lt;span class=&quot;c1&quot;&gt;-----------------&lt;/span&gt;
+ &lt;span class=&quot;s1&quot;&gt;'keep'&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;&amp;amp;&lt;/span&gt; &lt;span class=&quot;s1&quot;&gt;'move'&lt;/span&gt;
+&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;mi&quot;&gt;1&lt;/span&gt; &lt;span class=&quot;k&quot;&gt;row&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt;
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
+
+&lt;p&gt;Com o operador &lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;@@&lt;/code&gt; podemos verificar se um &lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;tsquery&lt;/code&gt; esta presente em um &lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;tsvector&lt;/code&gt;,
+ou melhor dizendo, se uma palavra (ou mais com operadores booleanos &lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;|&lt;/code&gt; e &lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;&amp;amp;&lt;/code&gt;) normalizada
+encontra-se em um documento.&lt;/p&gt;
+
+&lt;div class=&quot;language-sql highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;&lt;span class=&quot;n&quot;&gt;textsearchdb&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;=#&lt;/span&gt; &lt;span class=&quot;k&quot;&gt;SELECT&lt;/span&gt;
+  &lt;span class=&quot;n&quot;&gt;to_tsvector&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;s1&quot;&gt;'english'&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt; &lt;span class=&quot;s1&quot;&gt;'Life is like riding a bicycle.
+    To keep your balance, you must keep moving.'&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;@@&lt;/span&gt;
+  &lt;span class=&quot;n&quot;&gt;to_tsquery&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;s1&quot;&gt;'english'&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt; &lt;span class=&quot;s1&quot;&gt;'keep &amp;amp; moves'&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;);&lt;/span&gt;
+ &lt;span class=&quot;o&quot;&gt;?&lt;/span&gt;&lt;span class=&quot;k&quot;&gt;column&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;?&lt;/span&gt;
+&lt;span class=&quot;c1&quot;&gt;----------&lt;/span&gt;
+ &lt;span class=&quot;n&quot;&gt;t&lt;/span&gt;
+&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;mi&quot;&gt;1&lt;/span&gt; &lt;span class=&quot;k&quot;&gt;row&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt;
+
+&lt;span class=&quot;n&quot;&gt;textsearchdb&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;=#&lt;/span&gt; &lt;span class=&quot;k&quot;&gt;SELECT&lt;/span&gt;
+  &lt;span class=&quot;n&quot;&gt;to_tsvector&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;s1&quot;&gt;'english'&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt; &lt;span class=&quot;s1&quot;&gt;'Life is like riding a bicycle.
+    To keep your balance, you must keep moving.'&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;@@&lt;/span&gt;
+  &lt;span class=&quot;n&quot;&gt;to_tsquery&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;s1&quot;&gt;'english'&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt; &lt;span class=&quot;s1&quot;&gt;'unpresent'&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;);&lt;/span&gt;
+ &lt;span class=&quot;o&quot;&gt;?&lt;/span&gt;&lt;span class=&quot;k&quot;&gt;column&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;?&lt;/span&gt;
+&lt;span class=&quot;c1&quot;&gt;----------&lt;/span&gt;
+ &lt;span class=&quot;n&quot;&gt;f&lt;/span&gt;
+&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;mi&quot;&gt;1&lt;/span&gt; &lt;span class=&quot;k&quot;&gt;row&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt;
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
+
+&lt;p&gt;OBS: As letras ‘t’ e ‘f’ aqui significam, respectivamente, à &lt;em&gt;true&lt;/em&gt; e &lt;em&gt;false&lt;/em&gt;.&lt;/p&gt;
+
+&lt;p&gt;Com a função &lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;ts_rank&lt;/code&gt; podemos classificar os resultados da busca, podendo ordenar da mais alta
+para a mais baixa quando buscamos um termo em múltiplos documentos.&lt;/p&gt;
+
+&lt;div class=&quot;language-sql highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;&lt;span class=&quot;n&quot;&gt;textsearchdb&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;=#&lt;/span&gt; &lt;span class=&quot;k&quot;&gt;SELECT&lt;/span&gt;
+  &lt;span class=&quot;n&quot;&gt;ts_rank&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;
+    &lt;span class=&quot;n&quot;&gt;to_tsvector&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;s1&quot;&gt;'english'&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt; &lt;span class=&quot;s1&quot;&gt;'
+      Life is like riding a bicycle. To keep your balance, you must
+      keep moving.
+    '&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;),&lt;/span&gt;
+    &lt;span class=&quot;n&quot;&gt;to_tsquery&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;s1&quot;&gt;'english'&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt; &lt;span class=&quot;s1&quot;&gt;'keep'&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt;
+   &lt;span class=&quot;p&quot;&gt;);&lt;/span&gt;
+   &lt;span class=&quot;n&quot;&gt;ts_rank&lt;/span&gt;
+&lt;span class=&quot;c1&quot;&gt;-------------&lt;/span&gt;
+ &lt;span class=&quot;mi&quot;&gt;0&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;mi&quot;&gt;075990885&lt;/span&gt;
+&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;mi&quot;&gt;1&lt;/span&gt; &lt;span class=&quot;k&quot;&gt;row&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt;
+
+&lt;span class=&quot;n&quot;&gt;textsearchdb&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;=#&lt;/span&gt; &lt;span class=&quot;k&quot;&gt;SELECT&lt;/span&gt;
+  &lt;span class=&quot;n&quot;&gt;ts_rank&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;
+    &lt;span class=&quot;n&quot;&gt;to_tsvector&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;s1&quot;&gt;'english'&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt; &lt;span class=&quot;s1&quot;&gt;'
+      Making mistakes is a natural part of the language learning process.
+      The key is to learn from these mistakes. Do not be afraid to try out
+      new things in English but always remember to reflect on them and decide
+      what was successful and what you need to keep working on.
+    '&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;),&lt;/span&gt;
+    &lt;span class=&quot;n&quot;&gt;to_tsquery&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;s1&quot;&gt;'english'&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt; &lt;span class=&quot;s1&quot;&gt;'keep'&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt;
+&lt;span class=&quot;p&quot;&gt;);&lt;/span&gt;
+  &lt;span class=&quot;n&quot;&gt;ts_rank&lt;/span&gt;
+&lt;span class=&quot;c1&quot;&gt;------------&lt;/span&gt;
+ &lt;span class=&quot;mi&quot;&gt;0&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;mi&quot;&gt;06079271&lt;/span&gt;
+&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;mi&quot;&gt;1&lt;/span&gt; &lt;span class=&quot;k&quot;&gt;row&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt;
+
+&lt;span class=&quot;n&quot;&gt;textsearchdb&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;=#&lt;/span&gt; &lt;span class=&quot;k&quot;&gt;SELECT&lt;/span&gt;
+  &lt;span class=&quot;n&quot;&gt;ts_rank&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;
+    &lt;span class=&quot;n&quot;&gt;to_tsvector&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;s1&quot;&gt;'english'&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt; &lt;span class=&quot;s1&quot;&gt;'
+      If you really want to eat, keep climbing. The fruits are on the top of
+      the tree. Stretch your hands and keep stretching them. Success is on
+      the top, keep going.
+    '&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;),&lt;/span&gt;
+    &lt;span class=&quot;n&quot;&gt;to_tsquery&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;s1&quot;&gt;'english'&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt; &lt;span class=&quot;s1&quot;&gt;'keep'&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt;
+   &lt;span class=&quot;p&quot;&gt;);&lt;/span&gt;
+   &lt;span class=&quot;n&quot;&gt;ts_rank&lt;/span&gt;
+&lt;span class=&quot;c1&quot;&gt;-------------&lt;/span&gt;
+ &lt;span class=&quot;mi&quot;&gt;0&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;mi&quot;&gt;082745634&lt;/span&gt;
+&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;mi&quot;&gt;1&lt;/span&gt; &lt;span class=&quot;k&quot;&gt;row&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt;
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
+
+&lt;p&gt;Há uma série de fatores que influenciam essa pontuação, como a posição do termo no documento, a
+quantidade de palavras que o documento tem, quantas vezes o termo aparece e mais outras tantas.
+Vale ressaltar que existem inúmeras estratégias de ranqueamento que dependem do contexto e
+objetivo, como colocar na conta o tempo de modificação e/ou criação do texto, partes mais
+importantes que outras como o título em relação ao conteúdo de um post, por exemplo.&lt;/p&gt;
+
+&lt;p&gt;Bem, isso foi apenas uma introdução das funcionalidades de
+&lt;a href=&quot;https://www.postgresql.org/docs/current/textsearch-intro.html&quot; target=&quot;_blank&quot;&gt;Full Text Searching do PostgreSQL&lt;/a&gt;,
+na próxima parte vou mostrar como aplicar com a
+&lt;a href=&quot;https://github.com/Casecommons/pg_search&quot; target=&quot;_blank&quot;&gt;Gem PgSearch&lt;/a&gt; em projetinho Ruby on
+Rails.&lt;/p&gt;
+
+&lt;p&gt;&lt;del&gt;Link para parte II&lt;/del&gt; –&amp;gt; em breve :)&lt;/p&gt;</content><author><name>Eugenio Augusto Jimenes</name></author><category term="blog" /><summary type="html"></summary><media:thumbnail xmlns:media="http://search.yahoo.com/mrss/" url="/assets/posts/text-search.jpeg" /><media:content medium="image" url="/assets/posts/text-search.jpeg" xmlns:media="http://search.yahoo.com/mrss/" /></entry><entry><title type="html">Controller magro e model gordo, mas não perca o foco</title><link href="/blog/2020/12/17/controller-magro-model-gordo-n-perca-foco.html" rel="alternate" type="text/html" title="Controller magro e model gordo, mas não perca o foco" /><published>2020-12-17T09:46:13-03:00</published><updated>2020-12-17T09:46:13-03:00</updated><id>/blog/2020/12/17/controller-magro-model-gordo-n-perca-foco</id><content type="html" xml:base="/blog/2020/12/17/controller-magro-model-gordo-n-perca-foco.html">&lt;!-- excerpt-start --&gt;
+&lt;p&gt;Jamis Buck escreveu em 2006 o famoso post
+&lt;a href=&quot;http://weblog.jamisbuck.org/2006/10/18/skinny-controller-fat-model&quot; target=&quot;_blank&quot;&gt;Skinny Controller, Fat Model&lt;/a&gt;,
+tornando-se quase que um mantra para seguir o padrão MVC -
+&lt;strong&gt;&lt;em&gt;M&lt;/em&gt;&lt;/strong&gt;&lt;em&gt;odel-&lt;/em&gt;&lt;strong&gt;&lt;em&gt;V&lt;/em&gt;&lt;/strong&gt;&lt;em&gt;iew-&lt;/em&gt;&lt;strong&gt;&lt;em&gt;C&lt;/em&gt;&lt;/strong&gt;&lt;em&gt;ontroller&lt;/em&gt;. No caso, toda lógica não relacionada à resposta ao
+usuário/cliente (View-Controller) deve entrar no model, mantendo assim a comunicação simples, ou
+melhor dizendo, “magra”.
+&lt;!-- excerpt-end --&gt;&lt;/p&gt;
+
+&lt;p&gt;Por que disso? Simples, por conta dos testes e da organização. Se uma parte do seu código é
+responsável pela comunicação, ou parte dela, é esperado que, e somente que, testes de comunicação
+sejam feitos para esta parte do código.&lt;/p&gt;
+
+&lt;h1 id=&quot;mas-o-que-é-mvc&quot;&gt;Mas o que é MVC?&lt;/h1&gt;
+
+&lt;p&gt;Em uma tradução livre seria a arquitetura Modelo-Visão-Controle. Trata-se de um padrão de projeto
+de software (arquitetura de software) na qual propõe a separação de conceitos em três camadas
+interconectadas, onde a apresentação dos dados aos usuários é separada dos métodos que interagem
+com o banco de dados, vulgo “protege a lógica de negócio”.&lt;/p&gt;
+
+&lt;p&gt;&lt;img src=&quot;/assets/posts/padrao-mvc.png&quot; alt=&quot;Padrão MVC&quot; /&gt;&lt;/p&gt;
+
+&lt;p&gt;É comumente aplicada junto ao conceito DRY - &lt;strong&gt;&lt;em&gt;D&lt;/em&gt;&lt;/strong&gt;&lt;em&gt;on’t&lt;/em&gt; &lt;strong&gt;&lt;em&gt;R&lt;/em&gt;&lt;/strong&gt;&lt;em&gt;epeat&lt;/em&gt; &lt;strong&gt;&lt;em&gt;Y&lt;/em&gt;&lt;/strong&gt;&lt;em&gt;ourself&lt;/em&gt; -
+focando na não repetição de código, mas reutilizando-o, o que facilita refatorações e depuração
+(&lt;em&gt;debugging&lt;/em&gt;).&lt;/p&gt;
+
+&lt;h1 id=&quot;codando-e-exemplificando&quot;&gt;Codando e exemplificando&lt;/h1&gt;
+
+&lt;p&gt;Para entender o porquê do problema com “controllers obesos”, vamos dar um exemplo - em uma
+aplicação boba em Ruby on Rails, dado um modelo Post, temos o seguinte PostsController:&lt;/p&gt;
+
+&lt;div class=&quot;language-ruby highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;&lt;span class=&quot;k&quot;&gt;class&lt;/span&gt; &lt;span class=&quot;nc&quot;&gt;PostsController&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;&amp;lt;&lt;/span&gt; &lt;span class=&quot;no&quot;&gt;ApplicationController&lt;/span&gt;
+
+&lt;span class=&quot;o&quot;&gt;...&lt;/span&gt;
+  &lt;span class=&quot;k&quot;&gt;def&lt;/span&gt; &lt;span class=&quot;nf&quot;&gt;index&lt;/span&gt;
+    &lt;span class=&quot;vi&quot;&gt;@posts&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;no&quot;&gt;Post&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;nf&quot;&gt;all&lt;/span&gt;
+  &lt;span class=&quot;k&quot;&gt;end&lt;/span&gt;
+&lt;span class=&quot;o&quot;&gt;...&lt;/span&gt;
+
+&lt;span class=&quot;k&quot;&gt;end&lt;/span&gt;
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
+
+&lt;p&gt;Surgiu então a demanda do usuário poder fazer buscas na listagem dos posts. Uma solução, sem
+pensar muito, séria:&lt;/p&gt;
+
+&lt;div class=&quot;language-ruby highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;&lt;span class=&quot;k&quot;&gt;class&lt;/span&gt; &lt;span class=&quot;nc&quot;&gt;PostsController&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;&amp;lt;&lt;/span&gt; &lt;span class=&quot;no&quot;&gt;ApplicationController&lt;/span&gt;
+
+&lt;span class=&quot;o&quot;&gt;...&lt;/span&gt;
+  &lt;span class=&quot;k&quot;&gt;def&lt;/span&gt; &lt;span class=&quot;nf&quot;&gt;index&lt;/span&gt;
+    &lt;span class=&quot;vi&quot;&gt;@posts&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;search_posts&lt;/span&gt;
+  &lt;span class=&quot;k&quot;&gt;end&lt;/span&gt;
+&lt;span class=&quot;o&quot;&gt;...&lt;/span&gt;
+  &lt;span class=&quot;kp&quot;&gt;private&lt;/span&gt;
+  &lt;span class=&quot;k&quot;&gt;def&lt;/span&gt; &lt;span class=&quot;nf&quot;&gt;search_posts&lt;/span&gt;
+        &lt;span class=&quot;n&quot;&gt;entries&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;no&quot;&gt;Post&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;nf&quot;&gt;all&lt;/span&gt;
+
+      &lt;span class=&quot;k&quot;&gt;if&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;params&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;[&lt;/span&gt;&lt;span class=&quot;ss&quot;&gt;:q&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;].&lt;/span&gt;&lt;span class=&quot;nf&quot;&gt;present?&lt;/span&gt;
+        &lt;span class=&quot;n&quot;&gt;entries&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;entries&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;nf&quot;&gt;where&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;
+          &lt;span class=&quot;sx&quot;&gt;%(
+            unaccent(title) ilike unaccent(:term)
+            OR unaccent(subtitle) ilike unaccent(:term)
+            OR unaccent(content) ilike unaccent(:term)
+          )&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt;
+          &lt;span class=&quot;ss&quot;&gt;term: &lt;/span&gt;&lt;span class=&quot;s2&quot;&gt;&quot;%&lt;/span&gt;&lt;span class=&quot;si&quot;&gt;#{&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;params&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;[&lt;/span&gt;&lt;span class=&quot;ss&quot;&gt;:q&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;]&lt;/span&gt;&lt;span class=&quot;si&quot;&gt;}&lt;/span&gt;&lt;span class=&quot;s2&quot;&gt;%&quot;&lt;/span&gt;
+        &lt;span class=&quot;p&quot;&gt;)&lt;/span&gt;
+      &lt;span class=&quot;k&quot;&gt;end&lt;/span&gt;
+      &lt;span class=&quot;n&quot;&gt;entries&lt;/span&gt;
+    &lt;span class=&quot;k&quot;&gt;end&lt;/span&gt;
+  &lt;span class=&quot;k&quot;&gt;end&lt;/span&gt;
+&lt;span class=&quot;o&quot;&gt;...&lt;/span&gt;
+&lt;span class=&quot;k&quot;&gt;end&lt;/span&gt;
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
+
+&lt;p&gt;Vê o problema? Não faz sentido o controller ter uma lógica de busca. Se o modelo Post está sendo
+percorrido, porque não mover o método &lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;search_post&lt;/code&gt; para o próprio Post? Poderia ser apenas
+com o nome &lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;search&lt;/code&gt;, como método de classe, sendo chamado na forma &lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;Post.search(args)&lt;/code&gt;,
+bem mais intuitivo inclusive. Além de organizar a lógica, podemos agora manter todos os testes
+sobre o contexto de postagens - validação, busca, ranqueamento etc - sob o mesmo e não ter que
+executá-las para o controller. O exemplo também rompia o padrão MVC, o controller detinha lógica
+de chamadas ao banco quando isso é de responsabilidade do model.&lt;/p&gt;
+
+&lt;p&gt;&lt;u&gt;OBS&lt;/u&gt;: Não vou entrar no mérito quanto à performance da busca em si, que por sinal está horrível com
+todos esses &lt;em&gt;OR&lt;/em&gt;s na query SQL, não considera erros de digitação, coesão da frase buscada, enfim,
+apenas remove os acentos com &lt;em&gt;unaccent&lt;/em&gt; do PostgreSQL. Existem inúmeras técnicas de &lt;em&gt;Full Text
+Searching&lt;/em&gt;, como indexação léxica, caracteres-coringa, ranqueamento de palavras etc. Mas isso é
+tema para outro momento, quem sabe.&lt;/p&gt;
+
+&lt;h1 id=&quot;sempre-bom-controlar-o-colesterol&quot;&gt;Sempre bom controlar o colesterol&lt;/h1&gt;
+
+&lt;p&gt;Models obesos também são um problema. Isso pode desmotivá-lo a seguir os padrões mencionados, mas
+quando lidamos com uma lógica extensa e complexa de uma classe/arquivo, fica bem mais fácil
+“diluir” se ela é focada em um mesmo contexto, em um conjunto específico de responsabilidades.&lt;/p&gt;
+
+&lt;p&gt;A própria programação orientada a objetos possui inúmeras estratégias como composição, herança e
+delegação. Abstrair uma classe com heranças, por exemplo, fica mais difícil se ela é responsável
+por diversas tarefas de contextos diferentes, mais ainda se essas tarefas e contextos então
+misturados ou não bem definidos. Muitas vezes não trata-se de uma problema técnico, com o código
+em si, mas no entendimento do que está querendo ser feito.&lt;/p&gt;
+
+&lt;blockquote&gt;
+  &lt;p&gt; “Não entre em pânico.” -  Guia do Mochileiros das Galáxias&lt;/p&gt;
+&lt;/blockquote&gt;
+
+&lt;p&gt;Em Rails podemos contornar “códigos extensos” com &lt;em&gt;concerns&lt;/em&gt;, &lt;em&gt;services&lt;/em&gt; e até &lt;em&gt;jobs&lt;/em&gt; dependendo
+do objetivo. Vale repetir a importância em focar as funcionalidades de cada classe de modo a
+melhor granular o todo. No exemplo “codado”, pode acontecer de que não apenas Post tenha
+&lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;search&lt;/code&gt;, mas outros models também como Comments, Papers etc. Isso chama (ou “cheira” se você
+é fã do termo &lt;em&gt;Code Smell&lt;/em&gt;) à movermos o método para um concern, algo como SearchConcern sem ser
+muito criativo, que pode ser incluído nos models “buscaveis” da nossa aplicação, sejam eles
+existentes ou futuros . Veja que com isso, além de emagrecer o Model, a granulação feita joga a
+funcionalidade e complexidade de buscas para um único arquivo, mantendo assim o foco de
+funcionalidades para aquele trecho de código.&lt;/p&gt;</content><author><name>Eugenio Augusto Jimenes</name></author><category term="blog" /><summary type="html">Jamis Buck escreveu em 2006 o famoso post Skinny Controller, Fat Model, tornando-se quase que um mantra para seguir o padrão MVC - Model-View-Controller. No caso, toda lógica não relacionada à resposta ao usuário/cliente (View-Controller) deve entrar no model, mantendo assim a comunicação simples, ou melhor dizendo, “magra”.</summary><media:thumbnail xmlns:media="http://search.yahoo.com/mrss/" url="/assets/posts/fat-cat-draw.jpg" /><media:content medium="image" url="/assets/posts/fat-cat-draw.jpg" xmlns:media="http://search.yahoo.com/mrss/" /></entry><entry><title type="html">Meu primeiro post</title><link href="/blog/2020/12/10/meu-primeiro-post.html" rel="alternate" type="text/html" title="Meu primeiro post" /><published>2020-12-10T10:36:29-03:00</published><updated>2020-12-10T10:36:29-03:00</updated><id>/blog/2020/12/10/meu-primeiro-post</id><content type="html" xml:base="/blog/2020/12/10/meu-primeiro-post.html">&lt;!-- excerpt-start --&gt;
+&lt;p&gt;Criei vergonha na cara e parei de ficar apenas babando nos inúmeros blogs sobre programação que
+encontramos pela imensidão da internet do gênero “&lt;em&gt;What I Learned Today&lt;/em&gt;”. Vamos ver se
+consigo manter isso aqui, pelo menos para algo como “&lt;em&gt;What I’ve Learned This Week&lt;/em&gt;”.
+&lt;!-- excerpt-end --&gt;&lt;/p&gt;
+
+&lt;blockquote&gt;
+  &lt;p&gt;“Tudo que temos de decidir é o que fazer com o tempo que nos é dado” - Gandalf, o Cinzento.&lt;/p&gt;
+&lt;/blockquote&gt;
+
+&lt;p align=&quot;center&quot;&gt;
+&lt;img src=&quot;/assets/brain/meditation.png&quot; /&gt;
+&lt;/p&gt;</content><author><name>Eugenio Augusto Jimenes</name></author><category term="blog" /><summary type="html">Criei vergonha na cara e parei de ficar apenas babando nos inúmeros blogs sobre programação que encontramos pela imensidão da internet do gênero “What I Learned Today”. Vamos ver se consigo manter isso aqui, pelo menos para algo como “What I’ve Learned This Week”.</summary><media:thumbnail xmlns:media="http://search.yahoo.com/mrss/" url="/assets/brain/meditation.png" /><media:content medium="image" url="/assets/brain/meditation.png" xmlns:media="http://search.yahoo.com/mrss/" /></entry></feed>
