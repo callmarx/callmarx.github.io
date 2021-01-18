@@ -1,4 +1,4 @@
-<?xml version="1.0" encoding="utf-8"?><feed xmlns="http://www.w3.org/2005/Atom" ><generator uri="https://jekyllrb.com/" version="4.1.1">Jekyll</generator><link href="/feed.xml" rel="self" type="application/atom+xml" /><link href="/" rel="alternate" type="text/html" /><updated>2021-01-17T23:35:01-03:00</updated><id>/feed.xml</id><title type="html">CallMarx</title><subtitle>Nerd, dislexico, esquerdopata convicto, viciado-hipster em café, desenvolvedor e linux fanboy.</subtitle><author><name>Eugenio Augusto Jimenes</name></author><entry><title type="html">Busca em texto otimizada com a Gem pg_search - Parte I</title><link href="/blog/2021/01/17/busca-texto-otimizada-com-pg-search-p1.html" rel="alternate" type="text/html" title="Busca em texto otimizada com a Gem pg_search - Parte I" /><published>2021-01-17T22:58:53-03:00</published><updated>2021-01-17T22:58:53-03:00</updated><id>/blog/2021/01/17/busca-texto-otimizada-com-pg-search-p1</id><content type="html" xml:base="/blog/2021/01/17/busca-texto-otimizada-com-pg-search-p1.html">&lt;p&gt;&lt;img src=&quot;/assets/posts/text-search.jpeg&quot; alt=&quot;Full Text Searching&quot; /&gt;&lt;/p&gt;
+<?xml version="1.0" encoding="utf-8"?><feed xmlns="http://www.w3.org/2005/Atom" ><generator uri="https://jekyllrb.com/" version="4.1.1">Jekyll</generator><link href="/feed.xml" rel="self" type="application/atom+xml" /><link href="/" rel="alternate" type="text/html" /><updated>2021-01-18T00:16:20-03:00</updated><id>/feed.xml</id><title type="html">CallMarx</title><subtitle>Nerd, dislexico, esquerdopata convicto, viciado-hipster em café, desenvolvedor e linux fanboy.</subtitle><author><name>Eugenio Augusto Jimenes</name></author><entry><title type="html">Busca em texto otimizada com a Gem pg_search - Parte I</title><link href="/blog/2021/01/17/busca-texto-otimizada-com-pg-search-p1.html" rel="alternate" type="text/html" title="Busca em texto otimizada com a Gem pg_search - Parte I" /><published>2021-01-17T22:58:53-03:00</published><updated>2021-01-17T22:58:53-03:00</updated><id>/blog/2021/01/17/busca-texto-otimizada-com-pg-search-p1</id><content type="html" xml:base="/blog/2021/01/17/busca-texto-otimizada-com-pg-search-p1.html">&lt;p&gt;&lt;img src=&quot;/assets/posts/text-search.jpeg&quot; alt=&quot;Full Text Searching&quot; /&gt;&lt;/p&gt;
 
 &lt;!-- excerpt-start --&gt;
 &lt;p&gt;Naufragando pela internet me deparei com a &lt;a href=&quot;https://github.com/Casecommons/pg_search&quot; target=&quot;_blank&quot;&gt;Gem PgSearch&lt;/a&gt;
@@ -25,8 +25,8 @@ exemplo, entidades como usuário, produto, conta, perfil etc são intuitivamente
 classes dentro de uma programação orientada à objetos e, mais comumente armazenadas como tabelas.
 Afinal, quando falamos de PostgreSQL, MySQL ou SejaláoqueforSQL, estamos tratando de um
 &lt;a href=&quot;https://pt.wikipedia.org/wiki/Sistema_de_gerenciamento_de_banco_de_dados&quot; target=&quot;_blank&quot;&gt;sistema gerenciador de banco de dados objeto-relacional (SGBD)&lt;/a&gt;.
-Objeto-relacional, né?! Mas vamos ao que interessa, apesar de encher meu coração tecer meus
-receios &lt;del&gt;ódio à modinha&lt;/del&gt; de NoSQL. Meu foco aqui será mais sobre o uso e vantagens dessa Gem.&lt;/p&gt;
+Objeto-relacional, né?! Mas vamos ao que interessa, apesar de encher meu coração tecer &lt;del&gt;meu ódio
+à modinha&lt;/del&gt; meus receios à NoSQL. Meu foco aqui será mais sobre o uso e vantagens dessa Gem.&lt;/p&gt;
 
 &lt;h1 id=&quot;postgresql-seu-lindo&quot;&gt;PostgreSQL, seu lindo!&lt;/h1&gt;
 
@@ -165,7 +165,7 @@ importantes que outras como o título em relação ao conteúdo de um post, por 
 
 &lt;p&gt;Bem, isso foi apenas uma introdução das funcionalidades de
 &lt;a href=&quot;https://www.postgresql.org/docs/current/textsearch-intro.html&quot; target=&quot;_blank&quot;&gt;Full Text Searching do PostgreSQL&lt;/a&gt;,
-na próxima parte vou mostrar como aplicar com a
+na próxima parte vou mostrar como aplicá-las com a
 &lt;a href=&quot;https://github.com/Casecommons/pg_search&quot; target=&quot;_blank&quot;&gt;Gem PgSearch&lt;/a&gt; em projetinho Ruby on
 Rails.&lt;/p&gt;
 
