@@ -13,7 +13,8 @@ image:
 ---
 
 <!-- excerpt-start -->
-Na parte I deste post eu expliquei um pouco sobre o conceito e as funcionalidades de
+Na [parte I]({% post_url 2021-01-17-busca-texto-otimizada-com-pg-search-p1 %}){:target="_blank"} deste
+post eu expliquei um pouco sobre o conceito e as funcionalidades de
 [Full Text Searching do PostgreSQL](https://www.postgresql.org/docs/current/textsearch-intro.html){:target="_blank"}
 e me comprometi a explicar com um projetinho Ruby on Rails através da
 [Gem PgSearch](https://github.com/Casecommons/pg_search){:target="_blank"}, vamos lá então.

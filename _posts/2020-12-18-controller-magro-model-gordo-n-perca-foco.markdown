@@ -103,7 +103,7 @@ horrível com todos esses *OR*s na query SQL, não considera erros de digitaçã
 buscada, enfim, apenas remove os acentos com *unaccent* do PostgreSQL. Existem inúmeras técnicas
 de *Full Text Searching*, como indexação léxica, caracteres-coringa, ranqueamento de palavras etc.
 Mas isso é tema para outro momento, ~~quem sabe.~~ &#10144;
-[Busca em texto otimizada com a Gem pg_search]({ post_url 2021-01-17-busca-texto-otimizada-com-pg-search-p1 }){:target="_blank"}
+[Busca em texto otimizada com a Gem pg_search]({% post_url 2021-01-17-busca-texto-otimizada-com-pg-search-p1 %}){:target="_blank"}
 
 
 # Sempre bom controlar o colesterol
