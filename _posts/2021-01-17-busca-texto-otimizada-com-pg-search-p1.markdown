@@ -188,4 +188,4 @@ na próxima parte vou mostrar como aplicá-las com a
 [Gem PgSearch](https://github.com/Casecommons/pg_search){:target="_blank"} em projetinho Ruby on
 Rails.
 
-[Link para parte II]({% post_url 2021-04-07-busca-texto-otimizada-com-pg-search-p2 %}){:target="_blank"}
+[Link para parte II]({% post_url 2021-04-08-busca-texto-otimizada-com-pg-search-p2 %}){:target="_blank"}

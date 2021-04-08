@@ -98,8 +98,8 @@ sobre o contexto de postagens - validação, busca, ranqueamento etc - sob o mes
 executá-las para o controller. O exemplo também rompia o padrão MVC, o controller detinha lógica
 de chamadas ao banco quando isso é de responsabilidade do model.
 
-<u>OBS</u>: Não vou entrar no mérito quanto à performance da busca em si, que por sinal está
-horrível com todos esses *OR*s na query SQL, não considera erros de digitação, coesão da frase
+<u>OBS</u>: Não vou entrar no mérito do desempenho da busca em si, que por sinal está
+horrível com todos esses ```OR``` na *query* SQL, não considera erros de digitação, coesão da frase
 buscada, enfim, apenas remove os acentos com *unaccent* do PostgreSQL. Existem inúmeras técnicas
 de *Full Text Searching*, como indexação léxica, caracteres-coringa, ranqueamento de palavras etc.
 Mas isso é tema para outro momento, ~~quem sabe.~~ &#10144;

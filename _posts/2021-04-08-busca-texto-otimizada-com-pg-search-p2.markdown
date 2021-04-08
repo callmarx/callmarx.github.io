@@ -1,7 +1,7 @@
 ---
 layout: post
 title:  "Busca em texto otimizada com a Gem pg_search - Parte II"
-date:   2021-04-07 16:58:53 -0300
+date:   2021-04-08 19:18:53 -0300
 description: >-
   Destrinchando a funcionalidade “Full Text Searching" do PostgreSQL com a Gem pg_search
   em uma aplicação Ruby on Rails - Parte II
@@ -39,7 +39,7 @@ $ make prepare-db
 OBS: O comando ```make up``` ocupa o terminal em questão pois exibe, em tempo real, o log do Rails. 
 Para sair, basta dar CTRL+C (interrompe o ```rails server```, mas o container continua rodando).
 
-Você pode testar a diferença de performance das buscas tanto em requisições completas com
+Você pode testar o desempenho das buscas tanto em requisições completas com
 [cURL](https://curl.se){:target="_blank"}, [Postman](https://www.postman.com){:target="_blank"} ou
 qualquer outra ferramenta para consulta de API de sua preferência, quanto pelo console da aplicação
 invocando diretamente os métodos. No final deste post vou compartilhar os resultados que obtive.
@@ -48,10 +48,10 @@ invocando diretamente os métodos. No final deste post vou compartilhar os resul
 
 Primeiro eu montei um Rails API-Only, ou seja, uma aplicação
 [RESTful](https://en.wikipedia.org/wiki/Representational_state_transfer){:target="_blank"} que
-responde apenas em JSON já que o objetivo aqui é testar a performance de buscas em textos ~~e não
-porque eu não tenho saco em ficar enfeitando HTML e CSS~~. Com um único model e controller -
-Article - sob os campos ```:title``` e ```:content```, podemos preenchê-los com algum texto e assim
-utilizar a gema. Para popular esses artigos utilizei o RSS do site da
+responde apenas em JSON já que o objetivo aqui é testar buscas em textos ~~e não porque eu não
+tenho saco em ficar enfeitando HTML e CSS~~. Com um único model e controller - Article - sob os
+campos ```:title``` e ```:content```, podemos preenchê-los com algum texto e assim utilizar a gema.
+Para popular esses artigos utilizei o RSS do site da
 [câmara dos deputados](https://www.camara.leg.br/noticias/rss){:target="_blank"} como demonstrado
 no script a seguir.
 
@@ -99,12 +99,11 @@ end
 ```
 
 Para utilizar [PgSearch](https://github.com/Casecommons/pg_search){:target="_blank"} no Rails não é
-necessario nenhum arquivo de configuração ou inicialização, basta incluir no Gemfile e seguir as
-instruições de inclusão e escopo como a documentação da Gema explica em
+necessário nenhum arquivo de configuração ou inicialização, basta incluir no Gemfile e seguir as
+instruções de inclusão e escopo como a documentação da Gema explica em
 <https://github.com/Casecommons/pg_search#pg_search_scope>{:target="_blank"}. Porém, precisamos
 configurar nosso banco para o ```tsvector``` do PostgreSQL, no caso especificamente para a tabela
-*articles* que contém o texto à ser buscado. Para isso incluí a seguinte *migrate*, disponível
-em ```db/migrate/20210402195116_add_tsvector_to_article.rb```:
+*articles* que contém o texto a ser buscado. Para isso incluí o seguinte *migrate*:
 
 ```ruby
 # Código disponível em db/migrate/20210402195116_add_tsvector_to_article.rb
@@ -153,17 +152,18 @@ Traduzindo em passos o *migrate* acima, temos o seguinte:
 - Cria uma indexação sob essa nova coluna do tipo ```:gin```
 - Cria uma configuração de busca textual copiada da padrão ```pg_catalog.portuguese``` com nome
 *custom_pt*
-- Edita essa busca textual para mapiar as palavras com a extensão ```unaccent```
+- Edita essa busca textual para mapear as palavras com a extensão ```unaccent```
 - Cria um *trigger* que será invocado na inserção e edição para atualizar a coluna ```:tsv``` com
 tsvector sob os campos ```:title, :content``` do artigo em questão com a nova configuração de busca
 textual.
-- Atualiza todos os artigos para preencher a coluna *tsv* da mesma forma que o *trigger* acima faz.
+- Atualiza todos os artigos para preencher a coluna *tsv* da mesma forma que o *trigger* descrito.
 
-Note que com isto utlizei uma estratégia dupla de otimização: ***tsvector*** + ***GIN index***.
+Note que com isto utilizei uma estratégia dupla de otimização: ***tsvector*** + ***GIN index***.
 
 <br>
-Os métodos de busca estão no model, sendo ```.bad_search``` implementado com o simples *ilike* e
-```.good_search``` com a gema. O código, disponível em ```app/models/article.rb```, é o que segue:
+Os métodos de busca estão no model, sendo ```.bad_search``` implementado com o simples ```ilike```
+do SQL e ```.good_search``` com a gema. O código, disponível em ```app/models/article.rb```, é o
+que segue:
 ```ruby
 # Código disponível em app/models/article.rb
 class Article < ApplicationRecord
@@ -210,29 +210,22 @@ class Article < ApplicationRecord
 end
 ```
 
-Atente aqui que foi incluido ```PgSearch::Model``` e definido o escopo com ```pg_search_scope```
+Atente aqui que foi incluído ```PgSearch::Model``` e definido o escopo com ```pg_search_scope```
 para que possamos dizer a gema quais configurações de busca estamos utilizando e sob quais campos
 do modelo. Defini em ambas os métodos de busca para quando o argumento for nulo retornar ```.all```
-de maneira a simplifcar a lógica no controller.
+de maneira a simplificar a lógica no controller.
 
 ## Resultados
 
-<div class="tenor-gif-embed" data-postid="8171427" data-share-method="host" data-width="100%"
-data-aspect-ratio="1.78494623655914">
-  <a href="https://tenor.com/view/mysterious-mysteriousa-mysteriousb-gif-8171427">
-    Mysterious GIF
-  </a>
-  from <a href="https://tenor.com/search/mysterious-gifs">Mysterious GIFs</a>
-</div>
-<script type="text/javascript" async src="https://tenor.com/embed.js"></script>
+<div class="tenor-gif-embed" data-postid="8171427" data-share-method="host" data-width="100%" data-aspect-ratio="1.78494623655914"><a href="https://tenor.com/view/mysterious-mysteriousa-mysteriousb-gif-8171427">Mysterious GIF</a> from <a href="https://tenor.com/search/mysterious-gifs">Mysterious GIFs</a></div><script type="text/javascript" async src="https://tenor.com/embed.js"></script>
 
 <br/>
 <br/>
-Antes de pontuarmos a performance, vale lembrar que inflexões de palavras como conjugação verbal,
+Antes de pontuarmos o desempenho, vale lembrar que inflexões de palavras como conjugação verbal,
 gênero, plural etc, não deveria interferir na integridade da busca, ou seja, no nosso contexto com
-essa API, na quantidade de artigos selecionados. Se um usuário busca, por exemplo por *amendoins*,
+essa API, na quantidade de artigos selecionados. Se um usuário busca, por exemplo, por *amendoins*,
 é intuitivo incluir também artigos que contenham a inflexão singular *amendoim*. Porém, como será
-mostrado, esse é não o comportamento quando utilizamos *ilike* da linguagem SQL.
+mostrado, este não é o comportamento quando utilizamos ```ilike``` da linguagem SQL.
 
 Fazendo uma consulta simples na API (lembrando que é preciso ter um terminal com ```make up```
 rodando), sem o parâmetro de url ```:good_search == 'ok'```, o controller utiliza o método de busca
@@ -249,11 +242,117 @@ com o mesmo termo *proibir*, já obtemos 13 artigos:
 
 <br/>
 <br/>
-Se repitirmos as buscas acima com alguma conjugação do verbo como *proibido*, a consulta
+Se repetirmos as buscas acima com alguma conjugação do mesmo verbo como *proibido*, a consulta
 ```.bad_search``` irá selecionar outros artigos, já com a ```.good_search``` mantemos os mesmos 13
 artigos já que o ```tsvector``` trabalha com
-[lexemas](https://radames.manosso.nom.br/linguagem/gramatica/morfologia/lexema/){:target="_blank"}
-o que garante abranger na busca as inflexões. Essas consultas pelo Postman podem ser importadas
-pelo arquivo [fts_example.postman_collection.json](){:target="_blank"}, também disponível no
-projeto.
+[lexemas](https://radames.manosso.nom.br/linguagem/gramatica/morfologia/lexema/){:target="_blank"},
+o que garante abranger todas as inflexões do termo buscado. Essas consultas pelo Postman podem ser
+importadas pelo arquivo
+[fts_example.postman_collection.json](https://raw.githubusercontent.com/callmarx/fts_example/main/fts_example.postman_collection.json){:target="_blank"},
+também disponível no projeto.
 
+Para avaliar o desempenho implementei algumas tasks para medir o tempo de execução. As buscas são
+feitas através de uma
+[lista de 485 palavras](https://raw.githubusercontent.com/callmarx/fts_example/main/lib/tasks/present_words.txt){:target="_blank"},
+explicitamente presentes nos artigos, ou seja, cada uma das palavras retorna pelo menos um artigo
+com ```.bad_search```. Dessa forma evitamos consultas vazias com o método ruim, mas presentes com o
+método bom, o que afetaria a qualidade do teste. De qualquer forma, como demonstrado anteriormente,
+```.good_search``` tende a retornar mais artigos que o outro método, mesmo assim provou-se mais
+eficiente como veremos.
+
+Utilizei a gema [Benchmark](https://github.com/ruby/benchmark){:target="_blank"} com o código
+seguinte:
+```ruby
+# Código disponível em lib/tasks/benchmark.rake
+require 'benchmark'
+require 'faraday'
+
+present_words = File.readlines('lib/tasks/present_words.txt').map{ |word| word.chomp }
+url = 'http://localhost:3000/v1/articles'
+
+namespace :benchmark do
+  task method: :environment do
+    puts "\n########## Method - Gem Benchmark ###########"
+    Benchmark.bm do |benchmark|
+      benchmark.report('bad ') do
+        present_words.each do |word|
+          Article.bad_search(word).count
+        end
+      end
+      benchmark.report('good') do
+        present_words.each do |word|
+          Article.good_search(word).count
+        end
+      end
+    end
+  end
+
+  task request: :environment do
+    puts "\n########## Request - Gem Benchmark ##########"
+    Benchmark.bm do |benchmark|
+      benchmark.report('bad ') do
+        present_words.each do |word|
+          Faraday.get(url, { q: word }, { 'Accept' => 'application/json' })
+        end
+      end
+      benchmark.report('good') do
+        present_words.each do |word|
+          Faraday.get(url, { q: word, good_search: 'ok' }, { 'Accept' => 'application/json' })
+        end
+      end
+    end
+  end
+
+  task all: :environment do
+    Rake::Task['benchmark:method'].execute
+    Rake::Task['benchmark:request'].execute
+  end
+end
+```
+
+Inclui a execução de ambos os testes (método e requisição JSON) no Makefile do projeto, assim basta
+executar em seu terminal ```make benchmark```. A seguir os resultados que obtive:
+
+```bash
+# em um terminal
+$ make up
+
+# em outro terminal
+$ make benchmark
+docker-compose exec api bundle exec rails benchmark:all
+
+########## Method - Gem Benchmark ###########
+       user     system      total        real
+bad   0.314819   0.029698   0.344517 (  4.853793)
+good  0.340305   0.011930   0.352235 (  0.483992)
+
+########## Request - Gem Benchmark ##########
+       user     system      total        real
+bad   0.399208   0.109991   0.509199 ( 12.725288)
+good  0.378955   0.143361   0.522316 (  4.883817)
+```
+
+Este relatório mostra, em segundos, o tempo de CPU do usuário, o tempo de CPU do sistema, a soma
+dos dois anteriores e o tempo real decorrido. Como dependemos do Rails e do PostgreSQL devemos
+considerar a última coluna, o tempo real medido. Para reafirmar isso implementei "na mão" outro
+benchmark com uso de ```Process.clock_gettime(Process::CLOCK_MONOTONIC)``` no lugar de gema
+[Benchmark](https://github.com/ruby/benchmark){:target="_blank"}, podendo ser executado com ```make benchmark-manual ```.
+Note a aproximação dos resultados:
+
+```bash
+$ make benchmark-manual
+docker-compose exec api bundle exec rails manual_benchmark:all
+
+######### Method - Manual Benchmark #########
+context       average       total
+  bad         0.0101s       4.8883s
+  good        0.0010s       0.4901s
+
+######### Request - Manual Benchmark ########
+context       average       total
+  bad         0.0253s       12.2896s
+  good        0.0095s       4.5954s
+```
+
+Dessa forma, podemos observar o poder de ***tsvector*** + ***GIN index***. Quando comparado com ```ilike```
+o ganho de tempo foi, aproximadamente, de 90% com o método e de 62% com a requisição.
