@@ -7,7 +7,7 @@ description: >-
   limpo e claro. Veja exemplos em Ruby on Rails.
 categories: blog
 image:
-  path: assets/posts/fat-cat-draw.jpg
+  path: assets/posts/fat-cat-draw.webp
   width: 500
   height: 500
 ---
@@ -33,7 +33,7 @@ interconectadas, onde a apresentação dos dados aos usuários é separada dos m
 com o banco de dados, vulgo “protege a lógica de negócio”.
 
 
-![Padrão MVC](/assets/posts/padrao-mvc.png)
+![Padrão MVC](/assets/posts/padrao-mvc.webp)
 
 
 É comumente aplicada junto ao conceito DRY - ***D****on’t* ***R****epeat* ***Y****ourself* -

@@ -6,7 +6,7 @@ description: >-
   Nerd, dislexico, linux fanboy, computeiro programador, esquerdopata convicto, viciado/hipster
   em café e paulistano nato.
 image:
-  path: assets/eu-e-nila-57.jpeg
+  path: assets/eu-e-nila.webp
   width: 500
   height: 500
 ---
@@ -20,7 +20,7 @@ estágios). Apesar de curioso e apaixonado por tecnologias, mantenho minha **rel
 “Credo! Que delícia”** com TI, na clássica batalha de gerir expectativas, foco e frustrações.
 
 
-![Eu e minha gatinha Nila](/assets/eu-e-nila-57.jpeg)
+![Eu e minha gatinha Nila](/assets/eu-e-nila.webp)
 Eu e a Nila, minha gatinha idosa.
 
 

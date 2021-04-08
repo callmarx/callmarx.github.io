@@ -7,7 +7,7 @@ description: >-
   encontramos pela imensidão da internet do gênero “What I Learned Today”.
 categories: blog
 image:
-  path: assets/brain/meditation.png
+  path: assets/brain/meditation.webp
   width: 500
   height: 500
 ---
@@ -22,5 +22,5 @@ consigo manter isso aqui, pelo menos para algo como “*What I've Learned This W
 
 
 <p align="center">
-<img src="/assets/brain/meditation.png">
+<img src="/assets/brain/meditation.webp">
 </p>

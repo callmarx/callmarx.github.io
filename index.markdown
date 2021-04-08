@@ -4,7 +4,7 @@
 
 layout: home
 image:
-  path: assets/eu-e-nila-57.jpeg
+  path: assets/eu-e-nila.webp
   width: 500
   height: 500
 ---

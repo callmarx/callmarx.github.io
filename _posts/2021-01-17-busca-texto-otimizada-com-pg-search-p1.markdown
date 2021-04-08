@@ -7,12 +7,12 @@ description: >-
   em uma aplicação Ruby on Rails - Parte I
 categories: blog
 image:
-  path: assets/posts/text-search.jpeg
+  path: assets/posts/text-search.webp
   width: 500
   height: 500
 ---
 
-![Full Text Searching](/assets/posts/text-search.jpeg)
+![Full Text Searching](/assets/posts/text-search.webp)
 
 <!-- excerpt-start -->
 Naufragando pela internet me deparei com a [Gem PgSearch](https://github.com/Casecommons/pg_search){:target="_blank"}
@@ -41,7 +41,7 @@ Objeto-relacional, né?! Mas vamos ao que interessa, apesar de encher meu coraç
 à modinha~~ meus receios à NoSQL. Meu foco aqui será mais sobre o uso e vantagens dessa Gem.
 
 
-# PostgreSQL, seu lindo!
+## PostgreSQL, seu lindo!
 
 ![PostgreSQL, seu lindo!](/assets/posts/elephants-love.webp)
 
@@ -188,4 +188,4 @@ na próxima parte vou mostrar como aplicá-las com a
 [Gem PgSearch](https://github.com/Casecommons/pg_search){:target="_blank"} em projetinho Ruby on
 Rails.
 
-~~Link para parte II~~ --> em breve :)
+[Link para parte II]({% post_url 2021-04-07-busca-texto-otimizada-com-pg-search-p2 %}){:target="_blank"}
