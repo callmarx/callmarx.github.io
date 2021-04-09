@@ -20,8 +20,8 @@ e me comprometi a explicar com um projetinho Ruby on Rails através da Gema
 [PgSearch](https://github.com/Casecommons/pg_search){:target="_blank"}, vamos lá então.
 <!-- excerpt-end -->
 
-<div class="tenor-gif-embed" data-postid="14796708" data-share-method="host" data-width="100%" data-aspect-ratio="0.7991967871485944"><a href="https://tenor.com/view/cat-funny-cat-pc-cat-reading-workaholics-gif-14796708">Cat Funny Cat GIF</a> from <a href="https://tenor.com/search/cat-gifs">Cat GIFs</a></div><script type="text/javascript" async src="https://tenor.com/embed.js"></script>
-
+<div style="left: 0; width: 100%; height: 0; position: relative; padding-bottom: 74.023%;"><iframe src="https://giphy.com/embed/VbnUQpnihPSIgIXuZv" style="border: 0; top: 0; left: 0; width: 100%; height: 100%; position: absolute;" allowfullscreen scrolling="no" allow="encrypted-media"></iframe></div>
+<br/>
 ## Git clone e diverta-se!
 
 O projeto completo está disponível em <https://github.com/callmarx/fts_example>{:target="_blank"}.
