@@ -147,15 +147,15 @@ end
 ```
 
 Traduzindo em passos o *migrate* acima, temos o seguinte:
-- Cria uma nova coluna em *articles*, chamada *tsv* do tipo ```:tsvector```
-- Cria uma indexação sob essa nova coluna do tipo ```:gin```
+- Cria uma nova coluna em *articles*, chamada *tsv* do tipo ```tsvector```
+- Cria uma indexação sob essa nova coluna do tipo ```gin```
 - Cria uma configuração de busca textual copiada da padrão ```pg_catalog.portuguese``` com nome
 *custom_pt*
 - Edita essa busca textual para mapear as palavras com a extensão ```unaccent```
-- Cria um *trigger* que será invocado na inserção e edição para atualizar a coluna ```:tsv``` com
-tsvector sob os campos ```:title, :content``` do artigo em questão com a nova configuração de busca
-textual.
-- Atualiza todos os artigos para preencher a coluna *tsv* da mesma forma que o *trigger* descrito.
+- Cria um *trigger* que será invocado na inserção e edição para atualizar o novo campo ```:tsv```
+com ```tsvector``` dos campos ```:title, :content``` do artigo em questão com a nova configuração
+de busca textual.
+- Atualiza todos os artigos para preencher ```:tsv``` da mesma forma que o *trigger* descrito.
 
 Note que com isto utilizei uma estratégia dupla de otimização: ***tsvector*** + ***GIN index***.
 
