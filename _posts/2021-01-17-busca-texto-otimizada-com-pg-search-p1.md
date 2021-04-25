@@ -1,20 +1,21 @@
 ---
-layout: post
+layout: single
 title:  "Busca em texto otimizada com a Gem pg_search - Parte I"
 date:   2021-01-17 22:58:53 -0300
+tags: TextSearch PostgreSQL Rails Optimization
 description: >-
   Destrinchando a funcionalidade “Full Text Searching" do PostgreSQL com a Gem pg_search
   em uma aplicação Ruby on Rails - Parte I
 categories: blog
-image:
-  path: assets/posts/text-search.webp
-  width: 500
-  height: 500
+header:
+  og_image:
+    path: assets/posts/text-search.webp
+    width: 500
+    height: 500
 ---
 
 ![Full Text Searching](/assets/posts/text-search.webp)
 
-<!-- excerpt-start -->
 Naufragando pela internet me deparei com a [Gem PgSearch](https://github.com/Casecommons/pg_search){:target="_blank"}
 que tira proveito das funcionalidades de
 [Full Text Searching do PostgreSQL](https://www.postgresql.org/docs/current/textsearch-intro.html){:target="_blank"}.
@@ -22,7 +23,7 @@ O conceito [Full Text Searching](https://en.wikipedia.org/wiki/Full-text_search)
 refere a técnicas e estrateǵias computacionais para otimizar a pesquisa de palavras, e até frases,
 em longos e múltiplos textos armazenados em bancos de dados. Trata-se de uma ampla área de estudo
 e pesquisa dentro da Ciências da Computação, desde de 1990.
-<!-- excerpt-end -->
+<!-- excerpt-separator -->
 
 Mas confesso: tenho preconceitos com NoSQL.
 

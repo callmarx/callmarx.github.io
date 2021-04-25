@@ -1,27 +1,27 @@
 ---
-layout: post
+layout: single
 title:  "Como configurar verificador ortográfico PT-BR no editor Vim"
 date:   2021-04-25 14:02:53 -0300
+tags: Vim SpellCheck Vim-Plugins
 description: >-
   Como configurar verificador ortográfico (spellcheck) para português brasileiro no seu vim .
 categories: blog
-image:
-  path: assets/posts/vim-logo.webp
-  width: 500
-  height: 500
+header:
+  og_image:
+    path: assets/posts/vim-logo.webp
+    width: 500
+    height: 500
 ---
 
 ![vim](/assets/posts/vim-br.webp)
 
 
 <br/>
-<br/>
-<!-- excerpt-start -->
 Editando esse mesmo blog em meu **vim** (utilizo o [Jekyll](https://jekyllrb.com){:target="_blank"})
 me questionei: "Porque diabos estou usando o Google Docs como corretor?". Decidi então buscar como
 configurar meu próprio **vim** - na verdade **nvim**, cheio plugins e firulas visuais - para fazer
 este trabalho e me poupar dos CTRL+C e CTRL+V.
-<!-- excerpt-end -->
+<!-- excerpt-separator -->
 
 
 ## Mãos à obra

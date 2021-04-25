@@ -1,25 +1,26 @@
 ---
-layout: post
+layout: single
 title:  "Controller magro e model gordo, mas não perca o foco"
 date:   2020-12-17 09:46:13 -0300
+tags: DesignPatterns Rails MVC
 description: >-
   Mantra “Skinny Controller, Fat Model”, padrão MVC e conceito DRY. É o velho desfaio do código
   limpo e claro. Veja exemplos em Ruby on Rails.
 categories: blog
-image:
-  path: assets/posts/fat-cat-draw.webp
-  width: 500
-  height: 500
+header:
+  og_image:
+    path: assets/posts/fat-cat-draw.webp
+    width: 500
+    height: 500
 ---
 
-<!-- excerpt-start -->
 Jamis Buck escreveu em 2006 o famoso post
 [Skinny Controller, Fat Model](http://weblog.jamisbuck.org/2006/10/18/skinny-controller-fat-model){:target="_blank"},
 tornando-se quase que um mantra para seguir o padrão MVC -
 ***M****odel-****V****iew-****C****ontroller*. No caso, toda lógica não relacionada à resposta ao
 usuário/cliente (View-Controller) deve entrar no model, mantendo assim a comunicação simples, ou
 melhor dizendo, “magra”.
-<!-- excerpt-end -->
+<!-- excerpt-separator -->
 
 Por que disso? Simples, por conta dos testes e da organização. Se uma parte do seu código é
 responsável pela comunicação, ou parte dela, é esperado que, e somente que, testes de comunicação
