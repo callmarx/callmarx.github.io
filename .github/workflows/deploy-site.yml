@@ -1,0 +1,19 @@
+name: deploy generated site to GitHub Pages on gh-branch 
+
+on:
+  push:
+    tags: releases/\d+\.\d+\.\d+ # yep, the conditional is a regular expression. Modify the RegExp if the release tags in your site use a different format
+  workflow_dispatch:
+
+jobs:
+  deploy-site:
+    runs-on: ubuntu-latest  # ToDo: investigate if a specific ubuntu is better
+
+    steps:
+    - name: Checkout code
+      uses: actions/checkout@v2
+    - name: Deploy
+      uses: peaceiris/actions-gh-pages@v3
+      with:
+        github_token: ${{ secrets.GITHUB_TOKEN }}
+        publish_dir: ./_site # the action will deploy the <repository root>/_site contents to the (default) gh-pages branch, root directory
