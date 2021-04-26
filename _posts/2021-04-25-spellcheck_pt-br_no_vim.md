@@ -29,29 +29,31 @@ do **vim**.
 
 ```bash
 $ cd ~/Downloads
+$ wget https://pt-br.libreoffice.org/assets/Uploads/\
+PT-BR-Documents/VERO/VeroptBRV320AOC.oxt
 
-# Caso não baixe, dê erro 404, por exemplo, verifique no site do
-# libreoffice seu o link não mudou.
-$ wget https://pt-br.libreoffice.org/assets/Uploads/PT-BR-Documents/VERO/VeroptBRV320AOC.oxt
 $ unzip -x VeroptBRV320AOC.oxt
 ```
+**Obs**: Caso não baixe, dê erro 404, por exemplo, verifique no site do libreoffice se o link não mudou ou
+expirou.
+{: .notice--warning}
 
 Agora vamos utilizar o próprio **vim** para compilar o arquivo de correção em português brasileiro:
 
 ```bash
-# Na pasta onde você baixou o Vero, abra o vim
+# Na pasta onde você baixou e descompactou o Vero, abra o vim
 $ vim
 
-# dentro excute
+# dentro do vim excute
 :mkspell pt pt_BR
-
 # Vá dando ENTER até finalizar a compilação
+
 # Saia do vim
 :q
 ```
 
-Com isso o arquivo ```pt.utf-8.spl``` foi gerado, agora basta mover para a pasta ```/spell/``` do
-seu **vim**.
+Com isso o arquivo ```pt.utf-8.spl``` foi gerado, agora basta copiá-lo para a pasta ```/spell/```
+do seu **vim**.
 
 ```bash
 # Caso utilize o vim (não o nvim, nem o gvim) copie o arquivo

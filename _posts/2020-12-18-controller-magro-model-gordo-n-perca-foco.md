@@ -96,13 +96,13 @@ sobre o contexto de postagens - validação, busca, ranqueamento etc - sob o mes
 executá-las para o controller. O exemplo também rompia o padrão MVC, o controller detinha lógica
 de chamadas ao banco quando isso é de responsabilidade do model.
 
-<u>OBS</u>: Não vou entrar no mérito do desempenho da busca em si, que por sinal está
+**Obs**: Não vou entrar no mérito do desempenho da busca em si, que por sinal está
 horrível com todos esses ```OR``` na *query* SQL, não considera erros de digitação, coesão da frase
 buscada, enfim, apenas remove os acentos com *unaccent* do PostgreSQL. Existem inúmeras técnicas
 de *Full Text Searching*, como indexação léxica, caracteres-coringa, ranqueamento de palavras etc.
 Mas isso é tema para outro momento, ~~quem sabe.~~ &#10144;
 [Busca em texto otimizada com a Gem pg_search]({% post_url 2021-01-17-busca-texto-otimizada-com-pg-search-p1 %}){:target="_blank"}
-
+{: .notice--info}
 
 # Sempre bom controlar o colesterol
 

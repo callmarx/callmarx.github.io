@@ -18,7 +18,4 @@ consigo manter isso aqui, pelo menos para algo como “*What I've Learned This W
 
 > “Tudo que temos de decidir é o que fazer com o tempo que nos é dado” - Gandalf, o Cinzento.
 
-
-<p align="center">
-<img src="/assets/brain/meditation.webp">
-</p>
+![meditation](/assets/brain/meditation.webp){: .align-center}

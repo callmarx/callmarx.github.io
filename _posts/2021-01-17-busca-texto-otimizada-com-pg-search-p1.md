@@ -41,7 +41,7 @@ Objeto-relacional, né?! Mas vamos ao que interessa, apesar de encher meu coraç
 
 ## PostgreSQL, seu lindo!
 
-![PostgreSQL, seu lindo!](/assets/posts/elephants-love.webp)
+![PostgreSQL, seu lindo!](/assets/posts/elephants-love.webp){: .align-left}
 
 Fanboy que sou desse SGBD, qualquer desculpa é válida para estudar e aproveitar ainda mais essa
 poderosa ferramenta. Vamos então explorar as funcionalidades que ele nos oferece para *Full Text
@@ -125,7 +125,8 @@ textsearchdb=# SELECT
 (1 row)
 ```
 
-OBS: As letras ‘t’ e ‘f’ aqui significam, respectivamente, à *true* e *false*.
+**Obs:** As letras ‘t’ e ‘f’ aqui significam, respectivamente, à *true* e *false*.
+{: .notice--info}
 
 Com a função ```ts_rank``` podemos classificar os resultados da busca, podendo ordenar da mais alta
 para a mais baixa quando buscamos um termo em múltiplos documentos.

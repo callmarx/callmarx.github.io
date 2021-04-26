@@ -33,8 +33,10 @@ $ make up
 # em outro terminal, também dentro da pasta do projeto
 $ make prepare-db
 ```
-OBS: O comando ```make up``` ocupa o terminal em questão pois exibe, em tempo real, o log do Rails. 
-Para sair, basta dar CTRL+C (interrompe o ```rails server```, mas o container continua rodando).
+**Obs**: O comando ```make up``` ocupa o terminal em questão pois exibe, em tempo real, o log do Rails. 
+Para sair, basta dar CTRL+C; isso interrompe o ```rails server```, mas o *container* continuará
+rodando em segundo plano (*background*).
+{: .notice--info}
 
 Você pode testar o desempenho das buscas tanto em requisições completas com
 [cURL](https://curl.se){:target="_blank"}, [Postman](https://www.postman.com){:target="_blank"} ou
@@ -156,8 +158,8 @@ de busca textual.
 - Atualiza todos os artigos para preencher ```:tsv``` da mesma forma que o *trigger* descrito.
 
 Note que com isto utilizei uma estratégia dupla de otimização: ***tsvector*** + ***GIN index***.
+{: .notice--warning}
 
-<br>
 Os métodos de busca estão no model, sendo ```.bad_search``` implementado com o simples ```ilike```
 do SQL e ```.good_search``` com a gema. O código, disponível em ```app/models/article.rb```, é o
 que segue:

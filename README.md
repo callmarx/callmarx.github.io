@@ -1,10 +1,10 @@
 # callmarx.github.io
 
-[![License](https://img.shields.io/github/license/callmarx/callmarx.github.io)](/LICENSE)
+[![License](https://img.shields.io/badge/license-MIT-lightgrey.svg)](/LICENSE)
 [![Contributor Covenant](https://img.shields.io/badge/Contributor%20Covenant-2.0-4baaaa.svg)](/pages/code_of_conduct.md)
-[![website](https://img.shields.io/website?down_color=red&down_message=offline&up_color=green&up_message=online&url=https%3A%2F%2Fcallmarx.github.io)](https://callmarx.github.io)
 [![Jekyll](https://img.shields.io/badge/Jekyll-%3E%3D%204.1-blue.svg)](https://jekyllrb.com/)
-[![Minimal Mistakes Theme](https://img.shields.io/badge/Minimal%20Mistakes%20Theme-%3E%3D%204.2-blue.svg)](https://jekyllrb.com/)
+[![Minimal Mistakes Theme](https://img.shields.io/badge/Minimal%20Mistakes%20Theme-%3E%3D%204.2-blue.svg)](https://github.com/mmistakes/minimal-mistakes)
+[![website](https://img.shields.io/website?down_color=red&down_message=offline&up_color=green&up_message=online&url=https%3A%2F%2Fcallmarx.github.io)](https://callmarx.github.io)
 
 
 Aproveitando o [GitHub Pages](https://pages.github.com/), criei vergonha na cara e parei de ficar
