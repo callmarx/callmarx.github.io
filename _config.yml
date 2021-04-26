@@ -50,16 +50,13 @@ exclude:
   - .rubocop.yml
   - .jekyll-assets-cache
   - .sass-cache
-  - assets/js/plugins
-  - assets/js/_main.js
-  - assets/js/vendor
   - config
   - Gemfile
   - Gemfile.lock
+  - README.md
   - LICENSE
 keep_files:
   - .git
-  - README
 encoding: "utf-8"
 markdown_ext: "markdown,mkdown,mkdn,mkd,md"
 
