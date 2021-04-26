@@ -57,9 +57,9 @@ exclude:
   - Gemfile
   - Gemfile.lock
   - LICENSE
-  - README
 keep_files:
   - .git
+  - README
 encoding: "utf-8"
 markdown_ext: "markdown,mkdown,mkdn,mkd,md"
 
@@ -114,6 +114,7 @@ category_archive:
 tag_archive:
   type: liquid
   path: /tags/
+search: true
 
 # HTML Compression
 # - https://jch.penibelst.de/

@@ -2,7 +2,7 @@
 layout: single
 title:  "Como configurar verificador ortográfico PT-BR no editor Vim"
 date:   2021-04-25 14:02:53 -0300
-tags: Vim SpellCheck Vim-Plugins
+tags: Vim Config
 description: >-
   Como configurar verificador ortográfico (spellcheck) para português brasileiro no seu vim .
 categories: blog
