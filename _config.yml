@@ -46,27 +46,18 @@ exclude:
   - vendor
   - .asset-cache
   - .bundle
+  - .github
   - .rubocop.yml
   - .jekyll-assets-cache
   - .sass-cache
   - assets/js/plugins
   - assets/js/_main.js
   - assets/js/vendor
-  - Capfile
-  - CHANGELOG
   - config
   - Gemfile
   - Gemfile.lock
-  - Gruntfile.js
-  - gulpfile.js
   - LICENSE
-  - log
-  - node_modules
-  - package.json
-  - package-lock.json
-  - Rakefile
   - README
-  - tmp
 keep_files:
   - .git
 encoding: "utf-8"
