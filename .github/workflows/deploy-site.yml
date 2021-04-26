@@ -1,4 +1,5 @@
-name: deploy generated site to GitHub Pages on gh-branch
+name: Build and deploy Jekyll site to GitHub Pages
+
 on:
   push:
     branches:
@@ -12,3 +13,4 @@ jobs:
       - uses: helaili/jekyll-action@v2
         with:
           token: ${{ secrets.GITHUBPAGES_TOKEN }}
+          target_branch: gh-pages
