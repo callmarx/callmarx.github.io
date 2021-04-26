@@ -7,10 +7,7 @@ description: >-
   Como configurar verificador ortográfico (spellcheck) para português brasileiro no seu vim .
 categories: blog
 header:
-  og_image:
-    path: assets/posts/vim-logo.webp
-    width: 500
-    height: 500
+  og_image: assets/posts/vim-logo.webp
 ---
 
 ![vim](/assets/posts/vim-br.webp)

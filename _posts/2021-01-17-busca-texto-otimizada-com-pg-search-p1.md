@@ -8,10 +8,7 @@ description: >-
   em uma aplicação Ruby on Rails - Parte I
 categories: blog
 header:
-  og_image:
-    path: assets/posts/text-search.webp
-    width: 500
-    height: 500
+  og_image: assets/posts/text-search.webp
 ---
 
 ![Full Text Searching](/assets/posts/text-search.webp)

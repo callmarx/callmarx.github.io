@@ -8,10 +8,7 @@ description: >-
   encontramos pela imensidão da internet do gênero “What I Learned Today”.
 categories: blog
 header:
-  og_image:
-    path: assets/brain/meditation.webp
-    width: 500
-    height: 500
+  og_image: assets/brain/meditation.webp
 ---
 
 Criei vergonha na cara e parei de ficar apenas babando nos inúmeros blogs sobre programação que

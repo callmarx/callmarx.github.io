@@ -8,10 +8,7 @@ description: >-
   limpo e claro. Veja exemplos em Ruby on Rails.
 categories: blog
 header:
-  og_image:
-    path: assets/posts/fat-cat-draw.webp
-    width: 500
-    height: 500
+  og_image: assets/posts/fat-cat-draw.webp
 ---
 
 Jamis Buck escreveu em 2006 o famoso post

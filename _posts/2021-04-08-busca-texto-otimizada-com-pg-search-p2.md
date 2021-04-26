@@ -8,10 +8,7 @@ description: >-
   em uma aplicação Ruby on Rails - Parte II
 categories: blog
 header:
-  og_image:
-    path: assets/posts/text-search.webp
-    width: 500
-    height: 500
+  og_image: assets/posts/text-search.webp
 ---
 
 Na [parte I]({% post_url 2021-01-17-busca-texto-otimizada-com-pg-search-p1 %}){:target="_blank"}

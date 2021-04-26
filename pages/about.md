@@ -8,10 +8,7 @@ description: >-
   Nerd, dislexico, linux fanboy, computeiro programador, esquerdopata convicto, viciado/hipster
   em café e paulistano nato.
 header:
-  og_image:
-    path: assets/eu-e-nila.webp
-    width: 500
-    height: 500
+  og_image: assets/eu-e-nila.webp
 ---
 
 Nerd, dislexico, linux *fanboy*, computeiro programador, esquerdopata convicto, viciado/*hipster*
