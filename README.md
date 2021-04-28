@@ -5,6 +5,7 @@
 [![Jekyll](https://img.shields.io/badge/Jekyll-%3E%3D%204.1-blue.svg)](https://jekyllrb.com/)
 [![Minimal Mistakes Theme](https://img.shields.io/badge/Minimal%20Mistakes%20Theme-%3E%3D%204.2-blue.svg)](https://github.com/mmistakes/minimal-mistakes)
 [![website](https://img.shields.io/website?down_color=red&down_message=offline&up_color=green&up_message=online&url=https%3A%2F%2Fcallmarx.github.io)](https://callmarx.github.io)
+[![love](https://img.shields.io/badge/Code%20with-%F0%9F%96%A4-lightgreen)](https://callmarx.github.io/about/)
 
 
 Aproveitando o [GitHub Pages](https://pages.github.com/), criei vergonha na cara e parei de ficar

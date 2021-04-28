@@ -24,7 +24,7 @@ este trabalho e me poupar dos CTRL+C e CTRL+V.
 ## Mãos à obra
 
 Primeiro precisamos fazer download do [VERO](https://pt-br.libreoffice.org/projetos/vero/) -
-VERificador Ortográfico do LibreOffice - e descompacta-lo para então gerar o arquivo de *spellcheck*
+VERificador Ortográfico do LibreOffice - e descompactá-lo para então gerar o arquivo de *spellcheck*
 do **vim**.
 
 ```bash
@@ -66,7 +66,7 @@ $ sudo cp pt.utf-8.spl /usr/share/nvim/runtime/spell/
 
 Agora basta especificar no seu arquivo configuração, ```~/.vimrc``` para o **vim** ou 
 ```~/.config/nvim/init.vim``` para o **nvim**. Note que não habilitei globalmente o corretor,
-apenas para os arquivos do tipo texto ou Markdown. Fique a vontade para incluir outros tipos que
+apenas para os arquivos do tipo texto ou Markdown. Fique à vontade para incluir outros tipos que
 lhe for conveniente.
 
 ```vim
