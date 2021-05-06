@@ -1,0 +1,21 @@
+version: '3.5'
+
+services:
+  blog:
+    build: .
+    networks:
+      - blog
+    volumes:
+      - .:/blog
+      - bundle:/bundle
+    container_name: blog
+    ports:
+      - 4000:4000
+
+networks:
+  blog:
+    name: blog
+    driver: bridge
+
+volumes:
+  bundle:

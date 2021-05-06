@@ -43,18 +43,22 @@ include:
   - .htaccess
   - _pages
 exclude:
-  - vendor
   - .asset-cache
   - .bundle
   - .github
-  - .rubocop.yml
   - .jekyll-assets-cache
+  - .rubocop.yml
   - .sass-cache
   - config
+  - docker-compose.yml
+  - Dockerfile
+  - entrypoint.sh
   - Gemfile
   - Gemfile.lock
-  - README.md
   - LICENSE
+  - Makefile
+  - README.md
+  - vendor
 keep_files:
   - .git
 encoding: "utf-8"
