@@ -20,3 +20,12 @@ consigo manter, pelo menos para algo como “*What I've Learned This Week*”.
 <p align="center">
 <img src="/assets/brain/meditation.webp">
 </p>
+
+# Rodando o site localmente
+
+Basta ter o docker instalado e configurado :)
+
+```bash
+# execute dentro da pasta raiz deste projeto
+$ make up
+```
