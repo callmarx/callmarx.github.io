@@ -17,8 +17,10 @@ Como bom fanboy que sou de Ruby (e Rails), decidi estudar
 [Elixir](https://elixir-lang.org){:target="_blank"} - linguagem brazuca e com sintaxe inspirada no
 Ruby. Cheguei a pensar em comprar algum curso online, mas ~~como sou canguinha e mais implicante do
 que debugar java no Eclipse~~ decidi seguir os tutoriais do
-[Elixir School](https://elixirschool.com/pt/){:target="_blank"} juntamente com a lista de
-exercícios sobre a linguagem do <https://exercism.io>{:target="_blank"}.
+[Elixir School](https://elixirschool.com/pt/){:target="_blank"}, o
+[Getting Started](https://elixir-lang.org/getting-started){:target="_blank"} e a
+[documentação oficial](https://hexdocs.pm/elixir/Kernel.html){:target="_blank"}. Além disso, fazer
+os exercícios sobre a linguagem do <https://exercism.io>{:target="_blank"}.
 
 A ideia aqui é fazer uma mistura de um diário de estudo com tutorial de ensino sob a minha
 perspectiva. Tudo será compartilhado no repositório público que criei no meu GitHub -
