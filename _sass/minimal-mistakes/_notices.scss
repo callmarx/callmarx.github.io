@@ -13,7 +13,7 @@
 @mixin notice($notice-color, $relative_width: false) {
   @if $relative_width {
     width: fit-content;
-    font-size: $type-size-4 !important;
+    font-size: $type-size-5 !important;
   } @else {
     font-size: $type-size-6 !important;
   }

@@ -14,7 +14,7 @@ header:
 
 Antes de partir para a resolução de alguns exercícios, achei válido pontuar mais algumas
 funcionalidades do Elixir em um "apanhadão". Neste post abordo sobre estruturas de controle,
-funções, operador *Pipe* e *Enum*.
+funções e operador *Pipe*, além de rever um pouco mais sobre *pattern matching*.
 
 # Estruturas de Controle
 
@@ -37,21 +37,21 @@ Repere que quando fazemos ```case``` com uma lista, **não** à percorremos item
 aplicamos cada condição nela inteira.
 
 ```elixir
-iex> case {1, 2, 3} do
-...>   {1} ->
-...>     "Esta condição não será correspondida."
-...>   {1, 2, 3} ->
-...>     "Esta condição será correspondida."
-...> end
+case {1, 2, 3} do
+  {1} ->
+    "Esta condição não será correspondida."
+  {1, 2, 3} ->
+    "Esta condição será correspondida."
+end
 "Esta condição será correspondida."
 
-iex> case {1, 2, 3} do
-...>   {2, 3, 4} ->
-...>     "Esta condição não será correspondida."
-...>   {1, x, 3} ->
-...>     "Esta condição será correspondida e
-...>     atribuirá 'x' à #{x}."
-...> end
+case {1, 2, 3} do
+  {2, 3, 4} ->
+    "Esta condição não será correspondida."
+  {1, x, 3} ->
+    "Esta condição será correspondida e
+    atribuirá 'x' à #{x}."
+end
 "Esta condição será correspondida e\n    atribuirá 'x' à 2."
 ```
 **Obs**: Cuidado com o escopo, no segundo exemplo a variável ```x = 2``` é atribuída e
@@ -63,12 +63,12 @@ Você pode usar o operador ```^``` antes de uma variável para fazer a condiçã
 definir uma condição *default*, que sempre será válida, basta utilizar ```_```.
 
 ```elixir
-iex> x = 1
-1
-iex> case 2 do
-...>   ^x -> "não irá corresponder."
-...>   _ -> "irá corresponder."
-...> end
+x = 1
+
+case 2 do
+  ^x -> "não irá corresponder."
+  _ -> "irá corresponder."
+end
 "irá corresponder."
 ```
 Note que ```_``` deve ser a última se não o ```case``` sempre cairá nela. Outro
@@ -76,15 +76,15 @@ detalhe é que se nenhuma condição for satisfeita é obtido o erro *CaseClause
 
 
 ```elixir
-iex> case 2 do
-...>   _ -> "irá corresponder."
-...>   ^x -> "Também corresponde, mas não chegará até aqui."
-...> end
+case 2 do
+  _ -> "irá corresponder."
+  ^x -> "Também corresponde, mas não chegará até aqui."
+end
 "irá corresponder."
 
-iex> case :fool do
-...>   :smart -> "não irá corresponder."
-...> end
+case :fool do
+  :smart -> "não irá corresponder."
+end
 ** (CaseClauseError) no case clause matching: :fool
 ```
 
@@ -95,14 +95,14 @@ Parecido com o ```case```, mas atende a necessidade de checar múltiplos valores
 além de igualdade.
 
 ```elixir
-iex> cond do
-...>   1 + 1 == 3 ->
-...>    "é falso."
-...>   2 - 1  == 3 ->
-...>    "também é falso."
-...>   1 + 2 == 3 ->
-...>    "é verdadeiro."
-...> end
+cond do
+  1 + 1 == 3 ->
+   "é falso."
+  2 - 1  == 3 ->
+   "também é falso."
+  1 + 2 == 3 ->
+   "é verdadeiro."
+end
 "é verdadeiro."
 ```
 
@@ -111,10 +111,11 @@ Importante pontuar que tudo para além de ```nil``` e ```false``` é considerado
 ```elixir
 iex>  hd(["a", "b", "c"])
 "a"
-iex> cond do
-...>   hd(["a", "b", "c"]) ->
-...>     "'a' é considerado como verdadeiro."
-...> end
+
+cond do
+  hd(["a", "b", "c"]) ->
+    "'a' é considerado como verdadeiro."
+end
 "'a' é considerado como verdadeiro."
 ```
 
@@ -173,20 +174,18 @@ Introduzido na versão 1.2 do Elixir, a estrutura ```with``` permite simplificar
 substituído, por exemplo, clausulas aninhadas de ```case```.
 
 ```elixir
-iex> full_name = %{first: "Nila", last: "Minha gatatinha idosa"}
-%{first: "Nila", last: "Minha gatatinha idosa"}
+full_name = %{first: "Nila", last: "Minha gatatinha idosa"}
 
-iex> with {:ok, first} <- Map.fetch(full_name, :first),
-...>   {:ok, last} <- Map.fetch(full_name, :last),
-...>   do: last <> ", " <> first
+with {:ok, first} <- Map.fetch(full_name, :first),
+  {:ok, last} <- Map.fetch(full_name, :last),
+  do: last <> ", " <> first
 "Minha gatatinha idosa, Nila"
 
-iex> only_first = %{first: "Nila"}
-%{first: "Nila"}
+only_first = %{first: "Nila"}
 
-iex> with {:ok, first} <- Map.fetch(only_first, :first),
-...>   {:ok, last} <- Map.fetch(only_first, :last),
-...>   do: last <> ", " <> first
+with {:ok, first} <- Map.fetch(only_first, :first),
+  {:ok, last} <- Map.fetch(only_first, :last),
+  do: last <> ", " <> first
 :error
 ```
 
@@ -195,12 +194,11 @@ Primeiro, vamos entender precisamente este exemplo. O que faz a função ```fetc
 
 ```elixir
 iex> m = %{a: 1, b: 3, c: 5}
-%{a: 1, b: 3, c: 5}
 iex> Map.fetch(m, :a)
 {:ok, 1}
 iex> Map.fetch(m, :b)
 {:ok, 3}
-Map.fetch(m, :d)
+iex> Map.fetch(m, :d)
 :error
 ```
 
@@ -210,30 +208,28 @@ chave requisitada. Repare ainda que ao não encontrar devolve ```:error``` **soz
 Para fazer o equivalente com ```case```, perceba como aumenta a verbosidade do código:
 
 ```elixir
-iex> full_name = %{first: "Nila", last: "Minha gatatinha idosa"}
-%{first: "Nila", last: "Minha gatatinha idosa"}
+full_name = %{first: "Nila", last: "Minha gatatinha idosa"}
 
-iex> case Map.fetch(full_name, :first) do
-...>   {:ok, first} ->
-...>     case Map.fetch(full_name, :last) do
-...>       {:ok, last} -> last <> ", " <> first
-...>       :error -> :error # retorna o atom :error
-...>     end
-...>   :error -> :error # retorna o atom :error
-...> end
+case Map.fetch(full_name, :first) do
+  {:ok, first} ->
+    case Map.fetch(full_name, :last) do
+      {:ok, last} -> last <> ", " <> first
+      :error -> :error # retorna o atom :error
+    end
+  :error -> :error # retorna o atom :error
+end
 "Minha gatatinha idosa, Nila"
 
-iex> only_first = %{first: "Nila"}
-%{first: "Nila"}
+only_first = %{first: "Nila"}
 
-iex> case Map.fetch(only_first, :first) do
-...>   {:ok, first} ->
-...>     case Map.fetch(only_first, :last) do
-...>       {:ok, last} -> last <> ", " <> first
-...>       :error -> :error # retorna o atom :error
-...>     end
-...>   :error -> :error # retorna o atom :error
-...> end
+case Map.fetch(only_first, :first) do
+  {:ok, first} ->
+    case Map.fetch(only_first, :last) do
+      {:ok, last} -> last <> ", " <> first
+      :error -> :error # retorna o atom :error
+    end
+  :error -> :error # retorna o atom :error
+end
 :error
 ```
 <div class="notice--warning">
@@ -288,56 +284,56 @@ A partir da versão 1.3, ```with/1``` também suporta ```else```. Vejamos primei
  ```with``` direto (não aninhado):
 
 ```elixir
-iex> full_name = %{first: "Nila", last: "Minha gatatinha idosa"}
-%{first: "Nila", last: "Minha gatatinha idosa"}
-iex> with {:ok, first} <- Map.fetch(full_name, :first) do
-...>   "O primeiro nome é '#{first}'"
-...> else
-...>   :error -> "Erro! Não há a chave ':first'"
-...> end
+full_name = %{first: "Nila", last: "Minha gatatinha idosa"}
+
+with {:ok, first} <- Map.fetch(full_name, :first) do
+  "O primeiro nome é '#{first}'"
+else
+  :error -> "Erro! Não há a chave ':first'"
+end
 "O primeiro nome é 'Nila'"
 
-iex> only_last = %{last: "Minha gatatinha idosa"}
-%{last: "Minha gatatinha idosa"}
-iex> with {:ok, first} <- Map.fetch(only_last, :first) do
-...>   "O primeiro nome é '#{first}'"
-...> else
-...>   :error -> "Erro! Não há a chave ':first'"
-...> end
+only_last = %{last: "Minha gatatinha idosa"}
+
+with {:ok, first} <- Map.fetch(only_last, :first) do
+  "O primeiro nome é '#{first}'"
+else
+  :error -> "Erro! Não há a chave ':first'"
+end
 "Erro! Não há a chave ':first'"
 ```
 
 Agora refazendo o primeiro exemplo, aninhado com dois *match*s, temos:
 
 ```elixir
-iex> full_name = %{first: "Nila", last: "Minha gatatinha idosa"}
-%{first: "Nila", last: "Minha gatatinha idosa"}
-iex> with {:ok, first} <- Map.fetch(full_name, :first),
-...>   {:ok, last} <- Map.fetch(full_name, :last) do
-...>     last <> ", " <> first
-...>   else
-...>     :error -> "Erro! precisa ter as chaves 'first' e 'last'"
-...> end
+full_name = %{first: "Nila", last: "Minha gatatinha idosa"}
+
+with {:ok, first} <- Map.fetch(full_name, :first),
+  {:ok, last} <- Map.fetch(full_name, :last) do
+    last <> ", " <> first
+  else
+    :error -> "Erro! precisa ter as chaves 'first' e 'last'"
+end
 "Minha gatatinha idosa, Nila"
 
-iex> only_first = %{first: "Nila"}
-%{first: "Nila"}
-iex> with {:ok, first} <- Map.fetch(only_first, :first),
-...>   {:ok, last} <- Map.fetch(only_first, :last) do
-...>     last <> ", " <> first
-...>   else
-...>     :error -> "Erro! precisa ter as chaves 'first' e 'last'"
-...> end
+only_first = %{first: "Nila"}
+
+with {:ok, first} <- Map.fetch(only_first, :first),
+  {:ok, last} <- Map.fetch(only_first, :last) do
+    last <> ", " <> first
+  else
+    :error -> "Erro! precisa ter as chaves 'first' e 'last'"
+end
 "Erro! precisa ter as chaves 'first' e 'last'"
 
-iex> only_last = %{last: "Minha gatatinha idosa"}
-%{last: "Minha gatatinha idosa"}
-iex> with {:ok, first} <- Map.fetch(only_last, :first),
-...>   {:ok, last} <- Map.fetch(only_last, :last) do
-...>     last <> ", " <> first
-...>   else
-...>     :error -> "Erro! precisa ter as chaves 'first' e 'last'"
-...> end
+only_last = %{last: "Minha gatatinha idosa"}
+
+with {:ok, first} <- Map.fetch(only_last, :first),
+  {:ok, last} <- Map.fetch(only_last, :last) do
+    last <> ", " <> first
+  else
+    :error -> "Erro! precisa ter as chaves 'first' e 'last'"
+end
 "Erro! precisa ter as chaves 'first' e 'last'"
 ```
 
@@ -363,7 +359,6 @@ defmodule Fool do
 end
 
 iex> my_map = %{a: 2, b: 3}
-%{a: 2, b: 3}
 iex> Fool.check_even_on_map(my_map, :a)
 "é par"
 iex> Fool.check_even_on_map(my_map, :b)
@@ -378,4 +373,293 @@ Temos um ```with``` com dois casos distintos de negativa tratados pelo bloco ```
 
 # Funções
 
+Síntese sobre função anonima, função nomeada e *pattern matching* em funções.
 
+**Funções Anonimas**
+{: .notice--relative--primary}
+
+<div class="tenor-gif-embed" data-postid="18985404" data-share-method="host" data-width="100%" data-aspect-ratio="1.3351206434316354"><a href="https://tenor.com/view/imanonymous-anonymous-larry-david-anonymous-curb-anonymous-gif-18985404"></a></div><script type="text/javascript" async src="https://tenor.com/embed.js"></script>
+<br/>
+
+Definidas entre os termos ```fn``` e ```end```, funções anonimas podem ter qualquer número de
+argumentos e múltiplos blocos de execução separados com ```->```, sendo à esquerda da flecha os
+argumentos de um bloco e a direita o bloco desses argumentos.
+
+```elixir
+iex> sum = fn (a, b) -> a + b end
+iex> sum.(3, 7)
+10
+iex> sum.(3, -1)
+2
+
+iex> multi = fn (a, b) -> a * b end
+iex> multi.(3, 2)
+6
+iex> multi.(-3, 3)
+-9
+```
+
+Existem ainda uma abreviação com uso de ```&1```, ```&2```, ```&3``` etc, para os argumentos da
+função anonima.
+
+
+```elixir
+iex> sum = &(&1 + &2)
+iex> sum.(7, 7)
+14
+
+iex> triple_concat = &(&1 <> &2 <> &3)
+iex> triple_concat.("Olá", ", ", "mundo")
+"Olá, mundo"
+```
+
+
+**Pattern Matching** em **Funções Anonimas**
+{: .notice--relative--primary}
+
+Justamente para utilizar múltiplos blocos de execução, ou seja, fazer diferentes execuções,
+utilizamos *pattern matching* sob os argumentos de uma função anonima.
+
+```elixir
+handle_result = fn
+  {:ok, result} -> "Sucesso! mensagem: #{result}"
+  {:error} -> "Erro! Consulte o administrador"
+end
+
+iex> handle_result.({:ok, :uploaded})
+"Sucesso! mensagem: uploaded"
+
+iex> handle_result.({:error})
+"Erro! Consulte o administrador"
+```
+
+Isso pode ser ainda mais estendido com cláusulas *guard* através do termo ```when```.
+
+```elixir
+handle_result = fn
+  {:ok, result} when is_nil(result) ->
+    "Sucesso! Sem resposta do servidor"
+  {:ok, result} when is_number(result) ->
+    "Sucesso! código: #{result}"
+  {:ok, result} ->
+    "Sucesso! mensagem: #{result}"
+  {:error} ->
+    "Erro! Consulte o administrador"
+end
+
+iex> handle_result.({:ok, nil})
+"Sucesso! Sem resposta do servidor"
+iex> handle_result.({:ok, 2345})
+"Sucesso! código: 2345"
+iex> handle_result.({:ok, :logout})
+"Sucesso! mensagem: logout"
+iex> handle_result.({:error})
+"Erro! Consulte o administrador"
+```
+
+Um cuidado que se dever ter com *guard*s é que caso tenha um bloco com um conjunto de argumentos
+direto, sem *guard*, os blocos com este mesmo conjunto de argumentos que tenham *guards* **devem**
+vir antes do primeiro. Por exemplo, se no trecho anterior, o bloco
+ ```{:ok, result} -> "Sucesso! mensagem: #{result}"``` fosse o primeiro, note que os blocos
+ seguintes são ignorados.
+
+```elixir
+bad_handle = fn
+  {:ok, result} ->
+    "Sucesso! mensagem: #{result}"
+  {:ok, result} when is_nil(result) ->
+    "Sucesso! Sem resposta do servidor"
+  {:ok, result} when is_number(result) ->
+    "Sucesso! código: #{result}"
+  {:error} ->
+    "Erro! Consulte o administrador"
+end
+
+iex> bad_handle.({:ok, nil})
+"Sucesso! mensagem: "
+iex> bad_handle.({:ok, 2345})
+"Sucesso! mensagem: 2345"
+iex> bad_handle.({:ok, :logout})
+"Sucesso! mensagem: logout"
+```
+
+**Funções Nomeadas**
+{: .notice--relative--primary}
+
+Como já vimos, funções nomeadas são definidas com o termo ```def``` dentro de um módulo. Seu bloco
+é delimitado por ```do/end```, com a possibilidade de abreviação em uma linha com ```do:```.
+
+```elixir
+defmodule Greeter do
+  def hello(name) do
+    "Hello, " <> name
+  end
+
+  def same_hello(name), do: "Hello, " <> name
+end
+
+iex> Greeter.hello("Nila")
+"Hello, Nila"
+iex> Greeter.same_hello("Nila")
+"Hello, Nila"
+```
+
+Lembrando também, que as funções são distinguidas pelo Elixir por seu nome + aridade (quantidade de
+argumentos).
+
+```elixir
+defmodule Greeter2 do
+  def hello(), do: "Olá desconhecido"           # hello/0
+  def hello(name), do: "Olá, " <> name          # hello/1
+  def hello(n1, n2), do: "Olá, #{n1} e #{n2}"   # hello/2
+end
+```
+
+**Pattern Matching** em **Funções Nomeadas**
+{: .notice--relative--primary}
+
+Dado último post,
+[Preciso falar sobre "Pattern Matching"]({% post_url 2021-05-14-diario-dislexico-elixir-pattern-matching %}){:target="_blank"},
+vamos complicar um pouco somando *pattern matching* e recursão.
+
+
+```elixir
+defmodule Length do
+  def of([]), do: 0
+  def of([_ | tail]), do: 1 + of(tail)
+end
+
+iex> Length.of []
+0
+iex> Length.of [1]
+1
+iex> Length.of [1, 2]
+2
+iex> Length.of [1, 2, 3]
+3
+iex> Length.of [1, 2, 3, 4]
+4
+```
+
+O laço de recursão de ```of``` gira em torno do *pattern matching*. Temos que se o argumento:
+- for ```[]```, encerra o laço e devolve o valor 0.
+- tiver uma calda, soma-se 1 com ```of``` da calda do argumento (segue o laço)
+
+Por isso ```Length.of/1``` devolve o tamanho da lista.
+Note ainda que o *pattern matching* não esta apenas na primeira parte, em que ```[]``` é checado,
+mas como também esta na segunda parte, em que ```tail``` é associado a calda do parâmetro. É
+possível fazer a mesma recursão, substituído o segundo *match* pelo método ```tl/1```.
+
+```elixir
+defmodule Length do
+  def of([]), do: 0
+  def of(list), do: 1 + of(tl(list))
+end
+```
+
+Da mesma forma como vimos anteriormente com funções anonimas, também podemos usar *guard*s.
+
+```elixir
+defmodule Length do
+  def of([]), do: 0
+  def of([_ | tail]), do: 1 + of(tail)
+  def of(not_a_list) when not is_list(not_a_list) do
+    "Erro! O argumento precisa ser uma lista"
+  end
+end
+
+iex> Length.of "ops!"
+"Erro! O argumento precisa ser uma lista"
+iex> Length.of [3, 4, 5]
+3
+```
+
+Importante relembrar que o *pattern matching* é feito para **ambos** os lados de ```=```, dentro da
+definição do argumento
+
+```elixir
+defmodule Greeter do
+  def hello(%{name: person_name} = person) do
+    IO.puts "Olá, #{person_name}"
+    IO.inspect person
+  end
+
+  def hello(%{first: first_name} = %{last: last_name} = person) do
+    IO.puts "Olá, #{first_name} #{last_name}"
+    IO.inspect person
+  end
+end
+
+iex> my_cat = %{name: "Nila", age: "16", favorite_hobby: "sleep"}
+iex> Greeter.hello my_cat
+Olá, Nila
+%{age: "16", favorite_hobby: "sleep", name: "Nila"}
+
+iex> my_self = %{first: "Eugenio Augusto", last: "Jimenes", age: "16", favorite_hobby: "sleep"}
+iex> Greeter.hello my_self
+Olá, Eugenio Augusto Jimenes
+%{age: "16", favorite_hobby: "sleep", first: "Eugenio Augusto", last: "Jimenes"}
+```
+
+# Operador *Pipe*
+
+Representado por ```|>```, ele passa o resultado da expressão à sua esquerda para "o que vier" à
+sua direita.
+
+```elixir
+iex> "Minha gata é velhinha" |> String.split()
+["Minha", "gata", "é", "velhinha"]
+iex> "Minha gata é velhinha" |> String.upcase() |> String.split()
+["MINHA", "GATA", "É", "VELHINHA"]
+```
+
+Quando lidamos com funções que possuem mais de um argumento o resultado que vem do *pipe* (à
+esquerda) entrará sempre como o primeiro parâmetro (à direita). Por exemplo, a própria função
+ ```String.split``` possui um segundo argumento opcional.
+
+```elixir
+ iex> "Minha_gata_é_velhinha" |> String.split("_")
+["Minha", "gata", "é", "velhinha"]
+```
+
+Note que **sempre** entrará como primeiro parâmetro.
+
+```elixir
+iex> "_" |> String.split("Minha_gata_é_velhinha")
+["_"]
+
+iex> String.split("_", "Minha_gata_é_velhinha")
+["_"]
+
+iex> String.split("Minha_gata_é_velhinha", "_")
+["Minha", "gata", "é", "velhinha"]
+```
+
+Esse operador é extremamente presente nos códigos em Elixir. Com ele é possível escrever lógicas
+consecutivas, logo sucintas e de fácil leitura.
+
+```elixir
+defmodule Greeter do
+  def hello(names) when is_list(names) do
+    names
+    |> Enum.join(", ")
+    |> hello
+  end
+
+  def hello(name) when is_binary(name) do
+    phrase() <> name
+  end
+
+  defp phrase, do: "Olá, "
+end
+
+iex> Greeter.hello "Eugenio"
+"Olá, Eugenio"
+
+iex> Greeter.hello ["Eugenio", "Lucas", "Tomaz"]
+"Olá, Eugenio, Lucas, Tomaz"
+```
+
+Por agora, é isso.
+
+<div class="tenor-gif-embed" data-postid="18638117" data-share-method="host" data-width="100%" data-aspect-ratio="1.546583850931677"><a href="https://tenor.com/view/done-so-done-im-done-monkey-throw-gif-18638117"></a></div><script type="text/javascript" async src="https://tenor.com/embed.js"></script>
