@@ -1,7 +1,7 @@
 ---
 layout: single
 title:  "Diário disléxico - Elixir: Aquele clássico apanhadão"
-date:   2021-05-20 17:51:49 -0300
+date:   2021-05-23 18:11:49 -0300
 tags: Elixir Learn
 description: >-
   Uma "rápida" síntese de mais alguns conceitos antes de ir para resolução de exercícios.
