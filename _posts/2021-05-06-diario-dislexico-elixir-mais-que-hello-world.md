@@ -214,7 +214,7 @@ iex> byte_size("I'm a binary guy")
 16
 ```
 **Curiosidade**: Através de ```IO.puts``` podemos ver a saída de uma *string* com a quebra literal
-de linha. O modulo ```IO``` traz diversas funções de entrada e saída - *Input & Output*, irei
+de linha. O módulo ```IO``` traz diversas funções de entrada e saída - *Input & Output*, irei
 abordar mais sobre isso nos próximos posts.
 {: .notice--info}
 
