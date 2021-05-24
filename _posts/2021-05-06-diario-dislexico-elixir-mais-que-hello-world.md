@@ -6,6 +6,8 @@ tags: Elixir Learn
 description: >-
   Começando pelo básico: curiosidades, instalação, configuração e o clássico "Hello World".
 categories: blog
+redirect_from:
+ - blog/2021/05/06/diario-dislexico-elixir_mais-que-hello-world.html
 header:
   og_image: assets/posts/elixir-logo.webp
 ---
