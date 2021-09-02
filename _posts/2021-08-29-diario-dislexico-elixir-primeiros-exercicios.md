@@ -26,7 +26,7 @@ agora e o que eu aprendi/utilizei em cada.
 
 ## Word Count
 
-O enunciado pode ser obtido [aqui](https://github.com/callmarx/aprendendo_elixir/tree/main/exercicios/word-count){:target="_blank"}.
+O enunciado pode ser obtido [aqui](https://exercism.org/tracks/elixir/exercises/word-count){:target="_blank"}.
 {: .notice--primary}
 
 Exercício simples, perfeito para aplicar a estrutura *pipe* sem muita dificuldade. Entendi melhor
@@ -51,7 +51,7 @@ end
 
 ## RNA Transcription
 
-O enunciado pode ser obtido [aqui](https://github.com/callmarx/aprendendo_elixir/tree/main/exercicios/rna-transcription){:target="_blank"}.
+O enunciado pode ser obtido [aqui](https://exercism.org/tracks/elixir/exercises/rna-transcription){:target="_blank"}.
 {: .notice--primary}
 
 Aprendi que `?` + `caractere` devolve o seu *codepoint*, além disso podemos usar o acesso de um
@@ -85,7 +85,7 @@ end
 
 ## Nucleotide Count
 
-O enunciado pode ser obtido [aqui](https://github.com/callmarx/aprendendo_elixir/tree/main/exercicios/nucleotide-count){:target="_blank"}.
+O enunciado pode ser obtido [aqui](https://exercism.org/tracks/elixir/exercises/nucleotide-count){:target="_blank"}.
 {: .notice--primary}
 
 Além de reaplicar os conceitos de *codepoint* e *map* do problema anterior, foi possível verificar
@@ -140,7 +140,7 @@ end
 
 ## Accumulate
 
-O enunciado pode ser obtido [aqui](https://github.com/callmarx/aprendendo_elixir/tree/main/exercicios/accumulate){:target="_blank"}.
+O enunciado pode ser obtido [aqui](https://exercism.org/tracks/elixir/exercises/accumulate){:target="_blank"}.
 {: .notice--primary}
 
 Gostei bastante deste exercício. Mesmo tendo uma solução aparentemente direta e simples, pude
@@ -176,7 +176,7 @@ end
 
 ## Secret Handshake
 
-O enunciado pode ser obtido [aqui](https://github.com/callmarx/aprendendo_elixir/tree/main/exercicios/secret-handshake){:target="_blank"}.
+O enunciado pode ser obtido [aqui](https://exercism.org/tracks/elixir/exercises/secret-handshake){:target="_blank"}.
 {: .notice--primary}
 
 Foi ótimo para relembrar os conceitos de
@@ -227,7 +227,7 @@ que explica na [documentação oficial](https://hexdocs.pm/elixir/1.12/Enum.html
 
 ## Roman Numerals
 
-O enunciado pode ser obtido [aqui](https://github.com/callmarx/aprendendo_elixir/tree/main/exercicios/roman-numerals){:target="_blank"}.
+O enunciado pode ser obtido [aqui](https://exercism.org/tracks/elixir/exercises/roman-numerals){:target="_blank"}.
 {: .notice--primary}
 
 O divertido mesmo foi descobrir que números romanos possuem uma lógica recursiva de tradução da
@@ -302,7 +302,7 @@ end
 
 ## Beer Song
 
-O enunciado pode ser obtido [aqui](https://github.com/callmarx/aprendendo_elixir/tree/main/exercicios/beer-song){:target="_blank"}.
+O enunciado pode ser obtido [aqui](https://exercism.org/tracks/elixir/exercises/beer-song){:target="_blank"}.
 {: .notice--primary}
 
 Nada muito sofisticado, apenas te "empurra" a conhecer/utilizar `Enum.map_join` e de beber umas com
@@ -352,7 +352,7 @@ end
 
 ## Bob
 
-O enunciado pode ser obtido [aqui](https://github.com/callmarx/aprendendo_elixir/tree/main/exercicios/bob){:target="_blank"}.
+O enunciado pode ser obtido [aqui](https://exercism.org/tracks/elixir/exercises/bob){:target="_blank"}.
 {: .notice--primary}
 
 Confesso que dei umas coladinhas em outras soluções para fazer este exercício. Sempre tive uma
@@ -387,6 +387,17 @@ defmodule Bob do
   end
 end
 ```
+
+# Meu aprendizado com Elixir e a trilha do exercism.io
+
+Fiquei encantado com a plataforma. Os exercícios são muito bem feitos e os instrutores que revisam,
+corrigem ou aprovam sua solução, foram todos muito legais. É a polemica pedagogia do "se vira" -
+você se vê ali com um problema e precisa correr atrás para desenvolver uma resposta que muitas
+vezes não será otimizada e/ou 100% correta.
+
+Tenho outras demandas de estudo, não sei quando vou conseguir voltar a mexer, mas pretendo
+continuar essa trilha até o final. Todas as minhas soluções e avanços mantenho no repositório
+<https://github.com/callmarx/aprendendo_elixir>{:target="_blank"}.
 
 Por agora, é isso.
 <div class="tenor-gif-embed" data-postid="10835076" data-share-method="host" data-aspect-ratio="1.22293" data-width="100%"><a href="https://tenor.com/view/cat-ignore-gotta-sleep-now-night-gif-10835076"></a></div> <script type="text/javascript" async src="https://tenor.com/embed.js"></script>
