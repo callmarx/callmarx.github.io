@@ -1,8 +1,8 @@
 ---
 layout: single
-title:  "Como configurar verificador ortográfico PT-BR no editor Vim"
+title:  "Hoje eu aprendi: configurar verificador ortográfico PT-BR no editor Vim"
 date:   2021-04-25 14:02:53 -0300
-tags: Vim Config
+tags: Vim Config Hoje-eu-aprendi
 description: >-
   Como configurar verificador ortográfico (spellcheck) para português brasileiro no seu vim.
 categories: blog
@@ -23,9 +23,9 @@ este trabalho e me poupar dos CTRL+C e CTRL+V.
 
 ## Mãos à obra
 
-Primeiro precisamos fazer download do [VERO](https://pt-br.libreoffice.org/projetos/vero/) -
-VERificador Ortográfico do LibreOffice - e descompactá-lo para então gerar o arquivo de *spellcheck*
-do **vim**.
+Primeiro precisamos fazer download do
+[VERO](https://pt-br.libreoffice.org/projetos/vero/){:target="_blank"} - VERificador Ortográfico do
+LibreOffice - e descompactá-lo para então gerar o arquivo de *spellcheck* do **vim**.
 
 ```bash
 $ cd ~/Downloads
@@ -76,3 +76,4 @@ autocmd FileType md,markdown,txt,text, setlocal spell spelllang=pt,en
 ```
 
 Pronto! Minha dislexia agradece.
+<div class="tenor-gif-embed" data-postid="14911721" data-share-method="host" data-aspect-ratio="1" data-width="100%"><a href="https://tenor.com/view/teacher-drinking-beer-dos-equis-gif-14911721"></div> <script type="text/javascript" async src="https://tenor.com/embed.js"></script>
