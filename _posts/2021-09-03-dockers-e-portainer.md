@@ -7,7 +7,7 @@ description: >-
   Mini tutorial de gerenciamento local de contêineres com Portainer CE.
 categories: blog
 header:
-  og_image: assets/images/portainer.io.png
+  og_image: assets/posts/portainer-docker-ogimage.webp
 ---
 
 ![Portainer + Docker](/assets/posts/portainer+docker.webp)
