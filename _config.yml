@@ -5,6 +5,7 @@ minimal_mistakes_skin: "default"
 
 ## Site Settings
 title: CallMarx
+url: https://callmarx.github.io
 author:
   name             : "Eugenio Augusto Jimenes"
   avatar           : "assets/eu-e-nila.webp"
