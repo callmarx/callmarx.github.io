@@ -27,5 +27,5 @@ Basta ter o docker instalado e configurado :)
 
 ```bash
 # execute dentro da pasta raiz deste projeto
-$ make up
+$ docker-compose up blog
 ```
