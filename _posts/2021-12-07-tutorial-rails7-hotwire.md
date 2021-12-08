@@ -40,8 +40,8 @@ algumas [*branches*](https://github.com/callmarx/LearningHotwire/branches){:targ
 representam as partes abordas aqui.
 
 ## Etapa Zero
-Nesta parte inicial, explico como configurar o Rails 7, com suas as novas opções, e "dockerizo" os
-baco do dados PostgreSQL e Redis. O resultado final desta etapa é o disponível na *branch*
+Nesta parte inicial, explico como configurar o Rails 7, com suas novas opções, e "dockerizo" os
+bancos do dados PostgreSQL e Redis. O resultado final desta etapa é o disponível na *branch*
 [blog-part-0](https://github.com/callmarx/LearningHotwire/tree/blog-part-0){:target="_blank"}.
 
 ### Criando um novo projeto com Rails 7
@@ -67,7 +67,7 @@ $ rails new LearningHotwire \
 ```
 
 Nada de novo nas duas primeiras *flags*: será uma aplicação com bando de dados PostgreSQL
-(`-d=postgresql`) e não utilizarei testes (`--skip-test`).
+(`-d=postgresql`) e sem o pacote padrão de testes com Minitest (`--skip-test`).
 
 Nas duas últimas temos algumas novidades: escolho o [*esbuild*](https://esbuild.github.io/){:target="_blank"}
 como *JavaScript bundler* (`-j esbuild`) e o [*tailwind*](https://tailwindcss.com){:target="_blank"}
@@ -239,15 +239,20 @@ que atualizamos.
 # esse script já vem com permissão de execução
 $ bin/dev
 ```
+
+Você deve obter algo assim como saída no seu terminal:
 ![bin/dev](/assets/posts/bin-dev.webp){: .align-center}
 
-Não esqueça de criar o banco de dados, em um outro terminal execute:
+Não esqueça de criar o banco de dados. Você pode fazer isso agora na página web:
+![create-db-web](/assets/posts/create-db-web.webp){: .align-center}
+
+Ou, em um outro terminal já que precisamos do docker em execução, utilize:
 ```bash
 $ rails db:create
 ```
 
 E acesse <http://localhost:3000/> e veja a clássica telinha do Rails.
-
+![welcome-rails](/assets/posts/welcome-rails.webp){: .align-center}
 
 Por agora, é isso.
 <div class="tenor-gif-embed" data-postid="17519616" data-share-method="host" data-aspect-ratio="1" data-width="100%">

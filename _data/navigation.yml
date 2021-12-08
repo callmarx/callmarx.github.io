@@ -1,5 +1,7 @@
 # main links
 main:
+  - title: "Posts por tags"
+    url: /tags/
   - title: "Sobre mim"
     url: /about/
   # - title: "Sample Posts"
