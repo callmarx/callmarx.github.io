@@ -8,7 +8,7 @@ description: >-
   aplicação estilo Kanban, com cards/tarefas, com persistência simultânea via websockets.
 categories: blog
 header:
-  og_image: assets/posts/rails7-tailwind-hotwire.webp
+  og_image: assets/posts/rails-7.webp
 ---
 
 ![Rails 7 + Tailwind + Hotwire](/assets/posts/rails7-tailwind-hotwire.webp){: .align-center}
