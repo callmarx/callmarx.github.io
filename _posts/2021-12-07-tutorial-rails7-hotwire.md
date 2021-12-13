@@ -24,24 +24,25 @@ temas que pretendo abordar é *TypeOrm* com *migrations* e aplicação Multitena
 RLS.
 {: .notice--info}
 
-Neste tutorial eu utilizo Rails 7, esbuild, Tailwind e Hotwire (Turbo e Stimulus), mas meu foco aqui
-será mais sobre o pacote Hotwire e como ele pode nos ajudar. Esta dividido nas seguintes partes:
-* [Parte 0: Rails 7](#etapa-zero) → página atual
-* ~~Parte 1: Tailwind~~ → em breve
+## Objetivo Geral
+Neste tutorial eu pretendo desenvolver (e aprender) utilizando Rails 7, esbuild, Tailwind e Hotwire
+(Turbo e Stimulus), mas meu foco será mais sobre o pacote Hotwire e como ele pode nos ajudar.
+Esta dividido nas seguintes partes:
+* [Parte 0: Rails 7](#etapa-zero---rails-7) → página atual
+* [Parte 1: Tailwind]({% post_url 2021-12-09-tutorial-rails7-hotwire-parte-1 %}){:target="_blank"}
 * ~~Parte 2: Hotwire Turbo~~ → em breve
 * ~~Parte 3: Hotwire Stimulus~~ → em breve
-<!-- [Link para parte II]({% post_url 2021-04-08-busca-texto-otimizada-com-pg-search-p2 %}){:target="_blank"} -->
 
 O pano de fundo é uma aplicação estilo Kanban, com um quadro em que podemos incluir, ver, editar e
 excluir os cards/tarefas e isso ser persistido simultaneamente via *websockets* para todas as
 sessões abertas da aplicação. Todo código esta disponível neste
 [repositório](https://github.com/callmarx/LearningHotwire){:target="_blank"}. Note que incluí
 algumas [*branches*](https://github.com/callmarx/LearningHotwire/branches){:target="_blank"} que
-representam as partes abordas aqui.
+representam as partes abordadas aqui.
 
-## Etapa Zero
-Nesta parte inicial, explico como configurar o Rails 7, com suas novas opções, e "dockerizo" os
-bancos do dados PostgreSQL e Redis. O resultado final desta etapa é o disponível na *branch*
+## Etapa Zero - Rails 7
+Nesta parte inicial, explico como configurar o Rails 7, com suas novas opções, e como "dockerizar"
+os bancos de dados PostgreSQL e Redis. O resultado final desta etapa é o disponível na *branch*
 [blog-part-0](https://github.com/callmarx/LearningHotwire/tree/blog-part-0){:target="_blank"}.
 
 ### Criando um novo projeto com Rails 7
@@ -66,7 +67,7 @@ $ rails new LearningHotwire \
               --css tailwind
 ```
 
-Nada de novo nas duas primeiras *flags*: será uma aplicação com bando de dados PostgreSQL
+Nada de novo nas duas primeiras *flags*: será uma aplicação com banco de dados PostgreSQL
 (`-d=postgresql`) e sem o pacote padrão de testes com Minitest (`--skip-test`).
 
 Nas duas últimas temos algumas novidades: escolho o [*esbuild*](https://esbuild.github.io/){:target="_blank"}
@@ -118,11 +119,11 @@ group :development do
 end
 ```
 
-O Redis vem comentado automaticamente, mas vamos utiliza-lo mais a frente para o *ActionCable* com
+O Redis vem comentado automaticamente, mas vamos utilizá-lo mais a frente para o *ActionCable* com
 o [turbo-rails](https://github.com/hotwired/turbo-rails){:target="_blank"}.
 
 Nos blocos de `:development` e `:test` inclui algumas gemas para teste e lint. Não sei ainda se vou
-ou não desenvolver testes, mas na duvida instalei o RSpec com o comando padrão
+ou não desenvolver testes, mas na dúvida instalei o RSpec com o comando padrão
 `rails generate rspec:install` e inclui arquivos de configuração como
 [.reek.yml](https://github.com/callmarx/LearningHotwire/blob/blog-part-0/.reek.yml){:target="_blank"},
 [.rubocop.yml](https://github.com/callmarx/LearningHotwire/blob/blog-part-0/.rubocop.yml){:target="_blank"},
@@ -222,7 +223,9 @@ seja, em modo de reload automático (em inglês chamamos de *watch process*), ma
 duas novas inclusões.
 
 Como incluímos o PostgreSQL e Redis no docker, podemos incluir também a chamada `docker-compose up`
-no Procfile, ficando assim:
+no
+[Procfile.dev](https://github.com/callmarx/LearningHotwire/blob/blog-part-0/Procfile.dev){:target="_blank"},
+ficando assim:
 
 ```text
 docker: docker-compose up
@@ -256,6 +259,6 @@ E acesse <http://localhost:3000/> e veja a clássica telinha do Rails.
 
 Por agora, é isso.
 <div class="tenor-gif-embed" data-postid="17519616" data-share-method="host" data-aspect-ratio="1" data-width="100%">
-  <a href="https://tenor.com/view/cat-leaving-leave-oops-bye-gif-17519616"/>
+  <a href="https://tenor.com/view/cat-leaving-leave-oops-bye-gif-17519616"></a>
 </div>
 <script type="text/javascript" async src="https://tenor.com/embed.js"/>
