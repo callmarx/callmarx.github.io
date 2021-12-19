@@ -17,7 +17,7 @@ header:
 Na [parte anterior]({% post_url 2021-12-07-tutorial-rails7-hotwire %}){:target="_blank"} deste
 tutorial, expliquei como configurar o Rails 7, com suas novas opções e como "dockerizei" os bancos
 de dados PostgreSQL e Redis. Agora vou abordar um pouco sobre Tailwind.
-
+<!-- excerpt-separator -->
 
 ## Objetivo Geral
 A meta é desenvolver (e aprender) utilizando Rails 7, esbuild, Tailwind e Hotwire (Turbo e
@@ -25,14 +25,14 @@ Stimulus), mas meu foco será mais sobre o pacote Hotwire e como ele pode nos aj
 nas seguintes partes:
 * [Parte 0: Rails 7]({% post_url 2021-12-07-tutorial-rails7-hotwire %}){:target="_blank"}
 * [Parte 1: Tailwind](#etapa-1---tailwind) → página atual
-* ~~Parte 2: Hotwire Turbo~~ → em breve
+* [Parte 2: Hotwire Turbo]({% post_url 2021-12-15-tutorial-rails7-hotwire-parte-2 %}){:target="_blank"}
 * ~~Parte 3: Hotwire Stimulus~~ → em breve
 
 O pano de fundo é uma aplicação estilo Kanban, com um quadro em que podemos incluir, ver, editar e
 excluir os cards/tarefas e isso ser persistido simultaneamente via *websockets* para todas as
 sessões abertas da aplicação. Todo código esta disponível neste
 [repositório](https://github.com/callmarx/LearningHotwire){:target="_blank"}. Note que incluí
-algumas [*branches*](https://github.com/callmarx/LearningHotwire/branches){:target="_blank"} que
+algumas [*branches*](https://github.com/callmarx/LearningHotwire/branches/all){:target="_blank"} que
 representam as partes abordadas aqui.
 
 ## Etapa 1 - Tailwind

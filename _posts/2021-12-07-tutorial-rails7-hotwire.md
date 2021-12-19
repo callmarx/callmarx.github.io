@@ -18,6 +18,7 @@ Depois de meses desenvolvendo em Typescript com [NestJS](https://docs.nestjs.com
 por demanda do meu atual trabalho, consegui um tempinho para meu tão amado Ruby on Rails. Melhor
 ainda agora, como não trabalho oficialmente com Rails, posso me dar o luxo de me aventurar na
 versão 7, recém lançada em modo alfa, em meus projetos pessoais.
+<!-- excerpt-separator -->
 
 **OBS:** Pretendo escrever alguns artigos sobre minhas cabeçadas com NestJS e Typescript. Alguns
 temas que pretendo abordar é *TypeOrm* com *migrations* e aplicação Multitenant usando PostgreSQL
@@ -30,14 +31,14 @@ Neste tutorial eu pretendo desenvolver (e aprender) utilizando Rails 7, esbuild,
 Esta dividido nas seguintes partes:
 * [Parte 0: Rails 7](#etapa-zero---rails-7) → página atual
 * [Parte 1: Tailwind]({% post_url 2021-12-09-tutorial-rails7-hotwire-parte-1 %}){:target="_blank"}
-* ~~Parte 2: Hotwire Turbo~~ → em breve
+* [Parte 2: Hotwire Turbo]({% post_url 2021-12-15-tutorial-rails7-hotwire-parte-2 %}){:target="_blank"}
 * ~~Parte 3: Hotwire Stimulus~~ → em breve
 
 O pano de fundo é uma aplicação estilo Kanban, com um quadro em que podemos incluir, ver, editar e
 excluir os cards/tarefas e isso ser persistido simultaneamente via *websockets* para todas as
 sessões abertas da aplicação. Todo código esta disponível neste
 [repositório](https://github.com/callmarx/LearningHotwire){:target="_blank"}. Note que incluí
-algumas [*branches*](https://github.com/callmarx/LearningHotwire/branches){:target="_blank"} que
+algumas [*branches*](https://github.com/callmarx/LearningHotwire/branches/all){:target="_blank"} que
 representam as partes abordadas aqui.
 
 ## Etapa Zero - Rails 7

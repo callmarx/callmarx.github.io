@@ -17,6 +17,7 @@ header:
 
 Para além de instalar e codar o clássico "Hello World", vamos explorar os passos iniciais com a
 tecnologia. Entender os *data types*, as operações básicas e algumas curiosidades.
+<!-- excerpt-separator -->
 
 # Um pouco de história
 Elixir é uma linguagem de programação dinâmica, funcional e concorrente, compilada e executada na

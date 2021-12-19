@@ -21,6 +21,7 @@ que debugar java no Eclipse~~ decidi seguir os tutoriais do
 [Getting Started](https://elixir-lang.org/getting-started){:target="_blank"} e a
 [documentação oficial](https://hexdocs.pm/elixir/Kernel.html){:target="_blank"}. Além disso, fazer
 os exercícios sobre a linguagem do <https://exercism.io>{:target="_blank"}.
+<!-- excerpt-separator -->
 
 A ideia aqui é fazer uma mistura de um diário de estudo com tutorial de ensino sob a minha
 perspectiva. Tudo será compartilhado no repositório público que criei no meu GitHub -
