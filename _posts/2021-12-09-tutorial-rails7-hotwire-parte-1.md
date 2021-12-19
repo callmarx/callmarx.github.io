@@ -5,7 +5,7 @@ date:   2021-12-09 11:12:54 -0300
 tags: Tutorial Rails Ruby Tailwind Hotwire
 description: >-
   Parte 1: Montando um layout com Tailwind - Tutorial sobre Rails 7 com esbuild, tailwind e
-  Hotwire(Turbo e Stimulus). Como desenvolver um aplicação estilo Kanban, com cards/tarefas, com
+  Hotwire(Turbo e Stimulus). Como desenvolver um aplicação estilo Kanban, com cards/tarefas e
   persistência simultânea via websockets.
 categories: blog
 header:
@@ -21,11 +21,11 @@ de dados PostgreSQL e Redis. Agora vou abordar um pouco sobre Tailwind.
 
 ## Objetivo Geral
 A meta é desenvolver (e aprender) utilizando Rails 7, esbuild, Tailwind e Hotwire (Turbo e
-Stimulus), mas meu foco será mais sobre o pacote Hotwire e como ele pode nos ajudar. Esta dividido
-nas seguintes partes:
+Stimulus), mas meu foco será mais sobre o pacote Hotwire e como ele pode nos ajudar. Conforme
+avanço nos estudos e na implementação, vou complementando este tutorial. Por enquanto temos:
 * [Parte 0: Rails 7]({% post_url 2021-12-07-tutorial-rails7-hotwire %}){:target="_blank"}
 * [Parte 1: Tailwind](#etapa-1---tailwind) → página atual
-* [Parte 2: Hotwire Turbo]({% post_url 2021-12-15-tutorial-rails7-hotwire-parte-2 %}){:target="_blank"}
+* [Parte 2: Hotwire Turbo]({% post_url 2021-12-19-tutorial-rails7-hotwire-parte-2 %}){:target="_blank"}
 * ~~Parte 3: Hotwire Stimulus~~ → em breve
 
 O pano de fundo é uma aplicação estilo Kanban, com um quadro em que podemos incluir, ver, editar e
