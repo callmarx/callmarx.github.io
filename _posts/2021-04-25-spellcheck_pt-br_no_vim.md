@@ -20,7 +20,6 @@ configurar meu próprio **vim** - na verdade **nvim**, cheio plugins e firulas v
 este trabalho e me poupar dos CTRL+C e CTRL+V.
 <!-- excerpt-separator -->
 
-
 ## Mãos à obra
 
 Primeiro precisamos fazer download do
@@ -64,7 +63,7 @@ $ sudo cp pt.utf-8.spl /usr/share/vim/vim*/spell/
 $ sudo cp pt.utf-8.spl /usr/share/nvim/runtime/spell/
 ```
 
-Agora basta especificar no seu arquivo configuração, ```~/.vimrc``` para o **vim** ou 
+Agora basta especificar no seu arquivo configuração, ```~/.vimrc``` para o **vim** ou
 ```~/.config/nvim/init.vim``` para o **nvim**. Note que não habilitei globalmente o corretor,
 apenas para os arquivos do tipo texto ou Markdown. Fique à vontade para incluir outros tipos que
 lhe for conveniente.

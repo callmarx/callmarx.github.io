@@ -14,6 +14,7 @@ header:
 Volto aqui para falar um pouco sobre o que eu aprendi com os exercícios básicos e iniciantes do
 <https://exercism.io>{:target="_blank"} sobre Elixir. Abaixo segue o que eu resolvi da trilha até
 agora e o que eu aprendi/utilizei em cada.
+<!-- excerpt-separator -->
 - **Word Count**: *Pipe*, `String.split` e *regex*
 - **RNA Transcription**: *map*, `Enum.map` e *codepoint* de um caractere
 - **Nucleotide Count**: *map*, `Enum.reduce` e *codepoint* de um caractere

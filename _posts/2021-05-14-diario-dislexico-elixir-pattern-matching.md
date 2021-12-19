@@ -17,7 +17,7 @@ header:
 Quanto mais eu pesquiso sobre Elixir em tutoriais, artigos, livros e vídeos pela internet, mais eu
 vejo isso sendo enfatizado. Inicialmente acreditei que fosse apenas por conta de legibilidade do
 código, mas provou-se bem mais do que isto, justificando a vasta cobertura que diversos autores dão.
-
+<!-- excerpt-separator -->
 
 # "Pattern Matching"
 Essa parte provavelmente vai parecer confusa e desnecessária, mas confie, *pattern matching* é uma

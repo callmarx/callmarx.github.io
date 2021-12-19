@@ -18,6 +18,7 @@ entusiasta de contêineres. Hoje me deparei com a minha partição *root* do Lin
 qual motivo? Inúmeras imagens, volumes e contêineres, que a maior parte eu nem estava mais
 utilizando, ocupando grande parte do espaço. Eis que o Google me sugere o mamão com mel que é
 [Portainer CE](https://github.com/portainer/portainer){:target="_blank"}.
+<!-- excerpt-separator -->
 
 ## Primeiro de tudo
 

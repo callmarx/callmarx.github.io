@@ -15,6 +15,7 @@ header:
 Antes de partir para a resolução de alguns exercícios, achei válido pontuar mais algumas
 funcionalidades do Elixir em um "apanhadão". Neste post abordo sobre estruturas de controle,
 funções e operador *Pipe*, além de rever um pouco mais sobre *pattern matching*.
+<!-- excerpt-separator -->
 
 # Estruturas de Controle
 
@@ -262,7 +263,7 @@ end
 Mesmo não sabendo o comportamento, e muito menos como foi implementado, algumas das chamadas feitas
 neste trecho, podemos interpretar que:
 - No primeiro ```case```, se ```Repo.insert(changeset)``` retornar um ```{:ok, user}``` entramos
-  no segundo ```case```, caso contrário obtemos um erro. 
+  no segundo ```case```, caso contrário obtemos um erro.
 - Já no segundo ```case```, se ```Guardian.encode_and_sign(user, :token, claims)``` retornar um
  ```{:ok, token, full_claims}``` então a chamada de ```important_stuff(token, full_claims)``` é
  feita, caso contrário obtemos o mesmo erro anterior.
