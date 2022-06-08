@@ -1,4 +1,4 @@
-FROM ruby:2.7.5-alpine
+FROM ruby:alpine
 
 RUN apk add --update --no-cache \
       binutils-gold \
