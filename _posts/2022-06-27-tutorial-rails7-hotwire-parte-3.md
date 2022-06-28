@@ -12,7 +12,7 @@ header:
   og_image: assets/posts/hotwire-turbo.webp
 ---
 
-![Hotwire Turbo](/assets/posts/hotwire-turbo.webp){: .align-center}
+![Hotwire Stimulus Logo](/assets/posts/stimulus-logo.webp){: .align-center}
 
 Na [parte anterior]({% post_url 2021-12-19-tutorial-rails7-hotwire-parte-2 %}){:target="_blank"}
 deste tutorial eu expliquei como utilizar a renderização parcial de html com `turbo_stream` do
@@ -39,20 +39,23 @@ representam as partes abordadas aqui.
 
 ## Etapa 3 - Hotwire Stimulus
 Nesta etapa final, implemento um modal (o famoso pop-up que não é exatamente um pop-up) do qual
-será controlado por JS através do Hotwire Stimulus.
-
+será controlado por JS através do Hotwire Stimulus. Dividi essa etapa em 3 *branches*:
+* [blog-part-3.1](https://github.com/callmarx/LearningHotwire/blob/blog-part-3.1){:target="_blank"} -
+  Em que uso a tag Turbo Frame e o Stimulus para renderizar um html dinamicamente e depois remove-lo;
+* [blog-part-3.2](https://github.com/callmarx/LearningHotwire/blob/blog-part-3.2){:target="_blank"} -
+  Em que uso um pouco mais de Tailwind para fazer o modal e o Stimulus para lidar com outras ações necessárias;
+* [blog-part-3.4](https://github.com/callmarx/LearningHotwire/blob/blog-part-3.3){:target="_blank"} -
+  Subparte bonus, em que uso a gema [ViewComponent](https://viewcomponent.org/){:target="_blank"}
+  para agrupar melhor o código do modal.
 
 ### Breve introdução sobre Stimulus no Rails
 
-
-### Foi só falar que eu não ia usar turbo-frame que...
+### Foi só falar que eu não ia usar Turbo Frame que...
 Na etapar anterior, na parte que faço uma breve explicação sobre a diferença entre
 [turbo-frame e turbo-stream]({% post_url 2021-12-19-tutorial-rails7-hotwire-parte-2 %}#turbo-frame-vs-turbo-stream){:target="_blank"},
-coloquei uma observação dizendo que não pretendia utilizar o turbo-frame e eis q surge a
+coloquei uma observação dizendo que não pretendia utilizar o Turbo Frame e eis q surge a
 oportunidade: com ele podemos renderizar dinamicamente o formulário do *chore* para usuário quando
 ele precisar inserir ou editar.
-
-Coloquei essa parte,  na *branch*
 
 Primeiro incluí a linha `<%= turbo_frame_tag "modal" %>` no arquivo
 [app/views/layouts/application.html.erb](https://github.com/callmarx/LearningHotwire/blob/blog-part-3.1/app/views/layouts/application.html.erb){:target="_blank"},
@@ -71,14 +74,14 @@ resultando no seguinte:
   </head>
 
   <body>
-    <%= turbo_frame_tag "modal" %>
+    <%= turbo_frame_tag "modal" %> <!-- include this -->
     <%= yield %>
   </body>
 </html>
 ```
 
 Depois envolvi o conteudo de
-[app/views/chores/new.html.erb](https://github.com/callmarx/LearningHotwire/blob/blog-part-3.1/app/views/chores/new.html.erb){:target="_blank"},
+[app/views/chores/new.html.erb](https://github.com/callmarx/LearningHotwire/blob/46e4871993ac592a990d7d0e3a4e7c29d0e69626/app/views/chores/new.html.erb){:target="_blank"},
 pelo *block* de `<%= turbo_frame_tag "modal" do %>...<% end %>`, mas que no caso ficou apenas para
 dar o *render* do *partial form*, ou seja:
 ```erb
@@ -113,7 +116,7 @@ também incluí um ícone para o botão e removi o `render` do `form` que tinha 
       <% end %>
     </div>
   </div>
-</div> <!-- remove 'render "form"'
+</div> <!-- remove 'render "form"' -->
 ```
 com isso, quando você clicar no butão *New Chore*, será incluido
 `src="http://localhost:3000/chores/new"` na area reservado com `<%= turbo_frame_tag "modal" %>` que
@@ -122,13 +125,19 @@ agora esta no arquivo
 e com isso
 [app/views/chores/new.html.erb](https://github.com/callmarx/LearningHotwire/blob/blog-part-3.1/app/views/chores/new.html.erb){:target="_blank"}
 será renderizado dinamicamente dentro desta tag.
+![Triggering Turbo Frame](/assets/posts/gifs/triggering-turbo-frame.gif){: .align-center}
 
-**Por o gif!!!!**
 
-**OBS**: EXPLICAR QUE POR NO app/views/layouts/application.html.erb MAPEAMOS TODA APLICAÇÃO
+**OBS**: Eu coloquei `<%= turbo_frame_tag "modal" %>` em "app/views/layouts/application.html.erb"
+porque eu espero poder renderizar o modal de inserção em qualquer página da minha aplicação. Como
+se trata de Kanban, o usuário provavelmente gostaria de inserir um novo card em qualquer página,
+mas isso poderia ser feito, por exemplo, apenas quando estamos vendo todos os cards, ou seja, em
+"app/views/chores/index.html.erb".
 {: .notice--info}
 
-
+Note que uma vez clicado em "New Chore", não é possivel remover o formulário, seja com um botão de
+fechar ou mesmo após a inserção de um novo card. Para isso utilizaremos o Stimulus como mostrarei
+nos próximos passos.
 
 ### Primeiros passados com Stimulus
 Primeiro gerei um "novo stimulus" no projeto, com seguinte comando e saída:
@@ -138,225 +147,109 @@ $ rails generate stimulus chore-modal
        rails  stimulus:manifest:update
 ```
 
+Como observado antes, não é possivel "remover" o html inserido dinamicamente pelo turbo-frame,
+então vamos fazer isso como nosso primeiro método de *ChoreModalController*, em
+[app/javascript/controllers/chore_modal_controller.js](https://github.com/callmarx/LearningHotwire/blob/blog-part-3.1/app/javascript/controllers/chore_modal_controller.js){:target="_blank"}:
+```js
+// file app/javascript/controllers/chore_modal_controller.js of blog-part-3.1 branch
+import { Controller } from "@hotwired/stimulus"
 
-Para explicar separadamente o modo *render* `turbo_stream` eu incluí o código desta subparte na
-*branch* [blog-part-2.1](https://github.com/callmarx/LearningHotwire/tree/blog-part-2.1){:target="_blank"}.
+// Connects to data-controller="chore-modal"
+export default class extends Controller {
+  connect() {
+    console.log("Hi! we are in ChoreModalController from Stimulus")
+  }
 
-No `ChoresController` que geramos com `rails generate scaffold` na
-[etapa anterior]({% post_url 2021-12-09-tutorial-rails7-hotwire-parte-1 %}#um-simples-scaffold){:target="_blank"}
-deste tutorial, por padrão o Rails incluiu múltiplos formatos de renderização, no caso HTML e JSON.
-Como incluímos `gem "turbo-rails"` no Gemfile, temos acesso também à renderização via *Turbo Stream*,
-bastando adicionar `format.turbo_stream` dentro do bloco `respond_to do |format|`. Fazendo isso
-para os métodos *create* e *destroy*, temos em
-[app/controllers/chores_controller.rb](https://github.com/callmarx/LearningHotwire/blob/blog-part-2.1/app/controllers/chores_controller.rb){:target="_blank"}:
-```ruby
-# file app/controllers/chores_controller.rb of blog-part-2.1 branch
-class ChoresController < ApplicationController
-  ...
-  def create
-    ...
-    respond_to do |format|
-      if @chore.save
-        format.turbo_stream # include this
-        format.html { redirect_to @chore, notice: "Chore was successfully created." }
-        format.json { render :show, status: :created, location: @chore }
-      else
-        format.html { render :new, status: :unprocessable_entity }
-        format.json { render json: @chore.errors, status: :unprocessable_entity }
-      end
-    end
-  end
-  ...
-  def destroy
-    @chore.destroy
-    respond_to do |format|
-      format.turbo_stream # include this
-      format.html { redirect_to chores_url, notice: "Chore was successfully destroyed." }
-      format.json { head :no_content }
-    end
-  end
-  ...
-end
+  // action: "chore-modal#hideModal"
+  hideModal() {
+    this.element.parentElement.removeAttribute("src")
+    this.element.remove()
+    console.log("You've just called ChoreModalController#hideModal")
+  }
+}
 ```
+Para fechar o formulário de inserção eu simplesmente removo o atributo `src` do elemento pai, que
+no caso precisará ser o da tag `<turbo-frame ...></turbo-frame>`. Note também que incluí alguns
+`console.log()` para mostrar quando estamos passando por cada parte de *ChoreModalController*
 
-Para esse tipo de renderização também precisamos de arquivos dedicados em `app/views`, como o temos
-para HTML e JSON. Sendo assim, temos o seguinte
-[app/views/chores/create.turbo_stream.erb](https://github.com/callmarx/LearningHotwire/blob/blog-part-2.1/app/views/chores/create.turbo_stream.erb){:target="_blank"}:
+Agora precisamos dizer em que parte do nosso html iremos chama-lo, para isso basta envolver sob
+alguma `div` com `data-controller="chore-modal"`. Também é necessario dizer onde estará a ação que
+invocará *ChoreModalController#hideModal* e isso é feito com `data-action="chore-modal#hideModal"`.
+Sendo assim,
+[app/views/chores/new.html.erb](https://github.com/callmarx/LearningHotwire/blob/blog-part-3.1/app/views/chores/new.html.erb){:target="_blank"}
+ficou:
 ```erb
-<!-- file app/views/chores/create.turbo_stream.erb of blog-part-2.1 branch -->
-<%= turbo_stream.append "chores", partial: "chores/chore", locals: { chore: @chore } %>
-<%= turbo_stream.replace "chore_form", partial: "chores/form", locals: { chore: Chore.new } %>
-```
-
-Como queremos ver a aplicação disso sem recarregar uma página inteira, ou seja, poder **renderizar
-apenas uma parte** da página, o faremos no *index* de *chores*. Por isso usamos os métodos
-`turbo_stream.append` e `turbo_stream.replace` acima apontados para o DOM ID da página, ou seja,
-respectivamente os primeiros argumentos `"chores"` e `"chore_form"` devem estar presentes na página
-**completamente renderizada** por
-[app/views/chores/index.html.erb](https://github.com/callmarx/LearningHotwire/blob/blog-part-2.1/app/views/chores/index.html.erb){:target="_blank"}.
-Sendo isso assim precisamos incluir `id="chores"` na `<div>` que envolve a listagem dos *chores*:
-```erb
-<!-- file app/views/chores/index.html.erb  of blog-part-2.1 branch -->
-<div ...>
-  <div ...>
-    <div id="chores" ...> <!-- include id="chores" for turbo_stream.append -->
-      <% @chores.each do |chore| %>
-        <%= render "chore", chore:chore %>
-      <% end %>
-    </div>
-  </div>
-  <div ...>               <!-- don't include id="chore_form" here!         -->
+<!-- file app/views/chores/new.html.erb of blog-part-3.1 branch -->
+<%= turbo_frame_tag "modal" do %>
+  <%= tag.div data: { controller: "chore-modal" } do %>
     <%= render "form", chore: @chore %>
-  </div>
-</div>
+    <%= button_tag "Close", data: { action: "chore-modal#hideModal" }, type: "button", class: "fixed top-0 right-0 rounded-lg p-3 m-2 bg-red-700 text-white" %>
+  <% end %>
+<% end %>
 ```
+A ação onde apliquei `data-action="chore-modal#hideModal"` foi em um botão vermelho com "Close".
+No caso, o erb `<%= button_tag ... %>` irá resultar no seguinte html:
 
-Agora, para `id="chore_form"`, não podemos incluir na `<div>` que envolve
-`<%= render "form", chore: @chore %>` pois o método `turbo_stream.replace` **substitui completamente
-o elemento** e como o fazemos substituindo pelo *partial view*
-[app/views/chores/_form.html.erb](https://github.com/callmarx/LearningHotwire/blob/blog-part-2.1/app/views/chores/_form.html.erb){:target="_blank"}
-essa `<div>` seria apagada, sendo assim devemos incluir `id="chore_form"` no próprio arquivo *form*:
+```html
+<button
+  name="button"
+  type="button"
+  data-action="chore-modal#hideModal"
+  class="fixed right-0 rounded-lg p-3 m-2 bg-red-700 text-white">Close</button>
+```
+e como `<%= tag.div data: { controller: "chore-modal" } do %>` está dentro de
+`<%= turbo_frame_tag "modal" do %>`, *ChoreModalController#hideModal* irá remover `src` da tag
+`<turbo-frame id="modal" ...></turbo-frame>`.
+
+O resultado esperado é o seguinte:
+![Removing rendered Turbo Frame with Stimulus](/assets/posts/gifs/removing-turbo-frame.gif){: .align-center}
+
+E na aba "Console" podemos ver os `Console.log()` que coloquei:
+![Removing rendered Turbo Frame with Stimulus - Console](/assets/posts/gifs/removing-turbo-frame-console.gif){: .align-center}
+
+Tudo o que foi feito até aqui é o que corresponde a *branch*
+[blog-part-3.1](https://github.com/callmarx/LearningHotwire/blob/blog-part-3.1).
+
+### Mas e o modal?
+
+Bem, o formulário de inserção por enquanto é incluido no topo da página movendo todo resto para
+baixo. Definitivamente não é um modal ~~e nada bonito ou agradavel~~. Para isso basta utilizarmos o
+Tailwind.
+
+Em
+[app/views/chores/new.html.erb](https://github.com/callmarx/LearningHotwire/blob/blog-part-3.2/app/views/chores/new.html.erb){:target="_blank"},
+temos:
 ```erb
-<!-- file app/views/chores/_form.html.erb  of blog-part-2.1 branch -->
-<%= form_with(model: chore, id: "chore_form") do |form| %>
-  ...
+<!-- file app/views/chores/new.html.erb of blog-part-3.2 branch -->
+<%= turbo_frame_tag "modal" do %>
+  <%= tag.div data: {
+      controller: "chore-modal",
+    },
+    class: "z-40 fixed flex justify-center inset-0 bg-gray-600 bg-opacity-50 h-screen w-screen" do %>
+    <%= tag.div data: { chore_modal_target: "form" },
+      class: "flex flex-col p-4 m-12 rounded-md w-2/3 h-2/3 bg-slate-200 rounded-md hover:bg-slate-400 transition duration-600 ease-linear" do %>
+      <div class="flex justify-between">
+        <div></div>
+        <div></div>
+        <%= button_tag data: { action: "chore-modal#hideModal" }, type: "button", class: "flex-none w-8 h-8 text-slate-600 hover:text-black transition-all duration-600 ease-in-out" do %>
+          <svg xmlns="http://www.w3.org/2000/svg" width="32" height="32" fill="currentColor" viewBox="0 0 16 16">
+            <path d="M16 8A8 8 0 1 1 0 8a8 8 0 0 1 16 0zM5.354 4.646a.5.5 0 1 0-.708.708L7.293 8l-2.647 2.646a.5.5 0 0 0 .708.708L8 8.707l2.646 2.647a.5.5 0 0 0 .708-.708L8.707 8l2.647-2.646a.5.5 0 0 0-.708-.708L8 7.293 5.354 4.646z"/>
+          </svg>
+        <% end %>
+      </div>
+      <%= render "form", chore: @chore %>
+    <% end %>
+  <% end %>
 <% end %>
 ```
 
+Com as classes `fixed` e `z-40`, o tailwind irá montar um CSS que ira sobrepor o formulário em cima
+do resto do conteúdo da página. Somado com `h-screen`, `w-screen`, `bg-gray-600` e `bg-opacity-50`,
+siginifica que esse modal ocupara a tela toda, mas com a cor cinza e transparente de background.
+Também aproveitei para trocar o botão vermelho ~~gritante, que ficou horrivel,~~ de "Close" por um
+ícone "x" cinza escuro mais discreto no canto superior direito, ficando assim:
+![tailwind modal](/assets/posts/tailwind-modal.webp){: .align-center}
 
-Agora, para excluir um *chore* é ainda mais simples, temos o seguinte
-[app/views/chores/destroy.turbo_stream.erb](https://github.com/callmarx/LearningHotwire/blob/blog-part-2.1/app/views/chores/destroy.turbo_stream.erb){:target="_blank"}
-```erb
-<!-- file app/views/chores/destroy.turbo_stream.erb of blog-part-2.1 branch -->
-<%= turbo_stream.remove dom_id(@chore) %>
-```
-
-Da mesma forma, devemos incluir o DOM ID, mas no caso um específico para cada *chore*, por isso o
-`dom_id(@chore)`. Além disso, também precisamos editar o `<button>` do ícone de exclusão para
-apontar para o método *destroy* do *controller*, sendo assim em:
-[app/views/chores/_chore.html.erb](https://github.com/callmarx/LearningHotwire/blob/blog-part-2.1/app/views/chores/_chore.html.erb){:target="_blank"}
-```erb
-<!-- file app/views/chores/_chore.html.erb of blog-part-2.1 branch -->
-<div id="<%= dom_id(chore) %>" ...> <!-- include dom_id(chore) for turbo_stream.remove -->
-  <div ...>
-    ...
-    <div ...>
-      ...
-      <%= button_to chore_path(chore), method: :delete, class: ... do %> <!-- make button point to delete method -->
-        <svg ...>
-          ...
-        </svg>
-      <% end %>
-      ...
-```
-
-Agora, ao remover um *chore*, também teremos uma **renderização parcialmente** que remove o HTML do
-*chore* excluído sem recarregar toda a página. O resultado final desta subparte, ao criar ou
-excluir um *chore* em <http://localhost:3000/chores>{:target="_blank"}, é o seguinte:
-{% include video id="1pIKgDLLIK4LFVMVSQmc-p0xUKjYtiqNI" provider="google-drive" %}
-
-**OBS**: Note que não há um carregamento total da página a cada inclusão ou exclusão, a página é
-recarregada parcialmente via
-[*fetch*](https://developer.mozilla.org/pt-BR/docs/Web/API/Fetch_API/Using_Fetch){:target="_blank"}.
-{: .notice--info}
-
-
-Porém, se você abrir duas janelas de <http://localhost:3000/chores>{:target="_blank"} e incluir ou
-excluir *chores* em uma delas verá que as alterações são feitas apenas na janela que está
-manipulando isso, **não haverá persistência em todas as sessões**. Para isso precisamos fazer via
-*ActionCable* com `broadcast`.
-
-### Aplicando *broadcast*
-Aqui corresponde a parte final desta etapa do tutorial. A subparte anterior foi apenas para
-explicar o uso isolado do *render* `turbo_stream`, como objetivo é uma aplicação estilo Kanban
-pretendo utilizar majoritariamente esse *render* juntamente com `broadcast` daqui para frente. O
-código completo desta etapa está na *branch*
-[blog-part-2.2](https://github.com/callmarx/LearningHotwire/tree/blog-part-2.2){:target="_blank"}.
-
-Para aplicarmos as alterações dos *chores* em todas as sessões utilizaremos o
-`Turbo::StreamsChannel` que vem com a gema `turbo-rails`, podendo ser chamado diretamente no
-*model* ou no *controller* dependendo da abordagem que desejar. A ideia aqui é que **estaremos
-implementando as renderizações parciais em um padrão
-[Publish/Subscribe](https://en.wikipedia.org/wiki/Publish%E2%80%93subscribe_pattern){:target="_blank"}**.
-Por trás dos panos estaremos usando o *Active Jobs* para "publicar" (*publish*) a renderização
-parcial do `turbo_stream` de maneira assíncrona e o *Action Cable* para entregar essas atualizações
-aos "assinantes" (*subscribers*).
-
-No caso, nossos "assinantes" são todas as sessões abertas de
-<http://localhost:3000/chores>{:target="_blank"} e podemos mapear isso usando o helper
-`turbo_stream_from`. Sendo assim, em
-[app/views/chores/index.html.erb](https://github.com/callmarx/LearningHotwire/blob/blog-part-2.2/app/views/chores/index.html.erb){:target="_blank"},
-temos:
-```erb
-<!-- file app/views/chores/index.html.erb  of blog-part-2.2 branch -->
-<%= turbo_stream_from "chores" %>
-<div ...>
-  ...
-</div>
-```
-
-Como disse antes, podemos incluir `Turbo::StreamsChannel` no *model* ou *controller* para cobrir as
-modificações de *create*, *update* e *delete*, mais especificamente através dos métodos
-`.broadcast_append_to`, `.broadcast_replace_to`, `.broadcast_remove_to` entre outros. Se incluirmos
-isso no *model* através de *Active Record Callbacks*, como `after_create_commit`, **toda vez que o
-*model* for alterado** iremos disparar "publicações" de renderização parcial. Como por enquanto eu
-quero disparar as alterações feitas apenas através de requisições do usuário - não quero que
-`rails db:seed` dispare isso, por exemplo - optei por incluir no *controller*. Sendo assim em
-[app/controllers/chores_controller.rb](https://github.com/callmarx/LearningHotwire/blob/blog-part-2.2/app/controllers/chores_controller.rb){:target="_blank"},
-temos:
-```ruby
-# file app/controllers/chores_controller.rb of blog-part-2.2 branch
-class ChoresController < ApplicationController
-  before_action :set_chore, only: %i[ show edit update destroy ]
-  after_action :broadcast_insert, only: %i[create]
-  after_action :broadcast_remove, only: %i[destroy]
-
-  ...
-
-  private
-    ...
-    def broadcast_insert
-      return if @chore.errors.any?
-      Turbo::StreamsChannel.broadcast_append_to(
-        "chores",
-        target: "chores",
-        partial: "chores/chore",
-        locals: { chore: @chore }
-      )
-    end
-
-    def broadcast_remove
-      return unless @chore.destroyed?
-      Turbo::StreamsChannel.broadcast_remove_to(
-        "chores",
-        target: ActionView::RecordIdentifier.dom_id(@chore)
-      )
-    end
-end
-```
-
-Como os métodos privados `broadcast_insert` e `broadcast_remove` acima já fazem a inserção e
-exclusão dos *chores* não precisamos mais fazer isso nas *views* `*.turbo_stream.erb` que criamos
-na subparte anterior, por isso para essa parte final eu excluí a *view*
-`app/views/destroy.turbo_stream.erb` e mantive
-[app/views/chores/create.turbo_stream.erb](https://github.com/callmarx/LearningHotwire/blob/blog-part-2.2/app/views/chores/create.turbo_stream.erb){:target="_blank"},
-com apenas:
-```erb
-<!-- file app/views/chores/create.turbo_stream.erb of blog-part-2.2 branch -->
-<%= turbo_stream.replace "chore_form", partial: "chores/form", locals: { chore: Chore.new } %>
-```
-**OBS**: Não sei se você notou, mas não estamos "publicando" o *replace* do *form* via *ActionCable*
-como as outras renderizações parciais. Mantive aqui o `turbo_stream` para sessão corrente apenas, o
-que faz total sentido já que não precisamos limpar o *form* nas outras sessões, inclusive se
-fizermos isso poderemos apagar o *form* de um outro usuário que o está preenchendo e não submeteu
-ainda.
-{: .notice--info}
-
-Pronto! Basta subir o projeto com `bin/dev` e acessar em mais de uma janela
-<http://localhost:3000/chores>{:target="_blank"}, você deve obter este resultado final:
-{% include video id="1DmtL-9P9SylUJet2MJjMrqiHCySCCng5" provider="google-drive" %}
-
-<div class="tenor-gif-embed" data-postid="14693686" data-share-method="host" data-aspect-ratio="1.78771" data-width="100%">
-  <a href="https://tenor.com/view/nice-finger-gone-well-done-happy-woohoo-gif-14693686"></a>
-</div>
-<script type="text/javascript" async src="https://tenor.com/embed.js"></script>
+### Mais ações com Stimulus
+Por enquanto o modal só é fechado ao clicar no ícone "x", precisariamos, no mínimo, fechar também
+após a inserção bem sucedida de um *chore*.
