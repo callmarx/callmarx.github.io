@@ -38,15 +38,15 @@ algumas [*branches*](https://github.com/callmarx/LearningHotwire/branches/all){:
 representam as partes abordadas aqui.
 
 ## Etapa 3 - Hotwire Stimulus
-Nesta etapa final, implemento um modal (o famoso pop-up que não é exatamente um pop-up) do qual
+Nesta etapa final, implemento um *modal* (o famoso pop-up que não é exatamente um pop-up) do qual
 será controlado por JS através do Hotwire Stimulus. Dividi essa etapa em 3 *branches*:
 * [blog-part-3.1](https://github.com/callmarx/LearningHotwire/blob/blog-part-3.1){:target="_blank"} -
   Em que uso a tag Turbo Frame e o Stimulus para renderizar um html dinamicamente e depois remove-lo;
 * [blog-part-3.2](https://github.com/callmarx/LearningHotwire/blob/blog-part-3.2){:target="_blank"} -
-  Em que uso um pouco mais de Tailwind para fazer o modal e o Stimulus para lidar com outras ações necessárias;
+  Em que uso um pouco mais de Tailwind para fazer o *modal* e o Stimulus para lidar com outras ações necessárias;
 * [blog-part-3.4](https://github.com/callmarx/LearningHotwire/blob/blog-part-3.3){:target="_blank"} -
   Subparte bonus, em que uso a gema [ViewComponent](https://viewcomponent.org/){:target="_blank"}
-  para agrupar melhor o código do modal.
+  para agrupar melhor o código do *modal*.
 
 ### Breve introdução sobre Stimulus no Rails
 
@@ -129,7 +129,7 @@ será renderizado dinamicamente dentro desta tag.
 
 
 **OBS**: Eu coloquei `<%= turbo_frame_tag "modal" %>` em "app/views/layouts/application.html.erb"
-porque eu espero poder renderizar o modal de inserção em qualquer página da minha aplicação. Como
+porque eu espero poder renderizar o *modal* de inserção em qualquer página da minha aplicação. Como
 se trata de Kanban, o usuário provavelmente gostaria de inserir um novo card em qualquer página,
 mas isso poderia ser feito, por exemplo, apenas quando estamos vendo todos os cards, ou seja, em
 "app/views/chores/index.html.erb".
@@ -148,7 +148,7 @@ $ rails generate stimulus chore-modal
 ```
 
 Como observado antes, não é possivel "remover" o html inserido dinamicamente pelo turbo-frame,
-então vamos fazer isso como nosso primeiro método de *ChoreModalController*, em
+então vamos fazer isso como nosso primeiro método de `ChoreModalController`, em
 [app/javascript/controllers/chore_modal_controller.js](https://github.com/callmarx/LearningHotwire/blob/blog-part-3.1/app/javascript/controllers/chore_modal_controller.js){:target="_blank"}:
 ```js
 // file app/javascript/controllers/chore_modal_controller.js of blog-part-3.1 branch
@@ -170,11 +170,11 @@ export default class extends Controller {
 ```
 Para fechar o formulário de inserção eu simplesmente removo o atributo `src` do elemento pai, que
 no caso precisará ser o da tag `<turbo-frame ...></turbo-frame>`. Note também que incluí alguns
-`console.log()` para mostrar quando estamos passando por cada parte de *ChoreModalController*
+`console.log()` para mostrar quando estamos passando por cada parte de `ChoreModalController`.
 
 Agora precisamos dizer em que parte do nosso html iremos chama-lo, para isso basta envolver sob
 alguma `div` com `data-controller="chore-modal"`. Também é necessario dizer onde estará a ação que
-invocará *ChoreModalController#hideModal* e isso é feito com `data-action="chore-modal#hideModal"`.
+invocará `ChoreModalController#hideModal` e isso é feito com `data-action="chore-modal#hideModal"`.
 Sendo assim,
 [app/views/chores/new.html.erb](https://github.com/callmarx/LearningHotwire/blob/blog-part-3.1/app/views/chores/new.html.erb){:target="_blank"}
 ficou:
@@ -198,7 +198,7 @@ No caso, o erb `<%= button_tag ... %>` irá resultar no seguinte html:
   class="fixed right-0 rounded-lg p-3 m-2 bg-red-700 text-white">Close</button>
 ```
 e como `<%= tag.div data: { controller: "chore-modal" } do %>` está dentro de
-`<%= turbo_frame_tag "modal" do %>`, *ChoreModalController#hideModal* irá remover `src` da tag
+`<%= turbo_frame_tag "modal" do %>`, `ChoreModalController#hideModal` irá remover `src` da tag
 `<turbo-frame id="modal" ...></turbo-frame>`.
 
 O resultado esperado é o seguinte:
@@ -213,7 +213,7 @@ Tudo o que foi feito até aqui é o que corresponde a *branch*
 ### Mas e o modal?
 
 Bem, o formulário de inserção por enquanto é incluido no topo da página movendo todo resto para
-baixo. Definitivamente não é um modal ~~e nada bonito ou agradavel~~. Para isso basta utilizarmos o
+baixo. Definitivamente não é um *modal* ~~e nada bonito ou agradavel~~. Para isso basta utilizarmos o
 Tailwind.
 
 Em
@@ -225,8 +225,167 @@ temos:
   <%= tag.div data: {
       controller: "chore-modal",
     },
+    # include the following classes
     class: "z-40 fixed flex justify-center inset-0 bg-gray-600 bg-opacity-50 h-screen w-screen" do %>
-    <%= tag.div data: { chore_modal_target: "form" },
+    <div class="flex flex-col p-4 m-12 rounded-md w-2/3 h-2/3 bg-slate-200 rounded-md hover:bg-slate-400 transition duration-600 ease-linear">
+      <div class="flex justify-between">
+        <div></div>
+        <div></div>
+        <!-- replace button to a better one -->
+        <%= button_tag data: { action: "chore-modal#hideModal" }, type: "button", class: "flex-none w-8 h-8 text-slate-600 hover:text-black transition-all duration-600 ease-in-out" do %>
+          <svg xmlns="http://www.w3.org/2000/svg" width="32" height="32" fill="currentColor" viewBox="0 0 16 16">
+            <path d="M16 8A8 8 0 1 1 0 8a8 8 0 0 1 16 0zM5.354 4.646a.5.5 0 1 0-.708.708L7.293 8l-2.647 2.646a.5.5 0 0 0 .708.708L8 8.707l2.646 2.647a.5.5 0 0 0 .708-.708L8.707 8l2.647-2.646a.5.5 0 0 0-.708-.708L8 7.293 5.354 4.646z"/>
+          </svg>
+        <% end %>
+      </div>
+      <%= render "form", chore: @chore %>
+    </div>
+  <% end %>
+<% end %>
+```
+
+Com as classes `fixed` e `z-40`, o tailwind irá montar um CSS que ira sobrepor o formulário em cima
+do resto do conteúdo da página. Somado com `h-screen`, `w-screen`, `bg-gray-600` e `bg-opacity-50`,
+siginifica que esse *modal* ocupara a tela toda, mas com a cor cinza e transparente de background.
+Também aproveitei para trocar o botão vermelho ~~gritante, que ficou horrivel,~~ de "Close" por um
+ícone "x" cinza escuro mais discreto no canto superior direito, ficando assim:
+![tailwind modal](/assets/posts/tailwind-modal.webp){: .align-center}
+
+### Mais ações com Stimulus
+Por enquanto o *modal* só é fechado ao clicar no ícone "x", precisariamos, no mínimo, fechar também
+após a inserção bem sucedida de um *chore*. Felizmente, o pacote Hotwire Turbo emite uma série de
+eventos que permitem rastrear o ciclo de navegação. A lista completa desses eventos pode ser
+verificada [aqui](https://turbo.hotwired.dev/reference/events){:target="_blank"}.
+
+Para o nosso caso, temos o evento `turbo:submit-end` que é disparado logo depois que uma submissão
+de formulário é feita, armazenando as propriedade de `FormSubmissionResult`, ou seja, o resultado
+da submissão, em `event.detail`. Assim, em
+[app/javascript/controllers/chore_modal_controller.js](https://github.com/callmarx/LearningHotwire/blob/blog-part-3.2/app/javascript/controllers/chore_modal_controller.js){:target="_blank"},
+temos:
+```js
+// file app/javascript/controllers/chore_modal_controller.js of blog-part-3.2 branch
+import { Controller } from "@hotwired/stimulus"
+
+// Connects to data-controller="chore-modal"
+export default class extends Controller {
+  // action: "chore-modal#hideModal"
+  hideModal() {
+    this.element.parentElement.removeAttribute("src")
+    this.element.remove()
+  }
+
+  // action: "turbo:submit-end->chore-modal#submitEnd"
+  submitEnd(e) { // include this method
+    if (e.detail.success) {
+      this.hideModal()
+    }
+  }
+}
+```
+Perceba que verificamos se `e.detail` foi bem sucedido para então chamar o método `hideModal()`.
+Vale ressaltar que o método nomeado `submitEnd()` **não esta relacionado** ainda ao evento
+`turbo:submit-end`. Isso deve ser feito no atributo `data-action` onde `ChoreModalController` é
+chamado, ou seja, em
+[app/views/chores/new.html.erb](https://github.com/callmarx/LearningHotwire/blob/blog-part-3.2/app/views/chores/new.html.erb){:target="_blank"}:
+```erb
+<!-- file app/views/chores/new.html.erb of blog-part-3.2 branch -->
+<%= turbo_frame_tag "modal" do %>
+  <%= tag.div data: {
+      controller: "chore-modal",
+      action: "turbo:submit-end->chore-modal#submitEnd" # include this
+    },
+    class: "z-40 fixed flex justify-center inset-0 bg-gray-600 bg-opacity-50 h-screen w-screen" do %>
+    <div class="flex flex-col p-4 m-12 rounded-md w-2/3 h-2/3 bg-slate-200 rounded-md hover:bg-slate-400 transition duration-600 ease-linear">
+      <div class="flex justify-between">
+        <div></div>
+        <div></div>
+        <%= button_tag data: { action: "chore-modal#hideModal" }, type: "button", class: "flex-none w-8 h-8 text-slate-600 hover:text-black transition-all duration-600 ease-in-out" do %>
+          <svg xmlns="http://www.w3.org/2000/svg" width="32" height="32" fill="currentColor" viewBox="0 0 16 16">
+            <path d="M16 8A8 8 0 1 1 0 8a8 8 0 0 1 16 0zM5.354 4.646a.5.5 0 1 0-.708.708L7.293 8l-2.647 2.646a.5.5 0 0 0 .708.708L8 8.707l2.646 2.647a.5.5 0 0 0 .708-.708L8.707 8l2.647-2.646a.5.5 0 0 0-.708-.708L8 7.293 5.354 4.646z"/>
+          </svg>
+        <% end %>
+      </div>
+      <%= render "form", chore: @chore %>
+    </div>
+  <% end %>
+<% end %>
+```
+
+Quando incluo `<div ... data-action="turbo:submit-end->chore-modal#submitEnd" ...>`, agora sim,
+estou dizendo para chamar `ChoreModalController#submitEnd()` quando o evento `turbo:submit-end` for
+disparado. Para testar que inserção mal sucedida de um *chore* não feche o *modal*, inclui o seguinte
+validador em
+[app/models/chore.rb](https://github.com/callmarx/LearningHotwire/blob/blog-part-3.2/app/models/chore.rb){:target="_blank"}:
+```ruby
+# file app/models/chore.rb of blog-part-3.2 branch
+
+class Chore < ApplicationRecord
+  validates :title, presence: true # include this
+end
+```
+
+O resultado ficou o seguinte:
+![Turbo submit-end event](/assets/posts/gifs/turbo--submit-end--event.gif){: .align-center}
+
+
+Aproveitei outros eventos para implementar mais situações em que o usuário gostaria que o *modal*
+feche, no caso ao pressionar a tecla ESC e ao clicar "fora" do *modal*, ou seja, no background cinza
+transparente. Em
+[app/javascript/controllers/chore_modal_controller.js](https://github.com/callmarx/LearningHotwire/blob/blog-part-3.2/app/javascript/controllers/chore_modal_controller.js){:target="_blank"}:
+```js
+// file app/javascript/controllers/chore_modal_controller.js of blog-part-3.2 branch
+import { Controller } from "@hotwired/stimulus"
+
+// Connects to data-controller="chore-modal"
+export default class extends Controller {
+  static targets = ["form"]
+
+  // hide modal
+  // action: "chore-modal#hideModal"
+  hideModal() {
+    this.element.parentElement.removeAttribute("src")
+    this.element.remove()
+  }
+
+  // hide modal on successful form submission
+  // action: "turbo:submit-end->chore-modal#submitEnd"
+  submitEnd(e) {
+    if (e.detail.success) {
+      this.hideModal()
+    }
+  }
+
+  // hide modal when clicking ESC
+  // action: "keyup@window->chore-modal#closeWithKeyboard"
+  closeWithKeyboard(e) {
+    if (e.code == "Escape") {
+      this.hideModal()
+    }
+  }
+
+  // hide modal when clicking outside of modal
+  // action: "click@window->chore-modal#closeBackground"
+  closeBackground(e) {
+    if (e && this.formTarget.contains(e.target)) { // check with user are clicking inside the form
+      return
+    }
+    this.hideModal()
+  }
+}
+```
+
+E em
+[app/views/chores/new.html.erb](https://github.com/callmarx/LearningHotwire/blob/blog-part-3.2/app/views/chores/new.html.erb){:target="_blank"}:
+```erb
+<!-- file app/views/chores/new.html.erb of blog-part-3.2 branch -->
+<%= turbo_frame_tag "modal" do %>
+  <%= tag.div data: {
+      controller: "chore-modal",
+      # include all other actions separated with espace
+      action: "turbo:submit-end->chore-modal#submitEnd keyup@window->chore-modal#closeWithKeyboard click@window->chore-modal#closeBackground"
+    },
+    class: "z-40 fixed flex justify-center inset-0 bg-gray-600 bg-opacity-50 h-screen w-screen" do %>
+    <%= tag.div data: { chore_modal_target: "form" }, # include this data
       class: "flex flex-col p-4 m-12 rounded-md w-2/3 h-2/3 bg-slate-200 rounded-md hover:bg-slate-400 transition duration-600 ease-linear" do %>
       <div class="flex justify-between">
         <div></div>
@@ -243,13 +402,4 @@ temos:
 <% end %>
 ```
 
-Com as classes `fixed` e `z-40`, o tailwind irá montar um CSS que ira sobrepor o formulário em cima
-do resto do conteúdo da página. Somado com `h-screen`, `w-screen`, `bg-gray-600` e `bg-opacity-50`,
-siginifica que esse modal ocupara a tela toda, mas com a cor cinza e transparente de background.
-Também aproveitei para trocar o botão vermelho ~~gritante, que ficou horrivel,~~ de "Close" por um
-ícone "x" cinza escuro mais discreto no canto superior direito, ficando assim:
-![tailwind modal](/assets/posts/tailwind-modal.webp){: .align-center}
 
-### Mais ações com Stimulus
-Por enquanto o modal só é fechado ao clicar no ícone "x", precisariamos, no mínimo, fechar também
-após a inserção bem sucedida de um *chore*.
