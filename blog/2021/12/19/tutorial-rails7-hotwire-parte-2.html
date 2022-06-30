@@ -1,0 +1,1001 @@
+<!doctype html>
+<!--
+  Minimal Mistakes Jekyll Theme 4.24.0 by Michael Rose
+  Copyright 2013-2020 Michael Rose - mademistakes.com | @mmistakes
+  Free for personal and commercial use under the MIT license
+  https://github.com/mmistakes/minimal-mistakes/blob/master/LICENSE
+-->
+<html lang="pt" class="no-js">
+  <head>
+    <meta charset="utf-8">
+
+<!-- begin _includes/seo.html --><title>Tutorial: Rails7, Tailwind e Hotwire - Parte 2 - CallMarx</title>
+<meta name="description" content="Parte 2: Renderização parcial com Hotwire Turbo - Tutorial sobre Rails 7 com esbuild, tailwind e Hotwire (Turbo e Stimulus). Como desenvolver um aplicação estilo Kanban, com cards/tarefas e persistência simultânea via websockets.">
+
+
+  <meta name="author" content="Eugenio Augusto Jimenes">
+  
+  <meta property="article:author" content="Eugenio Augusto Jimenes">
+  
+
+
+<meta property="og:type" content="article">
+<meta property="og:locale" content="pt_BR">
+<meta property="og:site_name" content="CallMarx">
+<meta property="og:title" content="Tutorial: Rails7, Tailwind e Hotwire - Parte 2">
+<meta property="og:url" content="https://callmarx.github.io/blog/2021/12/19/tutorial-rails7-hotwire-parte-2.html">
+
+
+  <meta property="og:description" content="Parte 2: Renderização parcial com Hotwire Turbo - Tutorial sobre Rails 7 com esbuild, tailwind e Hotwire (Turbo e Stimulus). Como desenvolver um aplicação estilo Kanban, com cards/tarefas e persistência simultânea via websockets.">
+
+
+
+  <meta property="og:image" content="https://callmarx.github.io/assets/posts/hotwire-turbo.webp">
+
+
+
+  <meta name="twitter:site" content="@leminski_se">
+  <meta name="twitter:title" content="Tutorial: Rails7, Tailwind e Hotwire - Parte 2">
+  <meta name="twitter:description" content="Parte 2: Renderização parcial com Hotwire Turbo - Tutorial sobre Rails 7 com esbuild, tailwind e Hotwire (Turbo e Stimulus). Como desenvolver um aplicação estilo Kanban, com cards/tarefas e persistência simultânea via websockets.">
+  <meta name="twitter:url" content="https://callmarx.github.io/blog/2021/12/19/tutorial-rails7-hotwire-parte-2.html">
+
+  
+    <meta name="twitter:card" content="summary_large_image">
+    <meta name="twitter:image" content="https://callmarx.github.io/assets/posts/hotwire-turbo.webp">
+  
+
+  
+
+
+
+  <meta property="article:published_time" content="2021-12-19T14:42:03-03:00">
+
+
+
+
+
+
+<link rel="canonical" href="https://callmarx.github.io/blog/2021/12/19/tutorial-rails7-hotwire-parte-2.html">
+
+
+
+
+<script type="application/ld+json">
+  {
+    "@context": "https://schema.org",
+    
+      "@type": "Person",
+      "name": null,
+      "url": "https://callmarx.github.io/"
+    
+  }
+</script>
+
+
+
+
+
+
+
+<!-- end _includes/seo.html -->
+
+
+
+  <link href="/feed.xml" type="application/atom+xml" rel="alternate" title="CallMarx Feed">
+
+
+<!-- https://t.co/dKP3o1e -->
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+<script>
+  document.documentElement.className = document.documentElement.className.replace(/\bno-js\b/g, '') + ' js ';
+</script>
+
+<!-- For all browsers -->
+<link rel="stylesheet" href="/assets/css/main.css">
+<link rel="preload" href="https://cdn.jsdelivr.net/npm/@fortawesome/fontawesome-free@5/css/all.min.css" as="style" onload="this.onload=null;this.rel='stylesheet'">
+<noscript><link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@fortawesome/fontawesome-free@5/css/all.min.css"></noscript>
+
+
+
+    <!-- start custom head snippets -->
+
+<!-- insert favicons. use https://realfavicongenerator.net/ -->
+
+<!-- end custom head snippets -->
+
+  </head>
+
+  <body class="layout--single">
+    <nav class="skip-links">
+  <ul>
+    <li><a href="#site-nav" class="screen-reader-shortcut">Skip to primary navigation</a></li>
+    <li><a href="#main" class="screen-reader-shortcut">Skip to content</a></li>
+    <li><a href="#footer" class="screen-reader-shortcut">Skip to footer</a></li>
+  </ul>
+</nav>
+
+    <!--[if lt IE 9]>
+<div class="notice--danger align-center" style="margin: 0;">You are using an <strong>outdated</strong> browser. Please <a href="https://browsehappy.com/">upgrade your browser</a> to improve your experience.</div>
+<![endif]-->
+
+    
+
+<div class="masthead">
+  <div class="masthead__inner-wrap">
+    <div class="masthead__menu">
+      <nav id="site-nav" class="greedy-nav">
+        
+        <a class="site-title" href="/">
+          CallMarx
+          
+        </a>
+        <ul class="visible-links"><li class="masthead__menu-item">
+              <a href="/tags/">Posts por tags</a>
+            </li><li class="masthead__menu-item">
+              <a href="/about/">Sobre mim</a>
+            </li></ul>
+        
+        <button class="search__toggle" type="button">
+          <span class="visually-hidden">Buscar</span>
+          <i class="fas fa-search"></i>
+        </button>
+        
+        <button class="greedy-nav__toggle hidden" type="button">
+          <span class="visually-hidden">Toggle menu</span>
+          <div class="navicon"></div>
+        </button>
+        <ul class="hidden-links hidden"></ul>
+      </nav>
+    </div>
+  </div>
+</div>
+
+
+    <div class="initial-content">
+      
+
+
+
+<div id="main" role="main">
+  
+  <div class="sidebar sticky">
+  
+
+
+<div itemscope itemtype="https://schema.org/Person">
+
+  
+    <div class="author__avatar">
+      
+        <img src="/assets/eu-e-nila.webp" alt="Eugenio Augusto Jimenes" itemprop="image">
+      
+    </div>
+  
+
+  <div class="author__content">
+    
+      <h3 class="author__name" itemprop="name">Eugenio Augusto Jimenes</h3>
+    
+    
+      <div class="author__bio" itemprop="description">
+        <p>Nerd, disléxico, viciado-hipster em café, desenvolvedor, linux fanboy e esquerdopata convicto - CallMarx, sacou?</p>
+
+      </div>
+    
+  </div>
+
+  <div class="author__urls-wrapper">
+    <button class="btn btn--inverse">Contatos</button>
+    <ul class="author__urls social-icons">
+      
+        <li itemprop="homeLocation" itemscope itemtype="https://schema.org/Place">
+          <i class="fas fa-fw fa-map-marker-alt" aria-hidden="true"></i> <span itemprop="name">São Paulo - SP</span>
+        </li>
+      
+
+      
+        
+          
+            <li><a href="mailto:eugeniojimenes@gmail" rel="nofollow noopener noreferrer"><i class="fas fa-fw fa-envelope-square" aria-hidden="true"></i><span class="label">Email</span></a></li>
+          
+        
+          
+            <li><a href="https://github.com/callmarx" rel="nofollow noopener noreferrer"><i class="fab fa-fw fa-github" aria-hidden="true"></i><span class="label">GitHub</span></a></li>
+          
+        
+          
+            <li><a href="https://twitter.com/leminski_se" rel="nofollow noopener noreferrer"><i class="fab fa-fw fa-twitter" aria-hidden="true"></i><span class="label">Twitter</span></a></li>
+          
+        
+          
+            <li><a href="https://www.linkedin.com/in/eugenio-augusto-jimenes/" rel="nofollow noopener noreferrer"><i class="fab fa-fw fa-linkedin" aria-hidden="true"></i><span class="label">LinkedIn</span></a></li>
+          
+        
+      
+
+      
+
+      
+
+      
+
+      
+
+      
+
+      
+
+      
+
+      
+
+      
+
+      
+
+      
+
+      
+
+      
+
+      
+
+      
+
+      
+
+      
+
+      
+
+      
+
+      
+
+      
+
+      
+
+      
+
+      
+
+      <!--
+  <li>
+    <a href="http://link-to-whatever-social-network.com/user/" itemprop="sameAs" rel="nofollow noopener noreferrer">
+      <i class="fas fa-fw" aria-hidden="true"></i> Custom Social Profile Link
+    </a>
+  </li>
+-->
+    </ul>
+  </div>
+</div>
+
+  
+  </div>
+
+
+
+  <article class="page" itemscope itemtype="https://schema.org/CreativeWork">
+    <meta itemprop="headline" content="Tutorial: Rails7, Tailwind e Hotwire - Parte 2">
+    <meta itemprop="description" content="Na parte anteriordeste tutorial eu expliquei como customizar e utilizar o Tailwind sem uma linha sequer de CSS eJavaScript. Agora vou abordar um pouco sobre o pacoteHotwire Turbo.">
+    <meta itemprop="datePublished" content="2021-12-19T14:42:03-03:00">
+    
+
+    <div class="page__inner-wrap">
+      
+        <header>
+          <h1 id="page-title" class="page__title" itemprop="headline">Tutorial: Rails7, Tailwind e Hotwire - Parte 2
+</h1>
+          
+
+  <p class="page__meta">
+    
+      
+      <span class="page__meta-date">
+        <i class="far fa-calendar-alt" aria-hidden="true"></i>
+        
+        <time datetime="2021-12-19T14:42:03-03:00">2021-12-19</time>
+      </span>
+    
+
+    <span class="page__meta-sep"></span>
+
+    
+      
+      
+
+      <span class="page__meta-readtime">
+        <i class="far fa-clock" aria-hidden="true"></i>
+        
+          17 minuto(s) de leitura
+        
+      </span>
+    
+  </p>
+
+
+        </header>
+      
+
+      <section class="page__content" itemprop="text">
+        
+        <p><img src="/assets/posts/hotwire-turbo.webp" alt="Hotwire Turbo" class="align-center" /></p>
+
+<p>Na <a href="/blog/2021/12/09/tutorial-rails7-hotwire-parte-1.html" target="_blank">parte anterior</a>
+deste tutorial eu expliquei como customizar e utilizar o Tailwind sem uma linha sequer de CSS e
+JavaScript. Agora vou abordar um pouco sobre o pacote
+<a href="https://turbo.hotwired.dev" target="_blank">Hotwire Turbo</a>.
+<!-- excerpt-separator --></p>
+
+<h2 id="objetivo-geral">Objetivo Geral</h2>
+<p>A meta é desenvolver (e aprender) utilizando Rails 7, esbuild, Tailwind e Hotwire (Turbo e
+Stimulus), mas meu foco será mais sobre o pacote Hotwire e como ele pode nos ajudar. Conforme
+avanço nos estudos e na implementação, vou complementando este tutorial. Por enquanto temos:</p>
+<ul>
+  <li><a href="/blog/2021/12/07/tutorial-rails7-hotwire.html" target="_blank">Parte 0: Rails 7</a></li>
+  <li><a href="/blog/2021/12/09/tutorial-rails7-hotwire-parte-1.html" target="_blank">Parte 1: Tailwind</a></li>
+  <li><a href="#etapa-2---hotwire-turbo">Parte 2: Hotwire Turbo</a> → página atual</li>
+  <li><del>Parte 3: Hotwire Stimulus</del> → em breve</li>
+</ul>
+
+<p>O pano de fundo é uma aplicação estilo Kanban, com um quadro em que podemos incluir, ver, editar e
+excluir os cards/tarefas e isso ser persistido simultaneamente via <em>websockets</em> para todas as
+sessões abertas da aplicação. Todo código esta disponível neste
+<a href="https://github.com/callmarx/LearningHotwire" target="_blank">repositório</a>. Note que incluí
+algumas <a href="https://github.com/callmarx/LearningHotwire/branches/all" target="_blank"><em>branches</em></a> que
+representam as partes abordadas aqui.</p>
+
+<h2 id="etapa-2---hotwire-turbo">Etapa 2 - Hotwire Turbo</h2>
+<p>Nesta etapa explico sobre a proposta desta ferramenta e implemento o modo <em>render</em> <code class="language-plaintext highlighter-rouge">turbo_stream</code>
+juntamente com o <code class="language-plaintext highlighter-rouge">broadcast</code> via <em>ActionCable</em>. O resultado desta etapa eu dividi em duas partes:
+a <em>branch</em>
+<a href="https://github.com/callmarx/LearningHotwire/tree/blog-part-2.1" target="_blank">blog-part-2.1</a>,
+em que uso apenas o <code class="language-plaintext highlighter-rouge">turbo_stream</code> sem <code class="language-plaintext highlighter-rouge">broadcast</code>, e a final com <code class="language-plaintext highlighter-rouge">broadcast</code> na <em>branch</em>
+<a href="https://github.com/callmarx/LearningHotwire/tree/blog-part-2.2" target="_blank">blog-part-2.2</a>.</p>
+
+<h3 id="conceitualmente-turbina-o-que">Conceitualmente: Turbina o que?</h3>
+<p>Consultando a introdução do
+<a href="https://turbo.hotwired.dev/handbook/introduction" target="_blank">Handbook</a>, e fazendo uma
+tradução livre, conceitualmente temos um pacote que</p>
+<blockquote>
+  <p>Agrupa uma série de ferramentas para criar aplicações web velozes, modernas e de aprimoramento
+progressivo, sem muito JavaScript.</p>
+</blockquote>
+
+<p>Talvez a tradução de
+<a href="https://www.freecodecamp.org/news/what-is-progressive-enhancement-and-why-it-matters-e80c7aaf834a/" target="_blank"><em>Progressive Enhancement</em></a> -
+“aprimoramento progressivo” - não soe muito claro. Criado em 2003, trata-se basicamente de uma
+estratégia de design, de arquitetura web, que enfatiza o carregamento progressivo da página,
+priorizando o conteúdo principal (HTML) e distribuindo os demais (CSS, JavaScript, HTML adicionais
+etc) em outras camadas de apresentação/carregamento.</p>
+
+<p>Continuando minha tradução livre sobre as diretrizes do <em>Hotwire Turbo</em></p>
+<blockquote>
+  <p>Oferece uma alternativa mais simples contra a predominância das estruturas do lado do cliente,
+das quais colocam toda a lógica no front-end, confinando o lado do servidor da aplicação a ser
+pouco mais do que uma API JSON.</p>
+</blockquote>
+
+<p>Este é o <strong>trecho que mais me chamou atenção</strong>, me conquistou, me incentivou a estudar e querer
+utilizar isso. A “<em>predominância das estruturas do lado do cliente</em>” é algo que vem me chamando
+atenção nos últimos anos, parece que <strong>de repente toda área do back-end foi “<em>confinada</em>” à API
+JSON</strong>. Porém, com todo dinamismo que hoje em dia uma página web precisa, como processamento de
+dados de acordo com o comportamento do usuário e da navegação, isso acabou sendo feito pelo lado
+cliente, front-end, via JavaScript com bibliotecas como jQuery. Como determinadas lógicas desse
+processamento devem estar protegidas no back-end, não podendo serem completamente expostas no
+front-end, ou seja, não podendo serem totalmente feitas no lado cliente da aplicação, <strong>nos
+deparamos eventualmente com “<em>espelhamentos da lógica em ambos os lados</em>“</strong>. E as diretrizes
+continuam exatamente nesse sentido.</p>
+<blockquote>
+  <p>Com Turbo você permite que o servidor entregue HTML diretamente (…). Você não lidera mais com
+espelhamento da lógica em ambos os lados da aplicação, permeados via JSON. Toda lógica reside no
+servidor e o navegador lida apenas com o HTML final.</p>
+</blockquote>
+
+<p>É o conceito de <em>HTML-Over-The-Wire</em> - Hotwire. 🤓</p>
+
+<h3 id="turbo-frame-vs-turbo-stream"><em>Turbo Frame</em> VS. <em>Turbo Stream</em></h3>
+<p>Algo que me confundiu bastante no começo foi a demora em entender a diferença entre <em>Turbo Frame</em> e
+<em>Turbo Stream</em>, pois tratam-se de abordagens diferentes. Felizmente eu encontrei essa tabela
+publicada pelo
+<a href="https://medium.com/pragmatic-programmers/turbo-frames-vs-turbo-streams-4eee1c574d23" target="_blank"><em>The Pragmatic Programmers</em></a>.</p>
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>---------------------------------------------------------------------------+---------------------------------------------------------------------------+
+                Turbo Frames                                 |                     Turbo Streams                                                       |
+----------------------------------------------------------------------------+--------------------------------------------------------------------------+
+Altera apenas um elemento do DOM por requisição.             |  Altera inúmeros elementos do DOM por requisição.
+Consegui apenas atualizar o elemento interno do HTML.        |  Pode concatenar ou preceder um novo elemento, além de atualizar ou remover um elemento.
+Afeta apenas elementos dentro da tag turbo-frame com DOM ID. |  Afeta qualquer tipo de elemento HTML desde que tenha um DOM ID para ser referenciado.
+É "ativado" na requisição dentro do elemento turbo-frame.    |  Ativado também via ActionCable/broadcasts.
+</code></pre></div></div>
+
+<p class="notice--info"><strong>OBS</strong>: Não pretendo utilizar o <em>Turbo Frames</em> neste projeto. Talvez eu repense isso para
+aproveitar a funcionalidade de <em>lazily load</em>, mas se for o caso adicionarei um post separado sobre
+isso.</p>
+
+<h3 id="começando-apenas-com-turbo-stream">Começando apenas com <em>Turbo Stream</em></h3>
+<p>Para explicar separadamente o modo <em>render</em> <code class="language-plaintext highlighter-rouge">turbo_stream</code> eu incluí o código desta subparte na
+<em>branch</em> <a href="https://github.com/callmarx/LearningHotwire/tree/blog-part-2.1" target="_blank">blog-part-2.1</a>.</p>
+
+<p>No <code class="language-plaintext highlighter-rouge">ChoresController</code> que geramos com <code class="language-plaintext highlighter-rouge">rails generate scaffold</code> na
+<a href="/blog/2021/12/09/tutorial-rails7-hotwire-parte-1.html#um-simples-scaffold" target="_blank">etapa anterior</a>
+deste tutorial, por padrão o Rails incluiu múltiplos formatos de renderização, no caso HTML e JSON.
+Como incluímos <code class="language-plaintext highlighter-rouge">gem "turbo-rails"</code> no Gemfile, temos acesso também à renderização via <em>Turbo Stream</em>,
+bastando adicionar <code class="language-plaintext highlighter-rouge">format.turbo_stream</code> dentro do bloco <code class="language-plaintext highlighter-rouge">respond_to do |format|</code>. Fazendo isso
+para os métodos <em>create</em> e <em>destroy</em>, temos em
+<a href="https://github.com/callmarx/LearningHotwire/blob/blog-part-2.1/app/controllers/chores_controller.rb" target="_blank">app/controllers/chores_controller.rb</a>:</p>
+<div class="language-ruby highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="c1"># file app/controllers/chores_controller.rb of blog-part-2.1 branch</span>
+<span class="k">class</span> <span class="nc">ChoresController</span> <span class="o">&lt;</span> <span class="no">ApplicationController</span>
+  <span class="o">...</span>
+  <span class="k">def</span> <span class="nf">create</span>
+    <span class="o">...</span>
+    <span class="n">respond_to</span> <span class="k">do</span> <span class="o">|</span><span class="nb">format</span><span class="o">|</span>
+      <span class="k">if</span> <span class="vi">@chore</span><span class="p">.</span><span class="nf">save</span>
+        <span class="nb">format</span><span class="p">.</span><span class="nf">turbo_stream</span> <span class="c1"># include this</span>
+        <span class="nb">format</span><span class="p">.</span><span class="nf">html</span> <span class="p">{</span> <span class="n">redirect_to</span> <span class="vi">@chore</span><span class="p">,</span> <span class="ss">notice: </span><span class="s2">"Chore was successfully created."</span> <span class="p">}</span>
+        <span class="nb">format</span><span class="p">.</span><span class="nf">json</span> <span class="p">{</span> <span class="n">render</span> <span class="ss">:show</span><span class="p">,</span> <span class="ss">status: :created</span><span class="p">,</span> <span class="ss">location: </span><span class="vi">@chore</span> <span class="p">}</span>
+      <span class="k">else</span>
+        <span class="nb">format</span><span class="p">.</span><span class="nf">html</span> <span class="p">{</span> <span class="n">render</span> <span class="ss">:new</span><span class="p">,</span> <span class="ss">status: :unprocessable_entity</span> <span class="p">}</span>
+        <span class="nb">format</span><span class="p">.</span><span class="nf">json</span> <span class="p">{</span> <span class="n">render</span> <span class="ss">json: </span><span class="vi">@chore</span><span class="p">.</span><span class="nf">errors</span><span class="p">,</span> <span class="ss">status: :unprocessable_entity</span> <span class="p">}</span>
+      <span class="k">end</span>
+    <span class="k">end</span>
+  <span class="k">end</span>
+  <span class="o">...</span>
+  <span class="k">def</span> <span class="nf">destroy</span>
+    <span class="vi">@chore</span><span class="p">.</span><span class="nf">destroy</span>
+    <span class="n">respond_to</span> <span class="k">do</span> <span class="o">|</span><span class="nb">format</span><span class="o">|</span>
+      <span class="nb">format</span><span class="p">.</span><span class="nf">turbo_stream</span> <span class="c1"># include this</span>
+      <span class="nb">format</span><span class="p">.</span><span class="nf">html</span> <span class="p">{</span> <span class="n">redirect_to</span> <span class="n">chores_url</span><span class="p">,</span> <span class="ss">notice: </span><span class="s2">"Chore was successfully destroyed."</span> <span class="p">}</span>
+      <span class="nb">format</span><span class="p">.</span><span class="nf">json</span> <span class="p">{</span> <span class="n">head</span> <span class="ss">:no_content</span> <span class="p">}</span>
+    <span class="k">end</span>
+  <span class="k">end</span>
+  <span class="o">...</span>
+<span class="k">end</span>
+</code></pre></div></div>
+
+<p>Para esse tipo de renderização também precisamos de arquivos dedicados em <code class="language-plaintext highlighter-rouge">app/views</code>, como o temos
+para HTML e JSON. Sendo assim, temos o seguinte
+<a href="https://github.com/callmarx/LearningHotwire/blob/blog-part-2.1/app/views/chores/create.turbo_stream.erb" target="_blank">app/views/chores/create.turbo_stream.erb</a>:</p>
+<div class="language-erb highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="c">&lt;!-- file app/views/chores/create.turbo_stream.erb of blog-part-2.1 branch --&gt;</span>
+<span class="cp">&lt;%=</span> <span class="n">turbo_stream</span><span class="p">.</span><span class="nf">append</span> <span class="s2">"chores"</span><span class="p">,</span> <span class="ss">partial: </span><span class="s2">"chores/chore"</span><span class="p">,</span> <span class="ss">locals: </span><span class="p">{</span> <span class="ss">chore: </span><span class="vi">@chore</span> <span class="p">}</span> <span class="cp">%&gt;</span>
+<span class="cp">&lt;%=</span> <span class="n">turbo_stream</span><span class="p">.</span><span class="nf">replace</span> <span class="s2">"chore_form"</span><span class="p">,</span> <span class="ss">partial: </span><span class="s2">"chores/form"</span><span class="p">,</span> <span class="ss">locals: </span><span class="p">{</span> <span class="ss">chore: </span><span class="no">Chore</span><span class="p">.</span><span class="nf">new</span> <span class="p">}</span> <span class="cp">%&gt;</span>
+</code></pre></div></div>
+
+<p>Como queremos ver a aplicação disso sem recarregar uma página inteira, ou seja, poder <strong>renderizar
+apenas uma parte</strong> da página, o faremos no <em>index</em> de <em>chores</em>. Por isso usamos os métodos
+<code class="language-plaintext highlighter-rouge">turbo_stream.append</code> e <code class="language-plaintext highlighter-rouge">turbo_stream.replace</code> acima apontados para o DOM ID da página, ou seja,
+respectivamente os primeiros argumentos <code class="language-plaintext highlighter-rouge">"chores"</code> e <code class="language-plaintext highlighter-rouge">"chore_form"</code> devem estar presentes na página
+<strong>completamente renderizada</strong> por
+<a href="https://github.com/callmarx/LearningHotwire/blob/blog-part-2.1/app/views/chores/index.html.erb" target="_blank">app/views/chores/index.html.erb</a>.
+Sendo isso assim precisamos incluir <code class="language-plaintext highlighter-rouge">id="chores"</code> na <code class="language-plaintext highlighter-rouge">&lt;div&gt;</code> que envolve a listagem dos <em>chores</em>:</p>
+<div class="language-erb highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="c">&lt;!-- file app/views/chores/index.html.erb  of blog-part-2.1 branch --&gt;</span>
+<span class="nt">&lt;div</span> <span class="err">...</span><span class="nt">&gt;</span>
+  <span class="nt">&lt;div</span> <span class="err">...</span><span class="nt">&gt;</span>
+    <span class="nt">&lt;div</span> <span class="na">id=</span><span class="s">"chores"</span> <span class="err">...</span><span class="nt">&gt;</span> <span class="c">&lt;!-- include id="chores" for turbo_stream.append --&gt;</span>
+      <span class="cp">&lt;%</span> <span class="vi">@chores</span><span class="p">.</span><span class="nf">each</span> <span class="k">do</span> <span class="o">|</span><span class="n">chore</span><span class="o">|</span> <span class="cp">%&gt;</span>
+        <span class="cp">&lt;%=</span> <span class="n">render</span> <span class="s2">"chore"</span><span class="p">,</span> <span class="n">chore</span><span class="ss">:chore</span> <span class="cp">%&gt;</span>
+      <span class="cp">&lt;%</span> <span class="k">end</span> <span class="cp">%&gt;</span>
+    <span class="nt">&lt;/div&gt;</span>
+  <span class="nt">&lt;/div&gt;</span>
+  <span class="nt">&lt;div</span> <span class="err">...</span><span class="nt">&gt;</span>               <span class="c">&lt;!-- don't include id="chore_form" here!         --&gt;</span>
+    <span class="cp">&lt;%=</span> <span class="n">render</span> <span class="s2">"form"</span><span class="p">,</span> <span class="ss">chore: </span><span class="vi">@chore</span> <span class="cp">%&gt;</span>
+  <span class="nt">&lt;/div&gt;</span>
+<span class="nt">&lt;/div&gt;</span>
+</code></pre></div></div>
+
+<p>Agora, para <code class="language-plaintext highlighter-rouge">id="chore_form"</code>, não podemos incluir na <code class="language-plaintext highlighter-rouge">&lt;div&gt;</code> que envolve
+<code class="language-plaintext highlighter-rouge">&lt;%= render "form", chore: @chore %&gt;</code> pois o método <code class="language-plaintext highlighter-rouge">turbo_stream.replace</code> <strong>substitui completamente
+o elemento</strong> e como o fazemos substituindo pelo <em>partial view</em>
+<a href="https://github.com/callmarx/LearningHotwire/blob/blog-part-2.1/app/views/chores/_form.html.erb" target="_blank">app/views/chores/_form.html.erb</a>
+essa <code class="language-plaintext highlighter-rouge">&lt;div&gt;</code> seria apagada, sendo assim devemos incluir <code class="language-plaintext highlighter-rouge">id="chore_form"</code> no próprio arquivo <em>form</em>:</p>
+<div class="language-erb highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="c">&lt;!-- file app/views/chores/_form.html.erb  of blog-part-2.1 branch --&gt;</span>
+<span class="cp">&lt;%=</span> <span class="n">form_with</span><span class="p">(</span><span class="ss">model: </span><span class="n">chore</span><span class="p">,</span> <span class="ss">id: </span><span class="s2">"chore_form"</span><span class="p">)</span> <span class="k">do</span> <span class="o">|</span><span class="n">form</span><span class="o">|</span> <span class="cp">%&gt;</span>
+  ...
+<span class="cp">&lt;%</span> <span class="k">end</span> <span class="cp">%&gt;</span>
+</code></pre></div></div>
+
+<p>Agora, para excluir um <em>chore</em> é ainda mais simples, temos o seguinte
+<a href="https://github.com/callmarx/LearningHotwire/blob/blog-part-2.1/app/views/chores/destroy.turbo_stream.erb" target="_blank">app/views/chores/destroy.turbo_stream.erb</a></p>
+<div class="language-erb highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="c">&lt;!-- file app/views/chores/destroy.turbo_stream.erb of blog-part-2.1 branch --&gt;</span>
+<span class="cp">&lt;%=</span> <span class="n">turbo_stream</span><span class="p">.</span><span class="nf">remove</span> <span class="n">dom_id</span><span class="p">(</span><span class="vi">@chore</span><span class="p">)</span> <span class="cp">%&gt;</span>
+</code></pre></div></div>
+
+<p>Da mesma forma, devemos incluir o DOM ID, mas no caso um específico para cada <em>chore</em>, por isso o
+<code class="language-plaintext highlighter-rouge">dom_id(@chore)</code>. Além disso, também precisamos editar o <code class="language-plaintext highlighter-rouge">&lt;button&gt;</code> do ícone de exclusão para
+apontar para o método <em>destroy</em> do <em>controller</em>, sendo assim em:
+<a href="https://github.com/callmarx/LearningHotwire/blob/blog-part-2.1/app/views/chores/_chore.html.erb" target="_blank">app/views/chores/_chore.html.erb</a></p>
+<div class="language-erb highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="c">&lt;!-- file app/views/chores/_chore.html.erb of blog-part-2.1 branch --&gt;</span>
+<span class="nt">&lt;div</span> <span class="na">id=</span><span class="s">"</span><span class="cp">&lt;%=</span> <span class="n">dom_id</span><span class="p">(</span><span class="n">chore</span><span class="p">)</span> <span class="cp">%&gt;</span><span class="s">"</span> <span class="err">...</span><span class="nt">&gt;</span> <span class="c">&lt;!-- include dom_id(chore) for turbo_stream.remove --&gt;</span>
+  <span class="nt">&lt;div</span> <span class="err">...</span><span class="nt">&gt;</span>
+    ...
+    <span class="nt">&lt;div</span> <span class="err">...</span><span class="nt">&gt;</span>
+      ...
+      <span class="cp">&lt;%=</span> <span class="n">button_to</span> <span class="n">chore_path</span><span class="p">(</span><span class="n">chore</span><span class="p">),</span> <span class="ss">method: :delete</span><span class="p">,</span> <span class="ss">class: </span><span class="o">...</span> <span class="k">do</span> <span class="cp">%&gt;</span> <span class="c">&lt;!-- make button point to delete method --&gt;</span>
+        <span class="nt">&lt;svg</span> <span class="err">...</span><span class="nt">&gt;</span>
+          ...
+        <span class="nt">&lt;/svg&gt;</span>
+      <span class="cp">&lt;%</span> <span class="k">end</span> <span class="cp">%&gt;</span>
+      ...
+</code></pre></div></div>
+
+<p>Agora, ao remover um <em>chore</em>, também teremos uma <strong>renderização parcialmente</strong> que remove o HTML do
+<em>chore</em> excluído sem recarregar toda a página. O resultado final desta subparte, ao criar ou
+excluir um <em>chore</em> em <a href="http://localhost:3000/chores" target="_blank">http://localhost:3000/chores</a>, é o seguinte:</p>
+
+<!-- Courtesy of embedresponsively.com //-->
+
+<div class="responsive-video-container">
+    <iframe src="https://drive.google.com/file/d/1pIKgDLLIK4LFVMVSQmc-p0xUKjYtiqNI/preview" frameborder="0" webkitallowfullscreen="" mozallowfullscreen="" allowfullscreen=""></iframe>
+  </div>
+
+<p class="notice--info"><strong>OBS</strong>: Note que não há um carregamento total da página a cada inclusão ou exclusão, a página é
+recarregada parcialmente via
+<a href="https://developer.mozilla.org/pt-BR/docs/Web/API/Fetch_API/Using_Fetch" target="_blank"><em>fetch</em></a>.</p>
+
+<p>Porém, se você abrir duas janelas de <a href="http://localhost:3000/chores" target="_blank">http://localhost:3000/chores</a> e incluir ou
+excluir <em>chores</em> em uma delas verá que as alterações são feitas apenas na janela que está
+manipulando isso, <strong>não haverá persistência em todas as sessões</strong>. Para isso precisamos fazer via
+<em>ActionCable</em> com <code class="language-plaintext highlighter-rouge">broadcast</code>.</p>
+
+<h3 id="aplicando-broadcast">Aplicando <em>broadcast</em></h3>
+<p>Aqui corresponde a parte final desta etapa do tutorial. A subparte anterior foi apenas para
+explicar o uso isolado do <em>render</em> <code class="language-plaintext highlighter-rouge">turbo_stream</code>, como objetivo é uma aplicação estilo Kanban
+pretendo utilizar majoritariamente esse <em>render</em> juntamente com <code class="language-plaintext highlighter-rouge">broadcast</code> daqui para frente. O
+código completo desta etapa está na <em>branch</em>
+<a href="https://github.com/callmarx/LearningHotwire/tree/blog-part-2.2" target="_blank">blog-part-2.2</a>.</p>
+
+<p>Para aplicarmos as alterações dos <em>chores</em> em todas as sessões utilizaremos o
+<code class="language-plaintext highlighter-rouge">Turbo::StreamsChannel</code> que vem com a gema <code class="language-plaintext highlighter-rouge">turbo-rails</code>, podendo ser chamado diretamente no
+<em>model</em> ou no <em>controller</em> dependendo da abordagem que desejar. A ideia aqui é que <strong>estaremos
+implementando as renderizações parciais em um padrão
+<a href="https://en.wikipedia.org/wiki/Publish%E2%80%93subscribe_pattern" target="_blank">Publish/Subscribe</a></strong>.
+Por trás dos panos estaremos usando o <em>Active Jobs</em> para “publicar” (<em>publish</em>) a renderização
+parcial do <code class="language-plaintext highlighter-rouge">turbo_stream</code> de maneira assíncrona e o <em>Action Cable</em> para entregar essas atualizações
+aos “assinantes” (<em>subscribers</em>).</p>
+
+<p>No caso, nossos “assinantes” são todas as sessões abertas de
+<a href="http://localhost:3000/chores" target="_blank">http://localhost:3000/chores</a> e podemos mapear isso usando o helper
+<code class="language-plaintext highlighter-rouge">turbo_stream_from</code>. Sendo assim, em
+<a href="https://github.com/callmarx/LearningHotwire/blob/blog-part-2.2/app/views/chores/index.html.erb" target="_blank">app/views/chores/index.html.erb</a>,
+temos:</p>
+<div class="language-erb highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="c">&lt;!-- file app/views/chores/index.html.erb  of blog-part-2.2 branch --&gt;</span>
+<span class="cp">&lt;%=</span> <span class="n">turbo_stream_from</span> <span class="s2">"chores"</span> <span class="cp">%&gt;</span>
+<span class="nt">&lt;div</span> <span class="err">...</span><span class="nt">&gt;</span>
+  ...
+<span class="nt">&lt;/div&gt;</span>
+</code></pre></div></div>
+
+<p>Como disse antes, podemos incluir <code class="language-plaintext highlighter-rouge">Turbo::StreamsChannel</code> no <em>model</em> ou <em>controller</em> para cobrir as
+modificações de <em>create</em>, <em>update</em> e <em>delete</em>, mais especificamente através dos métodos
+<code class="language-plaintext highlighter-rouge">.broadcast_append_to</code>, <code class="language-plaintext highlighter-rouge">.broadcast_replace_to</code>, <code class="language-plaintext highlighter-rouge">.broadcast_remove_to</code> entre outros. Se incluirmos
+isso no <em>model</em> através de <em>Active Record Callbacks</em>, como <code class="language-plaintext highlighter-rouge">after_create_commit</code>, <strong>toda vez que o
+<em>model</em> for alterado</strong> iremos disparar “publicações” de renderização parcial. Como por enquanto eu
+quero disparar as alterações feitas apenas através de requisições do usuário - não quero que
+<code class="language-plaintext highlighter-rouge">rails db:seed</code> dispare isso, por exemplo - optei por incluir no <em>controller</em>. Sendo assim em
+<a href="https://github.com/callmarx/LearningHotwire/blob/blog-part-2.2/app/controllers/chores_controller.rb" target="_blank">app/controllers/chores_controller.rb</a>,
+temos:</p>
+<div class="language-ruby highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="c1"># file app/controllers/chores_controller.rb of blog-part-2.2 branch</span>
+<span class="k">class</span> <span class="nc">ChoresController</span> <span class="o">&lt;</span> <span class="no">ApplicationController</span>
+  <span class="n">before_action</span> <span class="ss">:set_chore</span><span class="p">,</span> <span class="ss">only: </span><span class="sx">%i[ show edit update destroy ]</span>
+  <span class="n">after_action</span> <span class="ss">:broadcast_insert</span><span class="p">,</span> <span class="ss">only: </span><span class="sx">%i[create]</span>
+  <span class="n">after_action</span> <span class="ss">:broadcast_remove</span><span class="p">,</span> <span class="ss">only: </span><span class="sx">%i[destroy]</span>
+
+  <span class="o">...</span>
+
+  <span class="kp">private</span>
+    <span class="o">...</span>
+    <span class="k">def</span> <span class="nf">broadcast_insert</span>
+      <span class="k">return</span> <span class="k">if</span> <span class="vi">@chore</span><span class="p">.</span><span class="nf">errors</span><span class="p">.</span><span class="nf">any?</span>
+      <span class="no">Turbo</span><span class="o">::</span><span class="no">StreamsChannel</span><span class="p">.</span><span class="nf">broadcast_append_to</span><span class="p">(</span>
+        <span class="s2">"chores"</span><span class="p">,</span>
+        <span class="ss">target: </span><span class="s2">"chores"</span><span class="p">,</span>
+        <span class="ss">partial: </span><span class="s2">"chores/chore"</span><span class="p">,</span>
+        <span class="ss">locals: </span><span class="p">{</span> <span class="ss">chore: </span><span class="vi">@chore</span> <span class="p">}</span>
+      <span class="p">)</span>
+    <span class="k">end</span>
+
+    <span class="k">def</span> <span class="nf">broadcast_remove</span>
+      <span class="k">return</span> <span class="k">unless</span> <span class="vi">@chore</span><span class="p">.</span><span class="nf">destroyed?</span>
+      <span class="no">Turbo</span><span class="o">::</span><span class="no">StreamsChannel</span><span class="p">.</span><span class="nf">broadcast_remove_to</span><span class="p">(</span>
+        <span class="s2">"chores"</span><span class="p">,</span>
+        <span class="ss">target: </span><span class="no">ActionView</span><span class="o">::</span><span class="no">RecordIdentifier</span><span class="p">.</span><span class="nf">dom_id</span><span class="p">(</span><span class="vi">@chore</span><span class="p">)</span>
+      <span class="p">)</span>
+    <span class="k">end</span>
+<span class="k">end</span>
+</code></pre></div></div>
+
+<p>Como os métodos privados <code class="language-plaintext highlighter-rouge">broadcast_insert</code> e <code class="language-plaintext highlighter-rouge">broadcast_remove</code> acima já fazem a inserção e
+exclusão dos <em>chores</em> não precisamos mais fazer isso nas <em>views</em> <code class="language-plaintext highlighter-rouge">*.turbo_stream.erb</code> que criamos
+na subparte anterior, por isso para essa parte final eu excluí a <em>view</em>
+<code class="language-plaintext highlighter-rouge">app/views/destroy.turbo_stream.erb</code> e mantive
+<a href="https://github.com/callmarx/LearningHotwire/blob/blog-part-2.2/app/views/chores/create.turbo_stream.erb" target="_blank">app/views/chores/create.turbo_stream.erb</a>,
+com apenas:</p>
+<div class="language-erb highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="c">&lt;!-- file app/views/chores/create.turbo_stream.erb of blog-part-2.2 branch --&gt;</span>
+<span class="cp">&lt;%=</span> <span class="n">turbo_stream</span><span class="p">.</span><span class="nf">replace</span> <span class="s2">"chore_form"</span><span class="p">,</span> <span class="ss">partial: </span><span class="s2">"chores/form"</span><span class="p">,</span> <span class="ss">locals: </span><span class="p">{</span> <span class="ss">chore: </span><span class="no">Chore</span><span class="p">.</span><span class="nf">new</span> <span class="p">}</span> <span class="cp">%&gt;</span>
+</code></pre></div></div>
+<p class="notice--info"><strong>OBS</strong>: Não sei se você notou, mas não estamos “publicando” o <em>replace</em> do <em>form</em> via <em>ActionCable</em>
+como as outras renderizações parciais. Mantive aqui o <code class="language-plaintext highlighter-rouge">turbo_stream</code> para sessão corrente apenas, o
+que faz total sentido já que não precisamos limpar o <em>form</em> nas outras sessões, inclusive se
+fizermos isso poderemos apagar o <em>form</em> de um outro usuário que o está preenchendo e não submeteu
+ainda.</p>
+
+<p>Pronto! Basta subir o projeto com <code class="language-plaintext highlighter-rouge">bin/dev</code> e acessar em mais de uma janela
+<a href="http://localhost:3000/chores" target="_blank">http://localhost:3000/chores</a>, você deve obter este resultado final:</p>
+
+<!-- Courtesy of embedresponsively.com //-->
+
+<div class="responsive-video-container">
+    <iframe src="https://drive.google.com/file/d/1DmtL-9P9SylUJet2MJjMrqiHCySCCng5/preview" frameborder="0" webkitallowfullscreen="" mozallowfullscreen="" allowfullscreen=""></iframe>
+  </div>
+
+<div class="tenor-gif-embed" data-postid="14693686" data-share-method="host" data-aspect-ratio="1.78771" data-width="100%">
+  <a href="https://tenor.com/view/nice-finger-gone-well-done-happy-woohoo-gif-14693686"></a>
+</div>
+<script type="text/javascript" async="" src="https://tenor.com/embed.js"></script>
+
+
+        
+      </section>
+
+      <footer class="page__meta">
+        
+        
+  
+
+
+  
+
+  <p class="page__taxonomy">
+    <strong><i class="fas fa-fw fa-tags" aria-hidden="true"></i> Tags: </strong>
+    <span itemprop="keywords">
+    
+      <a href="/tags/#hotwire" class="page__taxonomy-item" rel="tag">Hotwire</a><span class="sep">, </span>
+    
+      <a href="/tags/#rails" class="page__taxonomy-item" rel="tag">Rails</a><span class="sep">, </span>
+    
+      <a href="/tags/#ruby" class="page__taxonomy-item" rel="tag">Ruby</a><span class="sep">, </span>
+    
+      <a href="/tags/#tailwind" class="page__taxonomy-item" rel="tag">Tailwind</a><span class="sep">, </span>
+    
+      <a href="/tags/#tutorial" class="page__taxonomy-item" rel="tag">Tutorial</a>
+    
+    </span>
+  </p>
+
+
+
+
+  
+
+
+  
+
+  <p class="page__taxonomy">
+    <strong><i class="fas fa-fw fa-folder-open" aria-hidden="true"></i> Categorias: </strong>
+    <span itemprop="keywords">
+    
+      <a href="/categories/#blog" class="page__taxonomy-item" rel="tag">blog</a>
+    
+    </span>
+  </p>
+
+
+        
+
+  <p class="page__date"><strong><i class="fas fa-fw fa-calendar-alt" aria-hidden="true"></i> Atualizado em:</strong> <time datetime="2021-12-19T14:42:03-03:00">2021-12-19</time></p>
+
+
+      </footer>
+
+      <section class="page__share">
+  
+    <h4 class="page__share-title">Compartilhe</h4>
+  
+
+  <a href="https://twitter.com/intent/tweet?via=leminski_se&text=Tutorial%3A+Rails7%2C+Tailwind+e+Hotwire+-+Parte+2%20https%3A%2F%2Fcallmarx.github.io%2Fblog%2F2021%2F12%2F19%2Ftutorial-rails7-hotwire-parte-2.html" class="btn btn--twitter" onclick="window.open(this.href, 'window', 'left=20,top=20,width=500,height=500,toolbar=1,resizable=0'); return false;" title="Compartilhe Twitter"><i class="fab fa-fw fa-twitter" aria-hidden="true"></i><span> Twitter</span></a>
+
+  <a href="https://www.facebook.com/sharer/sharer.php?u=https%3A%2F%2Fcallmarx.github.io%2Fblog%2F2021%2F12%2F19%2Ftutorial-rails7-hotwire-parte-2.html" class="btn btn--facebook" onclick="window.open(this.href, 'window', 'left=20,top=20,width=500,height=500,toolbar=1,resizable=0'); return false;" title="Compartilhe Facebook"><i class="fab fa-fw fa-facebook" aria-hidden="true"></i><span> Facebook</span></a>
+
+  <a href="https://www.linkedin.com/shareArticle?mini=true&url=https%3A%2F%2Fcallmarx.github.io%2Fblog%2F2021%2F12%2F19%2Ftutorial-rails7-hotwire-parte-2.html" class="btn btn--linkedin" onclick="window.open(this.href, 'window', 'left=20,top=20,width=500,height=500,toolbar=1,resizable=0'); return false;" title="Compartilhe LinkedIn"><i class="fab fa-fw fa-linkedin" aria-hidden="true"></i><span> LinkedIn</span></a>
+</section>
+
+
+      
+  <nav class="pagination">
+    
+      <a href="/blog/2021/12/09/tutorial-rails7-hotwire-parte-1.html" class="pagination--pager" title="Tutorial: Rails7, Tailwind e Hotwire - Parte 1
+">Anterior</a>
+    
+    
+      <a href="/blog/2022/06/08/dotfiles.html" class="pagination--pager" title="Hoje eu aprendi: Vale a pena configurar seus dotfiles
+">Próxima</a>
+    
+  </nav>
+
+    </div>
+
+    
+  </article>
+
+  
+  
+    <div class="page__related">
+      <h4 class="page__related-title">Talvez você também goste</h4>
+      <div class="grid__wrapper">
+        
+          
+
+
+
+<div class="grid__item">
+  <article class="archive__item" itemscope itemtype="https://schema.org/CreativeWork">
+    
+    <h2 class="archive__item-title no_toc" itemprop="headline">
+      
+        <a href="/blog/2022/06/29/tutorial-rails7-hotwire-parte-3.html" rel="permalink">Tutorial: Rails7, Tailwind e Hotwire - Parte 3
+</a>
+      
+    </h2>
+    
+
+  <p class="page__meta">
+    
+      
+      <span class="page__meta-date">
+        <i class="far fa-fw fa-calendar-alt" aria-hidden="true"></i>
+        
+        <time datetime="2022-06-29T21:34:03-03:00">2022-06-29</time>
+      </span>
+    
+
+    <span class="page__meta-sep"></span>
+
+    
+      
+      
+
+      <span class="page__meta-readtime">
+        <i class="far fa-fw fa-clock" aria-hidden="true"></i>
+        
+          18 minuto(s) de leitura
+        
+      </span>
+    
+  </p>
+
+
+    <p class="archive__item-excerpt" itemprop="description">
+
+Na parte anterior
+deste tutorial eu expliquei como utilizar a renderização parcial de html com turbo_stream do
+Hotwire Turbo, o que nos permitiu mostrar os cards
+recém inseridos ou excluídos do nosso humilde protótipo de Kanban. Agora ...</p>
+  </article>
+</div>
+
+        
+          
+
+
+
+<div class="grid__item">
+  <article class="archive__item" itemscope itemtype="https://schema.org/CreativeWork">
+    
+    <h2 class="archive__item-title no_toc" itemprop="headline">
+      
+        <a href="/blog/2022/06/08/dotfiles.html" rel="permalink">Hoje eu aprendi: Vale a pena configurar seus dotfiles
+</a>
+      
+    </h2>
+    
+
+  <p class="page__meta">
+    
+      
+      <span class="page__meta-date">
+        <i class="far fa-fw fa-calendar-alt" aria-hidden="true"></i>
+        
+        <time datetime="2022-06-08T16:58:19-03:00">2022-06-08</time>
+      </span>
+    
+
+    <span class="page__meta-sep"></span>
+
+    
+      
+      
+
+      <span class="page__meta-readtime">
+        <i class="far fa-fw fa-clock" aria-hidden="true"></i>
+        
+          5 minuto(s) de leitura
+        
+      </span>
+    
+  </p>
+
+
+    <p class="archive__item-excerpt" itemprop="description">
+
+Depois de mais de 3 anos usando Vim como IDE (Integrated Development Environment), migrando no
+caminho para o Neovim com o shell zsh, o gerenciador
+Oh My Zsh e o tema
+Powerlevel10k, percebi como eu
+dependia dessas configurações e como ...</p>
+  </article>
+</div>
+
+        
+          
+
+
+
+<div class="grid__item">
+  <article class="archive__item" itemscope itemtype="https://schema.org/CreativeWork">
+    
+    <h2 class="archive__item-title no_toc" itemprop="headline">
+      
+        <a href="/blog/2021/12/09/tutorial-rails7-hotwire-parte-1.html" rel="permalink">Tutorial: Rails7, Tailwind e Hotwire - Parte 1
+</a>
+      
+    </h2>
+    
+
+  <p class="page__meta">
+    
+      
+      <span class="page__meta-date">
+        <i class="far fa-fw fa-calendar-alt" aria-hidden="true"></i>
+        
+        <time datetime="2021-12-09T11:12:54-03:00">2021-12-09</time>
+      </span>
+    
+
+    <span class="page__meta-sep"></span>
+
+    
+      
+      
+
+      <span class="page__meta-readtime">
+        <i class="far fa-fw fa-clock" aria-hidden="true"></i>
+        
+          18 minuto(s) de leitura
+        
+      </span>
+    
+  </p>
+
+
+    <p class="archive__item-excerpt" itemprop="description">
+
+Na parte anterior deste
+tutorial, expliquei como configurar o Rails 7, com suas novas opções e como “dockerizei” os bancos
+de dados PostgreSQL e Redis. Agora vou abordar um pouco sobre Tailwind.
+</p>
+  </article>
+</div>
+
+        
+          
+
+
+
+<div class="grid__item">
+  <article class="archive__item" itemscope itemtype="https://schema.org/CreativeWork">
+    
+    <h2 class="archive__item-title no_toc" itemprop="headline">
+      
+        <a href="/blog/2021/12/07/tutorial-rails7-hotwire.html" rel="permalink">Tutorial: Rails7, Tailwind e Hotwire
+</a>
+      
+    </h2>
+    
+
+  <p class="page__meta">
+    
+      
+      <span class="page__meta-date">
+        <i class="far fa-fw fa-calendar-alt" aria-hidden="true"></i>
+        
+        <time datetime="2021-12-07T17:48:12-03:00">2021-12-07</time>
+      </span>
+    
+
+    <span class="page__meta-sep"></span>
+
+    
+      
+      
+
+      <span class="page__meta-readtime">
+        <i class="far fa-fw fa-clock" aria-hidden="true"></i>
+        
+          8 minuto(s) de leitura
+        
+      </span>
+    
+  </p>
+
+
+    <p class="archive__item-excerpt" itemprop="description">
+
+
+Depois de meses desenvolvendo em Typescript com NestJS
+por demanda do meu atual trabalho, consegui um tempinho para meu tão amado Ruby on Rails. Melhor
+ainda agora, como não trabalho oficialmente com Rails, posso me dar o luxo de me a...</p>
+  </article>
+</div>
+
+        
+      </div>
+    </div>
+  
+  
+</div>
+
+    </div>
+
+    
+      <div class="search-content">
+        <div class="search-content__inner-wrap"><form class="search-content__form" onkeydown="return event.key != 'Enter';">
+    <label class="sr-only" for="search">
+      Enter your search term...
+    </label>
+    <input type="search" id="search" class="search-input" tabindex="-1" placeholder="Pesquisar..." />
+  </form>
+  <div id="results" class="results"></div></div>
+
+      </div>
+    
+
+    <div id="footer" class="page__footer">
+      <footer>
+        <!-- start custom footer snippets -->
+
+<!-- end custom footer snippets -->
+        <div class="page__footer-follow">
+  <ul class="social-icons">
+    
+      
+        
+          <li><a href="https://github.com/callmarx" rel="nofollow noopener noreferrer"><i class="fab fa-fw fa-github" aria-hidden="true"></i> GitHub</a></li>
+        
+      
+        
+          <li><a href="https://www.linkedin.com/in/eugenio-augusto-jimenes/" rel="nofollow noopener noreferrer"><i class="fab fa-fw fa-linkedin" aria-hidden="true"></i> LinkedIn</a></li>
+        
+      
+    
+
+    
+      <li><a href="/feed.xml"><i class="fas fa-fw fa-rss-square" aria-hidden="true"></i> Feed</a></li>
+    
+  </ul>
+</div>
+
+<div class="page__footer-copyright">&copy; 2022 CallMarx. Desenvolvido com o <a href=/code-of-conduct/><b>Código de Conduta</b></a> para comunidade de código aberto, sob a licença <a href=/mit-license/><b>MIT</b></a>, framework <a href="https://jekyllrb.com" rel="nofollow"><b>Jekyll</b></a> e tema <a href="https://github.com/mmistakes/minimal-mistakes" rel="nofollow"><b>Minimal Mistakes</b></a>.</div>
+
+      </footer>
+    </div>
+
+    
+  <script src="/assets/js/main.min.js"></script>
+
+
+
+
+<script src="/assets/js/lunr/lunr.min.js"></script>
+<script src="/assets/js/lunr/lunr-store.js"></script>
+<script src="/assets/js/lunr/lunr-en.js"></script>
+
+
+
+
+
+
+
+  </body>
+</html>

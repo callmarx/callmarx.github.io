@@ -1,0 +1,1081 @@
+<!doctype html>
+<!--
+  Minimal Mistakes Jekyll Theme 4.24.0 by Michael Rose
+  Copyright 2013-2020 Michael Rose - mademistakes.com | @mmistakes
+  Free for personal and commercial use under the MIT license
+  https://github.com/mmistakes/minimal-mistakes/blob/master/LICENSE
+-->
+<html lang="pt" class="no-js">
+  <head>
+    <meta charset="utf-8">
+
+<!-- begin _includes/seo.html --><title>Tutorial: Rails7, Tailwind e Hotwire - Parte 1 - CallMarx</title>
+<meta name="description" content="Parte 1: Montando um layout com Tailwind - Tutorial sobre Rails 7 com esbuild, tailwind e Hotwire(Turbo e Stimulus). Como desenvolver um aplicação estilo Kanban, com cards/tarefas e persistência simultânea via websockets.">
+
+
+  <meta name="author" content="Eugenio Augusto Jimenes">
+  
+  <meta property="article:author" content="Eugenio Augusto Jimenes">
+  
+
+
+<meta property="og:type" content="article">
+<meta property="og:locale" content="pt_BR">
+<meta property="og:site_name" content="CallMarx">
+<meta property="og:title" content="Tutorial: Rails7, Tailwind e Hotwire - Parte 1">
+<meta property="og:url" content="https://callmarx.github.io/blog/2021/12/09/tutorial-rails7-hotwire-parte-1.html">
+
+
+  <meta property="og:description" content="Parte 1: Montando um layout com Tailwind - Tutorial sobre Rails 7 com esbuild, tailwind e Hotwire(Turbo e Stimulus). Como desenvolver um aplicação estilo Kanban, com cards/tarefas e persistência simultânea via websockets.">
+
+
+
+  <meta property="og:image" content="https://callmarx.github.io/assets/posts/tailwind.webp">
+
+
+
+  <meta name="twitter:site" content="@leminski_se">
+  <meta name="twitter:title" content="Tutorial: Rails7, Tailwind e Hotwire - Parte 1">
+  <meta name="twitter:description" content="Parte 1: Montando um layout com Tailwind - Tutorial sobre Rails 7 com esbuild, tailwind e Hotwire(Turbo e Stimulus). Como desenvolver um aplicação estilo Kanban, com cards/tarefas e persistência simultânea via websockets.">
+  <meta name="twitter:url" content="https://callmarx.github.io/blog/2021/12/09/tutorial-rails7-hotwire-parte-1.html">
+
+  
+    <meta name="twitter:card" content="summary_large_image">
+    <meta name="twitter:image" content="https://callmarx.github.io/assets/posts/tailwind.webp">
+  
+
+  
+
+
+
+  <meta property="article:published_time" content="2021-12-09T11:12:54-03:00">
+
+
+
+
+
+
+<link rel="canonical" href="https://callmarx.github.io/blog/2021/12/09/tutorial-rails7-hotwire-parte-1.html">
+
+
+
+
+<script type="application/ld+json">
+  {
+    "@context": "https://schema.org",
+    
+      "@type": "Person",
+      "name": null,
+      "url": "https://callmarx.github.io/"
+    
+  }
+</script>
+
+
+
+
+
+
+
+<!-- end _includes/seo.html -->
+
+
+
+  <link href="/feed.xml" type="application/atom+xml" rel="alternate" title="CallMarx Feed">
+
+
+<!-- https://t.co/dKP3o1e -->
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+<script>
+  document.documentElement.className = document.documentElement.className.replace(/\bno-js\b/g, '') + ' js ';
+</script>
+
+<!-- For all browsers -->
+<link rel="stylesheet" href="/assets/css/main.css">
+<link rel="preload" href="https://cdn.jsdelivr.net/npm/@fortawesome/fontawesome-free@5/css/all.min.css" as="style" onload="this.onload=null;this.rel='stylesheet'">
+<noscript><link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@fortawesome/fontawesome-free@5/css/all.min.css"></noscript>
+
+
+
+    <!-- start custom head snippets -->
+
+<!-- insert favicons. use https://realfavicongenerator.net/ -->
+
+<!-- end custom head snippets -->
+
+  </head>
+
+  <body class="layout--single">
+    <nav class="skip-links">
+  <ul>
+    <li><a href="#site-nav" class="screen-reader-shortcut">Skip to primary navigation</a></li>
+    <li><a href="#main" class="screen-reader-shortcut">Skip to content</a></li>
+    <li><a href="#footer" class="screen-reader-shortcut">Skip to footer</a></li>
+  </ul>
+</nav>
+
+    <!--[if lt IE 9]>
+<div class="notice--danger align-center" style="margin: 0;">You are using an <strong>outdated</strong> browser. Please <a href="https://browsehappy.com/">upgrade your browser</a> to improve your experience.</div>
+<![endif]-->
+
+    
+
+<div class="masthead">
+  <div class="masthead__inner-wrap">
+    <div class="masthead__menu">
+      <nav id="site-nav" class="greedy-nav">
+        
+        <a class="site-title" href="/">
+          CallMarx
+          
+        </a>
+        <ul class="visible-links"><li class="masthead__menu-item">
+              <a href="/tags/">Posts por tags</a>
+            </li><li class="masthead__menu-item">
+              <a href="/about/">Sobre mim</a>
+            </li></ul>
+        
+        <button class="search__toggle" type="button">
+          <span class="visually-hidden">Buscar</span>
+          <i class="fas fa-search"></i>
+        </button>
+        
+        <button class="greedy-nav__toggle hidden" type="button">
+          <span class="visually-hidden">Toggle menu</span>
+          <div class="navicon"></div>
+        </button>
+        <ul class="hidden-links hidden"></ul>
+      </nav>
+    </div>
+  </div>
+</div>
+
+
+    <div class="initial-content">
+      
+
+
+
+<div id="main" role="main">
+  
+  <div class="sidebar sticky">
+  
+
+
+<div itemscope itemtype="https://schema.org/Person">
+
+  
+    <div class="author__avatar">
+      
+        <img src="/assets/eu-e-nila.webp" alt="Eugenio Augusto Jimenes" itemprop="image">
+      
+    </div>
+  
+
+  <div class="author__content">
+    
+      <h3 class="author__name" itemprop="name">Eugenio Augusto Jimenes</h3>
+    
+    
+      <div class="author__bio" itemprop="description">
+        <p>Nerd, disléxico, viciado-hipster em café, desenvolvedor, linux fanboy e esquerdopata convicto - CallMarx, sacou?</p>
+
+      </div>
+    
+  </div>
+
+  <div class="author__urls-wrapper">
+    <button class="btn btn--inverse">Contatos</button>
+    <ul class="author__urls social-icons">
+      
+        <li itemprop="homeLocation" itemscope itemtype="https://schema.org/Place">
+          <i class="fas fa-fw fa-map-marker-alt" aria-hidden="true"></i> <span itemprop="name">São Paulo - SP</span>
+        </li>
+      
+
+      
+        
+          
+            <li><a href="mailto:eugeniojimenes@gmail" rel="nofollow noopener noreferrer"><i class="fas fa-fw fa-envelope-square" aria-hidden="true"></i><span class="label">Email</span></a></li>
+          
+        
+          
+            <li><a href="https://github.com/callmarx" rel="nofollow noopener noreferrer"><i class="fab fa-fw fa-github" aria-hidden="true"></i><span class="label">GitHub</span></a></li>
+          
+        
+          
+            <li><a href="https://twitter.com/leminski_se" rel="nofollow noopener noreferrer"><i class="fab fa-fw fa-twitter" aria-hidden="true"></i><span class="label">Twitter</span></a></li>
+          
+        
+          
+            <li><a href="https://www.linkedin.com/in/eugenio-augusto-jimenes/" rel="nofollow noopener noreferrer"><i class="fab fa-fw fa-linkedin" aria-hidden="true"></i><span class="label">LinkedIn</span></a></li>
+          
+        
+      
+
+      
+
+      
+
+      
+
+      
+
+      
+
+      
+
+      
+
+      
+
+      
+
+      
+
+      
+
+      
+
+      
+
+      
+
+      
+
+      
+
+      
+
+      
+
+      
+
+      
+
+      
+
+      
+
+      
+
+      
+
+      <!--
+  <li>
+    <a href="http://link-to-whatever-social-network.com/user/" itemprop="sameAs" rel="nofollow noopener noreferrer">
+      <i class="fas fa-fw" aria-hidden="true"></i> Custom Social Profile Link
+    </a>
+  </li>
+-->
+    </ul>
+  </div>
+</div>
+
+  
+  </div>
+
+
+
+  <article class="page" itemscope itemtype="https://schema.org/CreativeWork">
+    <meta itemprop="headline" content="Tutorial: Rails7, Tailwind e Hotwire - Parte 1">
+    <meta itemprop="description" content="Na parte anterior destetutorial, expliquei como configurar o Rails 7, com suas novas opções e como “dockerizei” os bancosde dados PostgreSQL e Redis. Agora vou abordar um pouco sobre Tailwind.">
+    <meta itemprop="datePublished" content="2021-12-09T11:12:54-03:00">
+    
+
+    <div class="page__inner-wrap">
+      
+        <header>
+          <h1 id="page-title" class="page__title" itemprop="headline">Tutorial: Rails7, Tailwind e Hotwire - Parte 1
+</h1>
+          
+
+  <p class="page__meta">
+    
+      
+      <span class="page__meta-date">
+        <i class="far fa-calendar-alt" aria-hidden="true"></i>
+        
+        <time datetime="2021-12-09T11:12:54-03:00">2021-12-09</time>
+      </span>
+    
+
+    <span class="page__meta-sep"></span>
+
+    
+      
+      
+
+      <span class="page__meta-readtime">
+        <i class="far fa-clock" aria-hidden="true"></i>
+        
+          18 minuto(s) de leitura
+        
+      </span>
+    
+  </p>
+
+
+        </header>
+      
+
+      <section class="page__content" itemprop="text">
+        
+        <p><img src="/assets/posts/tailwind.webp" alt="Tailwind" class="align-center" /></p>
+
+<p>Na <a href="/blog/2021/12/07/tutorial-rails7-hotwire.html" target="_blank">parte anterior</a> deste
+tutorial, expliquei como configurar o Rails 7, com suas novas opções e como “dockerizei” os bancos
+de dados PostgreSQL e Redis. Agora vou abordar um pouco sobre Tailwind.
+<!-- excerpt-separator --></p>
+
+<h2 id="objetivo-geral">Objetivo Geral</h2>
+<p>A meta é desenvolver (e aprender) utilizando Rails 7, esbuild, Tailwind e Hotwire (Turbo e
+Stimulus), mas meu foco será mais sobre o pacote Hotwire e como ele pode nos ajudar. Conforme
+avanço nos estudos e na implementação, vou complementando este tutorial. Por enquanto temos:</p>
+<ul>
+  <li><a href="/blog/2021/12/07/tutorial-rails7-hotwire.html" target="_blank">Parte 0: Rails 7</a></li>
+  <li><a href="#etapa-1---tailwind">Parte 1: Tailwind</a> → página atual</li>
+  <li><a href="/blog/2021/12/19/tutorial-rails7-hotwire-parte-2.html" target="_blank">Parte 2: Hotwire Turbo</a></li>
+  <li><del>Parte 3: Hotwire Stimulus</del> → em breve</li>
+</ul>
+
+<p>O pano de fundo é uma aplicação estilo Kanban, com um quadro em que podemos incluir, ver, editar e
+excluir os cards/tarefas e isso ser persistido simultaneamente via <em>websockets</em> para todas as
+sessões abertas da aplicação. Todo código esta disponível neste
+<a href="https://github.com/callmarx/LearningHotwire" target="_blank">repositório</a>. Note que incluí
+algumas <a href="https://github.com/callmarx/LearningHotwire/branches/all" target="_blank"><em>branches</em></a> que
+representam as partes abordadas aqui.</p>
+
+<h2 id="etapa-1---tailwind">Etapa 1 - Tailwind</h2>
+<p>Nesta parte explico como utilizar e customizar o Tailwind. O resultado final desta etapa é o
+disponível na <em>branch</em>
+<a href="https://github.com/callmarx/LearningHotwire/tree/blog-part-1" target="_blank">blog-part-1</a>.</p>
+
+<h3 id="um-simples-scaffold">Um simples <em>scaffold</em></h3>
+<p>Antes de começar a brincar com HTML <del>e CSS</del> eu gerei um conjunto simples de <em>models</em>,
+<em>controllers</em> e <em>views</em> de <strong><em>chores</em></strong> (do inglês, equivalente à tarefas, pequenos trabalhos,
+designação etc).</p>
+<div class="language-bash highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="nv">$ </span>rails generate scaffold chore title:string content:text
+</code></pre></div></div>
+
+<p>E também um
+<a href="https://github.com/callmarx/LearningHotwire/blob/blog-part-1/db/seeds.rb" target="_blank">db/seeds.rb</a>
+para já termos algo à visualizar no <em>index</em>.</p>
+<div class="language-ruby highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="c1"># db/seeds.rb</span>
+<span class="no">Chore</span><span class="p">.</span><span class="nf">create</span><span class="p">([</span>
+  <span class="p">{</span>
+    <span class="ss">title: </span><span class="s2">"Gave up"</span><span class="p">,</span>
+    <span class="ss">content: </span><span class="s2">"Would it save you a lot of time if I just gave up and went mad now?"</span><span class="p">,</span>
+    <span class="ss">created_at: </span><span class="mi">15</span><span class="p">.</span><span class="nf">days</span><span class="p">.</span><span class="nf">ago</span>
+  <span class="p">},</span>
+  <span class="p">{</span>
+    <span class="ss">title: </span><span class="s2">"More than big"</span><span class="p">,</span>
+    <span class="ss">content: </span><span class="s2">"Space is big. You just won't believe how vastly, hugely, mind-bogglingly big it is. I mean, you may think it's a long way down the road to the chemist's, but that's just peanuts to space."</span><span class="p">,</span>
+    <span class="ss">created_at: </span><span class="mi">4</span><span class="p">.</span><span class="nf">days</span><span class="p">.</span><span class="nf">ago</span>
+  <span class="p">},</span>
+  <span class="p">{</span>
+    <span class="ss">title: </span><span class="s2">"What did happen?"</span><span class="p">,</span>
+    <span class="ss">content: </span><span class="s2">"For a moment, nothing happened. Then, after a second or so, nothing continued to happen."</span><span class="p">,</span>
+    <span class="ss">created_at: </span><span class="mi">9</span><span class="p">.</span><span class="nf">days</span><span class="p">.</span><span class="nf">ago</span>
+  <span class="p">},</span>
+  <span class="p">{</span>
+    <span class="ss">title: </span><span class="s2">"About be President"</span><span class="p">,</span>
+    <span class="ss">content: </span><span class="s2">"Anyone who is capable of getting themselves made President should on no account be allowed to do the job."</span><span class="p">,</span>
+    <span class="ss">created_at: </span><span class="mi">36</span><span class="p">.</span><span class="nf">days</span><span class="p">.</span><span class="nf">ago</span>
+  <span class="p">},</span>
+  <span class="p">{</span>
+    <span class="ss">title: </span><span class="s2">"UX/UI"</span><span class="p">,</span>
+    <span class="ss">content: </span><span class="s2">"A common mistake that people make when trying to design something completely foolproof is to underestimate the ingenuity of complete fools"</span><span class="p">,</span>
+    <span class="ss">created_at: </span><span class="mi">6</span><span class="p">.</span><span class="nf">days</span><span class="p">.</span><span class="nf">ago</span>
+  <span class="p">},</span>
+  <span class="p">{</span>
+    <span class="ss">title: </span><span class="s2">"42"</span><span class="p">,</span>
+    <span class="ss">content: </span><span class="s2">"Forty-two."</span><span class="p">,</span>
+    <span class="ss">created_at: </span><span class="mi">1</span><span class="p">.</span><span class="nf">days</span><span class="p">.</span><span class="nf">ago</span>
+  <span class="p">},</span>
+<span class="p">])</span>
+</code></pre></div></div>
+
+<p>E rodei as <em>migrations</em> e o <em>seeds</em>.</p>
+<div class="language-bash highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="nv">$ </span>rails db:migrate <span class="o">&amp;&amp;</span> rails db:seed
+</code></pre></div></div>
+
+<h3 id="não-configurando-o-tailwindo">Não configurando o Tailwindo</h3>
+<p>Acessando <a href="http://localhost:3000/chores" target="_blank">http://localhost:3000/chores</a> você deve obter algo como o seguinte.
+<img src="/assets/posts/ugly-chores.webp" alt="ugly-chores" class="align-center" /></p>
+
+<blockquote>
+  <p>“Ué?” - Eu, quando vi esta tela.</p>
+</blockquote>
+
+<p>Parece que o tailwind não está configurado, mas confia, esta sim. Se você envolver o conteúdo por
+algo como <code class="language-plaintext highlighter-rouge">&lt;div class="text-gray-100 bg-gray-900"&gt; ... &lt;/div&gt;</code>, que são classes do Tailwind, verá a
+mesma página com fundo escuro (<code class="language-plaintext highlighter-rouge">bg-gray-900</code>) e o texto claro (<code class="language-plaintext highlighter-rouge">text-gray-100</code>).</p>
+
+<p>Seria algo assim:</p>
+<div class="language-erb highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="c">&lt;!-- app/views/chores/index.html.erb --&gt;</span>
+<span class="nt">&lt;div</span> <span class="na">class=</span><span class="s">"text-gray-100 bg-gray-900"</span>
+  <span class="err">&lt;</span><span class="na">p</span><span class="nt">&gt;</span><span class="cp">&lt;%=</span> <span class="n">notice</span> <span class="cp">%&gt;</span><span class="nt">&lt;/p&gt;</span>
+
+  <span class="nt">&lt;h1&gt;</span>Chores<span class="nt">&lt;/h1&gt;</span>
+
+  <span class="nt">&lt;div</span> <span class="na">id=</span><span class="s">"chores"</span><span class="nt">&gt;</span>
+    <span class="cp">&lt;%=</span> <span class="n">render</span> <span class="vi">@chores</span> <span class="cp">%&gt;</span>
+  <span class="nt">&lt;/div&gt;</span>
+
+  <span class="cp">&lt;%=</span> <span class="n">link_to</span> <span class="s2">"New chore"</span><span class="p">,</span> <span class="n">new_chore_path</span> <span class="cp">%&gt;</span>
+<span class="nt">&lt;/div&gt;</span>
+</code></pre></div></div>
+
+<p>Acontece que o comando <code class="language-plaintext highlighter-rouge">rails generate scaffold</code> do rails 7 não vêm com um algum tipo de “layout
+padrão de geração” de <em>views</em> para o Tailwind, o mesmo vale para <code class="language-plaintext highlighter-rouge">rails generate controller</code>. Então
+cabe à nós editar, mas Tailwind é mamão com mel, confia.</p>
+
+<h3 id="customizando-tailwind">Customizando Tailwind</h3>
+<p>Para customizar ou incluir funcionalidades basta editar o arquivo
+<a href="https://github.com/callmarx/LearningHotwire/blob/blog-part-0/tailwind.config.js" target="_blank">tailwind.config.js</a>
+na raiz do projeto. Na
+<a href="/blog/2021/12/07/tutorial-rails7-hotwire.html" target="_blank">parte anterior</a> deste
+tutorial, quando criamos o projeto com a <em>flag</em> <code class="language-plaintext highlighter-rouge">--css tailwind</code> o Rails já nos faz o trabalho de
+instalar e referenciar o framework.</p>
+
+<p class="notice--info"><strong>UPDATE</strong>: No momento em que estava escrevendo este post saiu a
+<a href="https://tailwindcss.com/blog/tailwindcss-v3" target="_blank">versão 3 do tailwind</a> e mudou tudo
+que tinha customizado 🤡. Inclui a atualização para nova versão no repositório.</p>
+
+<p>Eu fiz algumas customizações para exemplificar aqui no blog, mas recomendo a leitura da
+<a href="https://tailwindcss.com/docs/configuration" target="_blank">documentação oficial</a>, muito boa
+por sinal.</p>
+<div class="language-js highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="c1">// tailwind.config.js</span>
+<span class="nx">module</span><span class="p">.</span><span class="nx">exports</span> <span class="o">=</span> <span class="p">{</span>
+  <span class="na">mode</span><span class="p">:</span> <span class="dl">'</span><span class="s1">jit</span><span class="dl">'</span><span class="p">,</span>
+  <span class="na">content</span><span class="p">:</span> <span class="p">[</span> <span class="c1">// 'purge' foi substituido por 'content' na v3.</span>
+    <span class="dl">'</span><span class="s1">./app/views/**/*.html.erb</span><span class="dl">'</span><span class="p">,</span>
+    <span class="dl">'</span><span class="s1">./app/helpers/**/*.rb</span><span class="dl">'</span><span class="p">,</span>
+    <span class="dl">'</span><span class="s1">./app/javascript/**/*.js</span><span class="dl">'</span>
+  <span class="p">],</span>
+  <span class="na">theme</span><span class="p">:</span> <span class="p">{</span>
+    <span class="na">extend</span><span class="p">:</span> <span class="p">{</span>
+      <span class="na">spacing</span><span class="p">:</span> <span class="p">{</span>
+        <span class="dl">'</span><span class="s1">100</span><span class="dl">'</span><span class="p">:</span> <span class="dl">'</span><span class="s1">25rem</span><span class="dl">'</span><span class="p">,</span>
+        <span class="dl">'</span><span class="s1">104</span><span class="dl">'</span><span class="p">:</span> <span class="dl">'</span><span class="s1">26rem</span><span class="dl">'</span><span class="p">,</span>
+        <span class="dl">'</span><span class="s1">108</span><span class="dl">'</span><span class="p">:</span> <span class="dl">'</span><span class="s1">27rem</span><span class="dl">'</span><span class="p">,</span>
+        <span class="dl">'</span><span class="s1">112</span><span class="dl">'</span><span class="p">:</span> <span class="dl">'</span><span class="s1">28rem</span><span class="dl">'</span><span class="p">,</span>
+      <span class="p">},</span>
+      <span class="na">colors</span><span class="p">:</span> <span class="p">{</span>
+        <span class="na">wood</span><span class="p">:</span> <span class="p">{</span>
+          <span class="mi">50</span><span class="p">:</span> <span class="dl">'</span><span class="s1">#f7eee9</span><span class="dl">'</span><span class="p">,</span>
+          <span class="mi">100</span><span class="p">:</span> <span class="dl">'</span><span class="s1">#efddd3</span><span class="dl">'</span><span class="p">,</span>
+          <span class="mi">150</span><span class="p">:</span> <span class="dl">'</span><span class="s1">#e7cdbd</span><span class="dl">'</span><span class="p">,</span>
+          <span class="mi">200</span><span class="p">:</span> <span class="dl">'</span><span class="s1">#dfbca7</span><span class="dl">'</span><span class="p">,</span>
+          <span class="mi">250</span><span class="p">:</span> <span class="dl">'</span><span class="s1">#d7ac91</span><span class="dl">'</span><span class="p">,</span>
+          <span class="mi">300</span><span class="p">:</span> <span class="dl">'</span><span class="s1">#cf9b7b</span><span class="dl">'</span><span class="p">,</span>
+          <span class="mi">350</span><span class="p">:</span> <span class="dl">'</span><span class="s1">#c78a65</span><span class="dl">'</span><span class="p">,</span>
+          <span class="mi">400</span><span class="p">:</span> <span class="dl">'</span><span class="s1">#bf7a4f</span><span class="dl">'</span><span class="p">,</span>
+          <span class="mi">450</span><span class="p">:</span> <span class="dl">'</span><span class="s1">#b76939</span><span class="dl">'</span><span class="p">,</span>
+          <span class="mi">500</span><span class="p">:</span> <span class="dl">'</span><span class="s1">#af5924</span><span class="dl">'</span><span class="p">,</span>
+          <span class="mi">550</span><span class="p">:</span> <span class="dl">'</span><span class="s1">#9d5020</span><span class="dl">'</span><span class="p">,</span>
+          <span class="mi">600</span><span class="p">:</span> <span class="dl">'</span><span class="s1">#8c471c</span><span class="dl">'</span><span class="p">,</span>
+          <span class="mi">650</span><span class="p">:</span> <span class="dl">'</span><span class="s1">#7a3e19</span><span class="dl">'</span><span class="p">,</span>
+          <span class="mi">700</span><span class="p">:</span> <span class="dl">'</span><span class="s1">#693515</span><span class="dl">'</span><span class="p">,</span>
+          <span class="mi">750</span><span class="p">:</span> <span class="dl">'</span><span class="s1">#572c12</span><span class="dl">'</span><span class="p">,</span>
+          <span class="mi">800</span><span class="p">:</span> <span class="dl">'</span><span class="s1">#46230e</span><span class="dl">'</span><span class="p">,</span>
+          <span class="mi">850</span><span class="p">:</span> <span class="dl">'</span><span class="s1">#341a0a</span><span class="dl">'</span><span class="p">,</span>
+          <span class="mi">900</span><span class="p">:</span> <span class="dl">'</span><span class="s1">#231107</span><span class="dl">'</span><span class="p">,</span>
+          <span class="mi">950</span><span class="p">:</span> <span class="dl">'</span><span class="s1">#110803</span><span class="dl">'</span><span class="p">,</span>
+        <span class="p">}</span>
+      <span class="p">}</span>
+    <span class="p">}</span>
+  <span class="p">}</span>
+<span class="p">}</span>
+</code></pre></div></div>
+
+<p>Explico:</p>
+
+<p><strong>Primeiro</strong> incluí um conjunto “manual” de cores que nomeei como <code class="language-plaintext highlighter-rouge">wood</code>, com graduações de 50 à 950.
+Ou seja, com isso você tem acesso a classes como <code class="language-plaintext highlighter-rouge">bg-wood-650</code> (equivalente à <em>background color</em>
+<a href="https://www.colorhexa.com/7a3e19" target="_blank">#7a3e19</a>), <code class="language-plaintext highlighter-rouge">text-wood-300</code> (equivalente à
+<em>text color</em> <a href="https://www.colorhexa.com/cf9b7b" target="_blank">#cf9b7b</a>), <code class="language-plaintext highlighter-rouge">border-wood-850</code>
+(equivalente à <em>border color</em> <a href="https://www.colorhexa.com/341a0a" target="_blank">#341a0a</a>) etc.
+No final das contas eu acabei nem usando essas cores <del>porque achei que ficou tudo com cara de cor
+de cocô</del>, mas fique a vontade em utilizá-las. Você pode ver mais sobre isso aqui
+<a href="https://tailwindcss.com/docs/customizing-colors" target="_blank">https://tailwindcss.com/docs/customizing-colors</a>.</p>
+
+<p><strong>Depois</strong> aumentei os valores dos “espaçamentos”. Quando ponho, por exemplo, <code class="language-plaintext highlighter-rouge">'108': '27rem'</code>
+dentro das chaves <code class="language-plaintext highlighter-rouge">spacing: { ... }</code>, tenho acesso à classes como <code class="language-plaintext highlighter-rouge">p-108</code> (<em>padding</em> de <em>27rem</em>),
+<code class="language-plaintext highlighter-rouge">m-108</code> (<em>margin</em> de <em>27rem</em>), <code class="language-plaintext highlighter-rouge">h-108</code> (<em>height</em> de <em>27rem</em>) etc. Você pode ver mais sobre isso
+aqui <a href="https://tailwindcss.com/docs/customizing-spacing" target="_blank">https://tailwindcss.com/docs/customizing-spacing</a>.</p>
+
+<h3 id="sou-um-designer-preguiçoso">Sou um designer preguiçoso</h3>
+<p>Sem mais delongas, depois de <del>me cansar de ficar enfeitando as páginas</del> um tempinho
+experimentando eu alterei os seguintes arquivos.</p>
+
+<p>Em <a href="https://github.com/callmarx/LearningHotwire/blob/blog-part-1/app/views/chores/index.html.erb" target="_blank">app/views/chores/index.html.erb</a></p>
+<div class="language-erb highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="c">&lt;!-- app/views/chores/index.html.erb --&gt;</span>
+<span class="nt">&lt;div</span> <span class="na">class=</span><span class="s">"z-0 flex flex-col justify-start h-screen justify-items-center bg-slate-300"</span><span class="nt">&gt;</span>
+  <span class="nt">&lt;div</span> <span class="na">class=</span><span class="s">"z-0 w-4/5 mx-auto mt-4 overflow-hidden h-2/3 bg-slate-200 rounded-md transition transform duration-600 ease-in-out hover:bg-slate-400 hover:overflow-visible"</span><span class="nt">&gt;</span>
+    <span class="nt">&lt;div</span> <span class="na">id=</span><span class="s">"chores"</span> <span class="na">class=</span><span class="s">"z-0 px-5 pt-1 pb-3 grid grid-cols-3 gap-2"</span><span class="nt">&gt;</span>
+      <span class="cp">&lt;%</span> <span class="vi">@chores</span><span class="p">.</span><span class="nf">each</span> <span class="k">do</span> <span class="o">|</span><span class="n">chore</span><span class="o">|</span> <span class="cp">%&gt;</span>
+        <span class="cp">&lt;%=</span> <span class="n">render</span> <span class="s2">"chore"</span><span class="p">,</span> <span class="n">chore</span><span class="ss">:chore</span> <span class="cp">%&gt;</span>
+      <span class="cp">&lt;%</span> <span class="k">end</span> <span class="cp">%&gt;</span>
+    <span class="nt">&lt;/div&gt;</span>
+  <span class="nt">&lt;/div&gt;</span>
+  <span class="nt">&lt;div</span> <span class="na">class=</span><span class="s">"w-4/5 mx-auto my-4 h-80 bg-slate-200 rounded-md hover:bg-slate-400 transition duration-600 ease-linear"</span><span class="nt">&gt;</span>
+    <span class="cp">&lt;%=</span> <span class="n">render</span> <span class="s2">"form"</span><span class="p">,</span> <span class="ss">chore: </span><span class="vi">@chore</span> <span class="cp">%&gt;</span>
+  <span class="nt">&lt;/div&gt;</span>
+<span class="nt">&lt;/div&gt;</span>
+</code></pre></div></div>
+
+<p>Em <a href="https://github.com/callmarx/LearningHotwire/blob/blog-part-1/app/views/chores/_chore.html.erb" target="_blank">app/views/chores/_chore.html.erb</a></p>
+<div class="language-erb highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="c">&lt;!-- app/views/chores/_chore.html.erb --&gt;</span>
+<span class="nt">&lt;div</span>
+  <span class="na">id=</span><span class="s">"</span><span class="cp">&lt;%=</span> <span class="n">dom_id</span> <span class="n">chore</span> <span class="cp">%&gt;</span><span class="s">"</span>
+  <span class="na">class=</span><span class="s">"p-3 my-3 bg-white shadow-lg group transition duration-700 ease-in-out transform hover:scale-125 hover:z-10 rounded-md"</span>
+<span class="nt">&gt;</span>
+  <span class="nt">&lt;a</span> <span class="na">href=</span><span class="s">"#"</span><span class="nt">&gt;</span>
+    <span class="nt">&lt;div</span> <span class="na">class=</span><span class="s">"flex flex-col"</span><span class="nt">&gt;</span>
+      <span class="nt">&lt;div</span> <span class="na">class=</span><span class="s">"flex justify-between"</span><span class="nt">&gt;</span>
+        <span class="nt">&lt;p</span> <span class="na">class=</span><span class="s">"text-lg font-semibold leading-snug text-gray-900 mr-0.5"</span><span class="nt">&gt;</span>
+          <span class="cp">&lt;%=</span> <span class="n">chore</span><span class="p">.</span><span class="nf">title</span> <span class="cp">%&gt;</span>
+        <span class="nt">&lt;/p&gt;</span>
+        <span class="nt">&lt;time</span>
+          <span class="na">datetime=</span><span class="cp">&lt;%=</span> <span class="n">chore</span><span class="p">.</span><span class="nf">created_at</span><span class="p">.</span><span class="nf">strftime</span><span class="p">(</span><span class="s2">"%Y-%m-%d"</span><span class="p">)</span> <span class="cp">%&gt;</span><span class="err">
+          </span><span class="s">class="invisible</span> <span class="na">text-sm</span> <span class="na">text-indigo-700</span> <span class="na">group-hover:visible</span><span class="err">"</span>
+        <span class="nt">&gt;</span>
+          <span class="cp">&lt;%=</span> <span class="n">chore</span><span class="p">.</span><span class="nf">created_at</span><span class="p">.</span><span class="nf">strftime</span><span class="p">(</span><span class="s2">"%b %d"</span><span class="p">)</span> <span class="cp">%&gt;</span>
+        <span class="nt">&lt;/time&gt;</span>
+      <span class="nt">&lt;/div&gt;</span>
+        <span class="nt">&lt;p</span> <span class="na">class=</span><span class="s">"leading-snug text-gray-900"</span><span class="nt">&gt;</span>
+          <span class="cp">&lt;%=</span> <span class="n">chore</span><span class="p">.</span><span class="nf">content</span> <span class="cp">%&gt;</span>
+        <span class="nt">&lt;/p&gt;</span>
+        <span class="nt">&lt;div</span> <span class="na">class=</span><span class="s">"flex justify-end space-x-2"</span><span class="nt">&gt;</span>
+          <span class="nt">&lt;button</span> <span class="na">class=</span><span class="s">"invisible w-5 h-5 text-indigo-500 cursor-pointer group-hover:visible hover:text-black transition-all duration-600 ease-in-out"</span><span class="nt">&gt;</span>
+            <span class="nt">&lt;svg</span> <span class="na">stroke=</span><span class="s">"currentColor"</span> <span class="na">fill=</span><span class="s">"none"</span> <span class="na">stroke-width=</span><span class="s">"1.7"</span> <span class="na">viewBox=</span><span class="s">"0 0 24 24"</span> <span class="na">stroke-linecap=</span><span class="s">"round"</span> <span class="na">stroke-linejoin=</span><span class="s">"round"</span><span class="nt">&gt;</span>
+              <span class="nt">&lt;path</span> <span class="na">d=</span><span class="s">"M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7"</span><span class="nt">/&gt;</span>
+              <span class="nt">&lt;path</span> <span class="na">d=</span><span class="s">"M18.5 2.5a2.121 2.121 0 0 1 3 3L12 15l-4 1 1-4 9.5-9.5z"</span><span class="nt">/&gt;</span>
+            <span class="nt">&lt;/svg&gt;</span>
+          <span class="nt">&lt;/button&gt;</span>
+          <span class="nt">&lt;button</span> <span class="na">class=</span><span class="s">"invisible w-5 h-5 text-indigo-500 cursor-pointer group-hover:visible hover:text-black transition-all duration-600 ease-in-out"</span><span class="nt">&gt;</span>
+            <span class="nt">&lt;svg</span> <span class="na">stroke=</span><span class="s">"currentColor"</span> <span class="na">fill=</span><span class="s">"currentColor"</span> <span class="na">stroke-width=</span><span class="s">"0"</span> <span class="na">viewBox=</span><span class="s">"0 0 16 16"</span><span class="nt">&gt;</span>
+              <span class="nt">&lt;path</span> <span class="na">d=</span><span class="s">"M5.5 5.5A.5.5 0 0 1 6 6v6a.5.5 0 0 1-1 0V6a.5.5 0 0 1 .5-.5zm2.5 0a.5.5 0 0 1 .5.5v6a.5.5 0 0 1-1 0V6a.5.5 0 0 1 .5-.5zm3 .5a.5.5 0 0 0-1 0v6a.5.5 0 0 0 1 0V6z"</span><span class="nt">&gt;&lt;/path&gt;&lt;path</span> <span class="na">fill-rule=</span><span class="s">"evenodd"</span> <span class="na">d=</span><span class="s">"M14.5 3a1 1 0 0 1-1 1H13v9a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V4h-.5a1 1 0 0 1-1-1V2a1 1 0 0 1 1-1H6a1 1 0 0 1 1-1h2a1 1 0 0 1 1 1h3.5a1 1 0 0 1 1 1v1zM4.118 4 4 4.059V13a1 1 0 0 0 1 1h6a1 1 0 0 0 1-1V4.059L11.882 4H4.118zM2.5 3V2h11v1h-11z"</span><span class="nt">/&gt;</span>
+            <span class="nt">&lt;/svg&gt;</span>
+          <span class="nt">&lt;/button&gt;</span>
+        <span class="nt">&lt;/div&gt;</span>
+    <span class="nt">&lt;/div&gt;</span>
+  <span class="nt">&lt;/a&gt;</span>
+<span class="nt">&lt;/div&gt;</span>
+</code></pre></div></div>
+
+<p>E em <a href="https://github.com/callmarx/LearningHotwire/blob/blog-part-1/app/views/chores/_form.html.erb" target="_blank">app/views/chores/_form.html.erb</a></p>
+<div class="language-erb highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="c">&lt;!-- app/views/chores/_form.html.erb --&gt;</span>
+<span class="cp">&lt;%=</span> <span class="n">form_with</span><span class="p">(</span><span class="ss">model: </span><span class="n">chore</span><span class="p">)</span> <span class="k">do</span> <span class="o">|</span><span class="n">form</span><span class="o">|</span> <span class="cp">%&gt;</span>
+  <span class="cp">&lt;%</span> <span class="k">if</span> <span class="n">chore</span><span class="p">.</span><span class="nf">errors</span><span class="p">.</span><span class="nf">any?</span> <span class="cp">%&gt;</span>
+    <span class="nt">&lt;div</span> <span class="na">id=</span><span class="s">"error_explanation"</span><span class="nt">&gt;</span>
+      <span class="nt">&lt;h2&gt;</span><span class="cp">&lt;%=</span> <span class="n">pluralize</span><span class="p">(</span><span class="n">chore</span><span class="p">.</span><span class="nf">errors</span><span class="p">.</span><span class="nf">count</span><span class="p">,</span> <span class="s2">"error"</span><span class="p">)</span> <span class="cp">%&gt;</span> prohibited this chore from being saved:<span class="nt">&lt;/h2&gt;</span>
+
+      <span class="nt">&lt;ul&gt;</span>
+        <span class="cp">&lt;%</span> <span class="n">chore</span><span class="p">.</span><span class="nf">errors</span><span class="p">.</span><span class="nf">each</span> <span class="k">do</span> <span class="o">|</span><span class="n">error</span><span class="o">|</span> <span class="cp">%&gt;</span>
+          <span class="nt">&lt;li&gt;</span><span class="cp">&lt;%=</span> <span class="n">error</span><span class="p">.</span><span class="nf">full_message</span> <span class="cp">%&gt;</span><span class="nt">&lt;/li&gt;</span>
+        <span class="cp">&lt;%</span> <span class="k">end</span> <span class="cp">%&gt;</span>
+      <span class="nt">&lt;/ul&gt;</span>
+    <span class="nt">&lt;/div&gt;</span>
+  <span class="cp">&lt;%</span> <span class="k">end</span> <span class="cp">%&gt;</span>
+
+  <span class="nt">&lt;div</span> <span class="na">class=</span><span class="s">"items-center mt-8"</span><span class="nt">&gt;</span>
+    <span class="nt">&lt;div</span> <span class="na">class=</span><span class="s">"flex flex-col w-5/6 mx-auto"</span><span class="nt">&gt;</span>
+      <span class="cp">&lt;%=</span> <span class="n">form</span><span class="p">.</span><span class="nf">text_field</span> <span class="ss">:title</span><span class="p">,</span> <span class="ss">placeholder: </span><span class="s2">"Title"</span><span class="p">,</span> <span class="ss">class: </span><span class="s2">"p-3 mt-2 leading-none text-gray-900 bg-gray-100 border border-gray-200 rounded"</span> <span class="cp">%&gt;</span>
+    <span class="nt">&lt;/div&gt;</span>
+  <span class="nt">&lt;/div&gt;</span>
+
+  <span class="nt">&lt;div</span> <span class="na">class=</span><span class="s">"flex flex-col w-5/6 mx-auto"</span><span class="nt">&gt;</span>
+    <span class="cp">&lt;%=</span> <span class="n">form</span><span class="p">.</span><span class="nf">text_area</span> <span class="ss">:content</span><span class="p">,</span> <span class="ss">placeholder: </span><span class="s2">"Content"</span><span class="p">,</span> <span class="ss">class: </span><span class="s2">"h-40 p-3 mt-2 text-base leading-none text-gray-900 bg-gray-100 border border-gray-200 rounded"</span> <span class="cp">%&gt;</span>
+  <span class="nt">&lt;/div&gt;</span>
+
+  <span class="nt">&lt;div</span> <span class="na">class=</span><span class="s">"flex items-center justify-center w-full"</span><span class="nt">&gt;</span>
+    <span class="cp">&lt;%=</span> <span class="n">form</span><span class="p">.</span><span class="nf">submit</span> <span class="ss">class: </span><span class="s2">"px-10 py-4 my-2 font-semibold leading-none text-white rounded bg-slate-700 hover:bg-slate-900"</span> <span class="cp">%&gt;</span>
+  <span class="nt">&lt;/div&gt;</span>
+<span class="cp">&lt;%</span> <span class="k">end</span> <span class="cp">%&gt;</span>
+</code></pre></div></div>
+<p>Essas alterações correspondem basicamente ao que há na <em>branch</em>
+<a href="https://github.com/callmarx/LearningHotwire/tree/blog-part-1" target="_blank">blog-part-1</a>.
+Então, agora se você subir o projeto com <code class="language-plaintext highlighter-rouge">bin/dev</code> e acessar <a href="http://localhost:3000/chores" target="_blank">http://localhost:3000/chores</a>,
+deve obter este resultado:</p>
+
+<!-- Courtesy of embedresponsively.com //-->
+
+<div class="responsive-video-container">
+    <iframe src="https://drive.google.com/file/d/1fidDQRgSkofbW09cng6YfiGL1AHXTlQ5/preview" frameborder="0" webkitallowfullscreen="" mozallowfullscreen="" allowfullscreen=""></iframe>
+  </div>
+
+<p>E isso <strong>sem uma <del><em>fucking</em></del> linha</strong> de JavaScript e CSS!</p>
+
+<div class="tenor-gif-embed" data-postid="7714163" data-share-method="host" data-aspect-ratio="1" data-width="100%">
+  <a href="https://tenor.com/view/friends-matt-leblanc-matt-shock-omg-gif-7714163"></a>
+</div>
+<script type="text/javascript" async="" src="https://tenor.com/embed.js"></script>
+
+<h3 id="como-pode">Como pode?!</h3>
+<p>Vou tentar explicar aqui algumas das classes do Tailwind que inclui HTML das quais permitiram esse
+resultado.</p>
+
+<p><strong>Primeiro</strong> vamos as <em>divs</em> que separam o “quadro de tarefas” da “inserção de uma nova tarefa” em
+<a href="https://github.com/callmarx/LearningHotwire/blob/blog-part-1/app/views/chores/index.html.erb" target="_blank">app/views/chores/index.html.erb</a>.
+Na <em>div</em> de inserção, temos:</p>
+<div class="language-erb highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="c">&lt;!-- app/views/chores/index.html.erb --&gt;</span>
+<span class="nt">&lt;div</span> <span class="err">...</span><span class="nt">&gt;</span>
+  ...
+  <span class="nt">&lt;div</span> <span class="na">class=</span><span class="s">"w-4/5 mx-auto my-4 h-80 bg-slate-200 rounded-md hover:bg-slate-400 transition duration-600 ease-linear"</span><span class="nt">&gt;</span>
+    <span class="cp">&lt;%=</span> <span class="n">render</span> <span class="s2">"form"</span><span class="p">,</span> <span class="ss">chore: </span><span class="vi">@chore</span> <span class="cp">%&gt;</span>
+  <span class="nt">&lt;/div&gt;</span>
+<span class="nt">&lt;/div&gt;</span>
+</code></pre></div></div>
+<p>A classe <code class="language-plaintext highlighter-rouge">bg-slate-200</code> com <code class="language-plaintext highlighter-rouge">hover:bg-slate-400</code> montam o gatilho de <em>mouseover</em>, alterando a cor
+de fundo de “<em>slate-200</em>” para “<em>slate-400</em>” quando passamos o mouse por cima. Adicionando ainda o
+conjunto <code class="language-plaintext highlighter-rouge">transition duration-600 ease-linear</code> à isso, temos essa transição com um efeito gradual,
+mais sutil aos olhos. A classe <code class="language-plaintext highlighter-rouge">duration-600</code> impõe um tempo de 600 milissegundos para essa
+transição. Você pode ver mais sobre isso em
+<a href="https://tailwindcss.com/docs/transition-timing-function" target="_blank">https://tailwindcss.com/docs/transition-timing-function</a>.</p>
+
+<p>Na <em>div</em> do quadro de tarefas, temos:</p>
+<div class="language-erb highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="c">&lt;!-- app/views/chores/index.html.erb --&gt;</span>
+<span class="nt">&lt;div</span> <span class="err">...</span><span class="nt">&gt;</span>
+  <span class="nt">&lt;div</span> <span class="na">class=</span><span class="s">"z-0 w-4/5 mx-auto mt-4 overflow-hidden h-2/3 bg-slate-200 rounded-md transition transform duration-600 ease-in-out hover:bg-slate-400 hover:overflow-visible"</span><span class="nt">&gt;</span>
+    ...
+  <span class="nt">&lt;/div&gt;</span>
+  ...
+<span class="nt">&lt;/div&gt;</span>
+</code></pre></div></div>
+<p>As classes <code class="language-plaintext highlighter-rouge">bg-slate-200</code> e <code class="language-plaintext highlighter-rouge">overflow-hidden</code> com <code class="language-plaintext highlighter-rouge">hover:bg-slate-400</code> e <code class="language-plaintext highlighter-rouge">hover:overflow-visible</code>,
+montam o gatilho de <em>mouseover</em> não apenas para mudar a cor, mas também para mudar o comportamento
+do “transbordar de conteúdo” - <code class="language-plaintext highlighter-rouge">overflow-hidden</code> omite as tarefas que não couberem na <em>div</em> (quando
+você redimensiona a janela do navegador, por exemplo), mas ao passar o mouse por cima isso é
+alterando para <code class="language-plaintext highlighter-rouge">overflow-visible</code>, tornando as tarefas visíveis. Novamente, com o conjunto
+<code class="language-plaintext highlighter-rouge">transition transform duration-600 ease-linear</code> à isso para termos a transição gradual.</p>
+
+<p><strong>Agora</strong> vamos as tarefas, no arquivo
+<a href="https://github.com/callmarx/LearningHotwire/blob/blog-part-1/app/views/chores/_chore.html.erb" target="_blank">app/views/chores/_chore.html.erb</a>,
+para explicar os efeitos de “aumentar o card da tarefa” e o de “exibir os ícones de edição e
+remoção”.</p>
+
+<p>Na <em>div</em> mais externa, a primeira, temos:</p>
+<div class="language-erb highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="c">&lt;!-- app/views/chores/_chore.html.erb --&gt;</span>
+<span class="nt">&lt;div</span>
+  <span class="err">...</span>
+  <span class="na">class=</span><span class="s">"p-3 my-3 bg-white shadow-lg group transition duration-700 ease-in-out transform hover:scale-125 hover:z-10 rounded-md"</span>
+<span class="nt">&gt;</span>
+  ...
+<span class="nt">&lt;/div&gt;</span>
+</code></pre></div></div>
+<p>Com as classes <code class="language-plaintext highlighter-rouge">hover:scale-125</code> e <code class="language-plaintext highlighter-rouge">hover:z-10</code>, montamos o gatilho para aumentar seu tamanho com
+<code class="language-plaintext highlighter-rouge">scale-125</code> e sobrepor qualquer outro conteúdo com <code class="language-plaintext highlighter-rouge">z-10</code>. Também incluí o conjunto <code class="language-plaintext highlighter-rouge">transition
+transform duration-600 ease-linear</code> para a transição gradual. Note também que incluí a classe
+<code class="language-plaintext highlighter-rouge">group</code>, ela serve para mapear a parte seguinte.</p>
+
+<p>Nas tags <em>button</em> que envolvem os SVG dos ícones de edição e remoção, temos:</p>
+<div class="language-erb highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="c">&lt;!-- app/views/chores/_chore.html.erb --&gt;</span>
+<span class="nt">&lt;div</span> <span class="err">...</span><span class="nt">&gt;</span>
+  <span class="nt">&lt;a</span> <span class="na">href=</span><span class="s">"#"</span><span class="nt">&gt;</span>
+    <span class="nt">&lt;div</span> <span class="na">class=</span><span class="s">"flex flex-col"</span><span class="nt">&gt;</span>
+      ...
+      <span class="nt">&lt;div</span> <span class="err">...</span><span class="nt">&gt;</span>
+        <span class="c">&lt;!-- botão de edição --&gt;</span>
+        <span class="nt">&lt;button</span> <span class="na">class=</span><span class="s">"invisible w-5 h-5 text-indigo-500 cursor-pointer group-hover:visible hover:text-black transition-all duration-600 ease-in-out"</span><span class="nt">&gt;</span>
+          <span class="nt">&lt;svg</span> <span class="err">...</span><span class="nt">&gt;</span>
+          <span class="nt">&lt;/svg&gt;</span>
+        <span class="nt">&lt;/button&gt;</span>
+        <span class="c">&lt;!-- botão de remoção --&gt;</span>
+        <span class="nt">&lt;button</span> <span class="na">class=</span><span class="s">"invisible w-5 h-5 text-indigo-500 cursor-pointer group-hover:visible hover:text-black transition-all duration-600 ease-in-out"</span><span class="nt">&gt;</span>
+          <span class="nt">&lt;svg</span> <span class="err">...</span><span class="nt">&gt;</span>
+          <span class="nt">&lt;/svg&gt;</span>
+        <span class="nt">&lt;/button&gt;</span>
+      <span class="nt">&lt;/div&gt;</span>
+    <span class="nt">&lt;/div&gt;</span>
+  <span class="nt">&lt;/a&gt;</span>
+<span class="nt">&lt;/div&gt;</span>
+</code></pre></div></div>
+<p>Com as classes <code class="language-plaintext highlighter-rouge">invisible</code> e <code class="language-plaintext highlighter-rouge">group-hover:visible</code> em ambos <code class="language-plaintext highlighter-rouge">&lt;button&gt; ... &lt;/button&gt;</code>, somado à
+classe <code class="language-plaintext highlighter-rouge">group</code> que adicionei na <em>div</em> mais externa, a “pai” de todas, como pontuei antes, dizemos
+ao Tailwind que ao passar o mouse dentro dessa <em>div</em> mais externa é para tornar visível ambos os
+botões, simples assim! Trata-se de um <em>efeito em grupo</em>. Note que o <em>efeito individual</em> de cada
+botão, no caso o de alterar a cor de preenchimento dos ícones com <code class="language-plaintext highlighter-rouge">text-indigo-500</code> e
+<code class="language-plaintext highlighter-rouge">hover:text-black</code>, é diferente, será acionado quando passamos o mouse no ícone, individualmente.
+Você pode ver mais sobre isso em
+<a href="https://tailwindcss.com/docs/hover-focus-and-other-states#styling-based-on-parent-state" target="_blank">https://tailwindcss.com/docs/hover-focus-and-other-states#styling-based-on-parent-state</a>.</p>
+
+<p class="notice--info"><strong>Recomendo</strong>: No
+<a href="https://www.youtube.com/channel/UCy1H38XrN7hi7wHSClfXPqQ" target="_blank">canal do Adam Wathan no YouTube</a>
+há várias <em>lives</em> gravadas em que ele monta um layout do zero com Tailwind, mexendo apenas com HTML,
+muito bom!</p>
+
+<p>Por agora, é isso.</p>
+<div class="tenor-gif-embed" data-postid="16435573" data-share-method="host" data-aspect-ratio="1.5311" data-width="100%">
+  <a href="https://tenor.com/view/cat-driving-leaving-meow-im-leaving-right-meow-gif-16435573">
+&lt;/div&gt;
+<script type="text/javascript" async="" src="https://tenor.com/embed.js"></script>
+</a></div>
+
+        
+      </section>
+
+      <footer class="page__meta">
+        
+        
+  
+
+
+  
+
+  <p class="page__taxonomy">
+    <strong><i class="fas fa-fw fa-tags" aria-hidden="true"></i> Tags: </strong>
+    <span itemprop="keywords">
+    
+      <a href="/tags/#hotwire" class="page__taxonomy-item" rel="tag">Hotwire</a><span class="sep">, </span>
+    
+      <a href="/tags/#rails" class="page__taxonomy-item" rel="tag">Rails</a><span class="sep">, </span>
+    
+      <a href="/tags/#ruby" class="page__taxonomy-item" rel="tag">Ruby</a><span class="sep">, </span>
+    
+      <a href="/tags/#tailwind" class="page__taxonomy-item" rel="tag">Tailwind</a><span class="sep">, </span>
+    
+      <a href="/tags/#tutorial" class="page__taxonomy-item" rel="tag">Tutorial</a>
+    
+    </span>
+  </p>
+
+
+
+
+  
+
+
+  
+
+  <p class="page__taxonomy">
+    <strong><i class="fas fa-fw fa-folder-open" aria-hidden="true"></i> Categorias: </strong>
+    <span itemprop="keywords">
+    
+      <a href="/categories/#blog" class="page__taxonomy-item" rel="tag">blog</a>
+    
+    </span>
+  </p>
+
+
+        
+
+  <p class="page__date"><strong><i class="fas fa-fw fa-calendar-alt" aria-hidden="true"></i> Atualizado em:</strong> <time datetime="2021-12-09T11:12:54-03:00">2021-12-09</time></p>
+
+
+      </footer>
+
+      <section class="page__share">
+  
+    <h4 class="page__share-title">Compartilhe</h4>
+  
+
+  <a href="https://twitter.com/intent/tweet?via=leminski_se&text=Tutorial%3A+Rails7%2C+Tailwind+e+Hotwire+-+Parte+1%20https%3A%2F%2Fcallmarx.github.io%2Fblog%2F2021%2F12%2F09%2Ftutorial-rails7-hotwire-parte-1.html" class="btn btn--twitter" onclick="window.open(this.href, 'window', 'left=20,top=20,width=500,height=500,toolbar=1,resizable=0'); return false;" title="Compartilhe Twitter"><i class="fab fa-fw fa-twitter" aria-hidden="true"></i><span> Twitter</span></a>
+
+  <a href="https://www.facebook.com/sharer/sharer.php?u=https%3A%2F%2Fcallmarx.github.io%2Fblog%2F2021%2F12%2F09%2Ftutorial-rails7-hotwire-parte-1.html" class="btn btn--facebook" onclick="window.open(this.href, 'window', 'left=20,top=20,width=500,height=500,toolbar=1,resizable=0'); return false;" title="Compartilhe Facebook"><i class="fab fa-fw fa-facebook" aria-hidden="true"></i><span> Facebook</span></a>
+
+  <a href="https://www.linkedin.com/shareArticle?mini=true&url=https%3A%2F%2Fcallmarx.github.io%2Fblog%2F2021%2F12%2F09%2Ftutorial-rails7-hotwire-parte-1.html" class="btn btn--linkedin" onclick="window.open(this.href, 'window', 'left=20,top=20,width=500,height=500,toolbar=1,resizable=0'); return false;" title="Compartilhe LinkedIn"><i class="fab fa-fw fa-linkedin" aria-hidden="true"></i><span> LinkedIn</span></a>
+</section>
+
+
+      
+  <nav class="pagination">
+    
+      <a href="/blog/2021/12/07/tutorial-rails7-hotwire.html" class="pagination--pager" title="Tutorial: Rails7, Tailwind e Hotwire
+">Anterior</a>
+    
+    
+      <a href="/blog/2021/12/19/tutorial-rails7-hotwire-parte-2.html" class="pagination--pager" title="Tutorial: Rails7, Tailwind e Hotwire - Parte 2
+">Próxima</a>
+    
+  </nav>
+
+    </div>
+
+    
+  </article>
+
+  
+  
+    <div class="page__related">
+      <h4 class="page__related-title">Talvez você também goste</h4>
+      <div class="grid__wrapper">
+        
+          
+
+
+
+<div class="grid__item">
+  <article class="archive__item" itemscope itemtype="https://schema.org/CreativeWork">
+    
+    <h2 class="archive__item-title no_toc" itemprop="headline">
+      
+        <a href="/blog/2022/06/29/tutorial-rails7-hotwire-parte-3.html" rel="permalink">Tutorial: Rails7, Tailwind e Hotwire - Parte 3
+</a>
+      
+    </h2>
+    
+
+  <p class="page__meta">
+    
+      
+      <span class="page__meta-date">
+        <i class="far fa-fw fa-calendar-alt" aria-hidden="true"></i>
+        
+        <time datetime="2022-06-29T21:34:03-03:00">2022-06-29</time>
+      </span>
+    
+
+    <span class="page__meta-sep"></span>
+
+    
+      
+      
+
+      <span class="page__meta-readtime">
+        <i class="far fa-fw fa-clock" aria-hidden="true"></i>
+        
+          18 minuto(s) de leitura
+        
+      </span>
+    
+  </p>
+
+
+    <p class="archive__item-excerpt" itemprop="description">
+
+Na parte anterior
+deste tutorial eu expliquei como utilizar a renderização parcial de html com turbo_stream do
+Hotwire Turbo, o que nos permitiu mostrar os cards
+recém inseridos ou excluídos do nosso humilde protótipo de Kanban. Agora ...</p>
+  </article>
+</div>
+
+        
+          
+
+
+
+<div class="grid__item">
+  <article class="archive__item" itemscope itemtype="https://schema.org/CreativeWork">
+    
+    <h2 class="archive__item-title no_toc" itemprop="headline">
+      
+        <a href="/blog/2022/06/08/dotfiles.html" rel="permalink">Hoje eu aprendi: Vale a pena configurar seus dotfiles
+</a>
+      
+    </h2>
+    
+
+  <p class="page__meta">
+    
+      
+      <span class="page__meta-date">
+        <i class="far fa-fw fa-calendar-alt" aria-hidden="true"></i>
+        
+        <time datetime="2022-06-08T16:58:19-03:00">2022-06-08</time>
+      </span>
+    
+
+    <span class="page__meta-sep"></span>
+
+    
+      
+      
+
+      <span class="page__meta-readtime">
+        <i class="far fa-fw fa-clock" aria-hidden="true"></i>
+        
+          5 minuto(s) de leitura
+        
+      </span>
+    
+  </p>
+
+
+    <p class="archive__item-excerpt" itemprop="description">
+
+Depois de mais de 3 anos usando Vim como IDE (Integrated Development Environment), migrando no
+caminho para o Neovim com o shell zsh, o gerenciador
+Oh My Zsh e o tema
+Powerlevel10k, percebi como eu
+dependia dessas configurações e como ...</p>
+  </article>
+</div>
+
+        
+          
+
+
+
+<div class="grid__item">
+  <article class="archive__item" itemscope itemtype="https://schema.org/CreativeWork">
+    
+    <h2 class="archive__item-title no_toc" itemprop="headline">
+      
+        <a href="/blog/2021/12/19/tutorial-rails7-hotwire-parte-2.html" rel="permalink">Tutorial: Rails7, Tailwind e Hotwire - Parte 2
+</a>
+      
+    </h2>
+    
+
+  <p class="page__meta">
+    
+      
+      <span class="page__meta-date">
+        <i class="far fa-fw fa-calendar-alt" aria-hidden="true"></i>
+        
+        <time datetime="2021-12-19T14:42:03-03:00">2021-12-19</time>
+      </span>
+    
+
+    <span class="page__meta-sep"></span>
+
+    
+      
+      
+
+      <span class="page__meta-readtime">
+        <i class="far fa-fw fa-clock" aria-hidden="true"></i>
+        
+          14 minuto(s) de leitura
+        
+      </span>
+    
+  </p>
+
+
+    <p class="archive__item-excerpt" itemprop="description">
+
+Na parte anterior
+deste tutorial eu expliquei como customizar e utilizar o Tailwind sem uma linha sequer de CSS e
+JavaScript. Agora vou abordar um pouco sobre o pacote
+Hotwire Turbo.
+</p>
+  </article>
+</div>
+
+        
+          
+
+
+
+<div class="grid__item">
+  <article class="archive__item" itemscope itemtype="https://schema.org/CreativeWork">
+    
+    <h2 class="archive__item-title no_toc" itemprop="headline">
+      
+        <a href="/blog/2021/12/07/tutorial-rails7-hotwire.html" rel="permalink">Tutorial: Rails7, Tailwind e Hotwire
+</a>
+      
+    </h2>
+    
+
+  <p class="page__meta">
+    
+      
+      <span class="page__meta-date">
+        <i class="far fa-fw fa-calendar-alt" aria-hidden="true"></i>
+        
+        <time datetime="2021-12-07T17:48:12-03:00">2021-12-07</time>
+      </span>
+    
+
+    <span class="page__meta-sep"></span>
+
+    
+      
+      
+
+      <span class="page__meta-readtime">
+        <i class="far fa-fw fa-clock" aria-hidden="true"></i>
+        
+          8 minuto(s) de leitura
+        
+      </span>
+    
+  </p>
+
+
+    <p class="archive__item-excerpt" itemprop="description">
+
+
+Depois de meses desenvolvendo em Typescript com NestJS
+por demanda do meu atual trabalho, consegui um tempinho para meu tão amado Ruby on Rails. Melhor
+ainda agora, como não trabalho oficialmente com Rails, posso me dar o luxo de me a...</p>
+  </article>
+</div>
+
+        
+      </div>
+    </div>
+  
+  
+</div>
+
+    </div>
+
+    
+      <div class="search-content">
+        <div class="search-content__inner-wrap"><form class="search-content__form" onkeydown="return event.key != 'Enter';">
+    <label class="sr-only" for="search">
+      Enter your search term...
+    </label>
+    <input type="search" id="search" class="search-input" tabindex="-1" placeholder="Pesquisar..." />
+  </form>
+  <div id="results" class="results"></div></div>
+
+      </div>
+    
+
+    <div id="footer" class="page__footer">
+      <footer>
+        <!-- start custom footer snippets -->
+
+<!-- end custom footer snippets -->
+        <div class="page__footer-follow">
+  <ul class="social-icons">
+    
+      
+        
+          <li><a href="https://github.com/callmarx" rel="nofollow noopener noreferrer"><i class="fab fa-fw fa-github" aria-hidden="true"></i> GitHub</a></li>
+        
+      
+        
+          <li><a href="https://www.linkedin.com/in/eugenio-augusto-jimenes/" rel="nofollow noopener noreferrer"><i class="fab fa-fw fa-linkedin" aria-hidden="true"></i> LinkedIn</a></li>
+        
+      
+    
+
+    
+      <li><a href="/feed.xml"><i class="fas fa-fw fa-rss-square" aria-hidden="true"></i> Feed</a></li>
+    
+  </ul>
+</div>
+
+<div class="page__footer-copyright">&copy; 2022 CallMarx. Desenvolvido com o <a href=/code-of-conduct/><b>Código de Conduta</b></a> para comunidade de código aberto, sob a licença <a href=/mit-license/><b>MIT</b></a>, framework <a href="https://jekyllrb.com" rel="nofollow"><b>Jekyll</b></a> e tema <a href="https://github.com/mmistakes/minimal-mistakes" rel="nofollow"><b>Minimal Mistakes</b></a>.</div>
+
+      </footer>
+    </div>
+
+    
+  <script src="/assets/js/main.min.js"></script>
+
+
+
+
+<script src="/assets/js/lunr/lunr.min.js"></script>
+<script src="/assets/js/lunr/lunr-store.js"></script>
+<script src="/assets/js/lunr/lunr-en.js"></script>
+
+
+
+
+
+
+
+  </body>
+</html>

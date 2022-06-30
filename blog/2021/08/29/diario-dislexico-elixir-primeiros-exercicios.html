@@ -1,0 +1,1065 @@
+<!doctype html>
+<!--
+  Minimal Mistakes Jekyll Theme 4.24.0 by Michael Rose
+  Copyright 2013-2020 Michael Rose - mademistakes.com | @mmistakes
+  Free for personal and commercial use under the MIT license
+  https://github.com/mmistakes/minimal-mistakes/blob/master/LICENSE
+-->
+<html lang="pt" class="no-js">
+  <head>
+    <meta charset="utf-8">
+
+<!-- begin _includes/seo.html --><title>Diário disléxico - Elixir: Os primeiros exercícios - CallMarx</title>
+<meta name="description" content="Sobre os primeiros exercícios de Elixir do exercism.io">
+
+
+  <meta name="author" content="Eugenio Augusto Jimenes">
+  
+  <meta property="article:author" content="Eugenio Augusto Jimenes">
+  
+
+
+<meta property="og:type" content="article">
+<meta property="og:locale" content="pt_BR">
+<meta property="og:site_name" content="CallMarx">
+<meta property="og:title" content="Diário disléxico - Elixir: Os primeiros exercícios">
+<meta property="og:url" content="https://callmarx.github.io/blog/2021/08/29/diario-dislexico-elixir-primeiros-exercicios.html">
+
+
+  <meta property="og:description" content="Sobre os primeiros exercícios de Elixir do exercism.io">
+
+
+
+  <meta property="og:image" content="https://callmarx.github.io/assets/posts/elixir-logo.webp">
+
+
+
+  <meta name="twitter:site" content="@leminski_se">
+  <meta name="twitter:title" content="Diário disléxico - Elixir: Os primeiros exercícios">
+  <meta name="twitter:description" content="Sobre os primeiros exercícios de Elixir do exercism.io">
+  <meta name="twitter:url" content="https://callmarx.github.io/blog/2021/08/29/diario-dislexico-elixir-primeiros-exercicios.html">
+
+  
+    <meta name="twitter:card" content="summary_large_image">
+    <meta name="twitter:image" content="https://callmarx.github.io/assets/posts/elixir-logo.webp">
+  
+
+  
+
+
+
+  <meta property="article:published_time" content="2021-08-29T21:49:12-03:00">
+
+
+
+
+
+
+<link rel="canonical" href="https://callmarx.github.io/blog/2021/08/29/diario-dislexico-elixir-primeiros-exercicios.html">
+
+
+
+
+<script type="application/ld+json">
+  {
+    "@context": "https://schema.org",
+    
+      "@type": "Person",
+      "name": null,
+      "url": "https://callmarx.github.io/"
+    
+  }
+</script>
+
+
+
+
+
+
+
+<!-- end _includes/seo.html -->
+
+
+
+  <link href="/feed.xml" type="application/atom+xml" rel="alternate" title="CallMarx Feed">
+
+
+<!-- https://t.co/dKP3o1e -->
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+<script>
+  document.documentElement.className = document.documentElement.className.replace(/\bno-js\b/g, '') + ' js ';
+</script>
+
+<!-- For all browsers -->
+<link rel="stylesheet" href="/assets/css/main.css">
+<link rel="preload" href="https://cdn.jsdelivr.net/npm/@fortawesome/fontawesome-free@5/css/all.min.css" as="style" onload="this.onload=null;this.rel='stylesheet'">
+<noscript><link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@fortawesome/fontawesome-free@5/css/all.min.css"></noscript>
+
+
+
+    <!-- start custom head snippets -->
+
+<!-- insert favicons. use https://realfavicongenerator.net/ -->
+
+<!-- end custom head snippets -->
+
+  </head>
+
+  <body class="layout--single">
+    <nav class="skip-links">
+  <ul>
+    <li><a href="#site-nav" class="screen-reader-shortcut">Skip to primary navigation</a></li>
+    <li><a href="#main" class="screen-reader-shortcut">Skip to content</a></li>
+    <li><a href="#footer" class="screen-reader-shortcut">Skip to footer</a></li>
+  </ul>
+</nav>
+
+    <!--[if lt IE 9]>
+<div class="notice--danger align-center" style="margin: 0;">You are using an <strong>outdated</strong> browser. Please <a href="https://browsehappy.com/">upgrade your browser</a> to improve your experience.</div>
+<![endif]-->
+
+    
+
+<div class="masthead">
+  <div class="masthead__inner-wrap">
+    <div class="masthead__menu">
+      <nav id="site-nav" class="greedy-nav">
+        
+        <a class="site-title" href="/">
+          CallMarx
+          
+        </a>
+        <ul class="visible-links"><li class="masthead__menu-item">
+              <a href="/tags/">Posts por tags</a>
+            </li><li class="masthead__menu-item">
+              <a href="/about/">Sobre mim</a>
+            </li></ul>
+        
+        <button class="search__toggle" type="button">
+          <span class="visually-hidden">Buscar</span>
+          <i class="fas fa-search"></i>
+        </button>
+        
+        <button class="greedy-nav__toggle hidden" type="button">
+          <span class="visually-hidden">Toggle menu</span>
+          <div class="navicon"></div>
+        </button>
+        <ul class="hidden-links hidden"></ul>
+      </nav>
+    </div>
+  </div>
+</div>
+
+
+    <div class="initial-content">
+      
+
+
+
+<div id="main" role="main">
+  
+  <div class="sidebar sticky">
+  
+
+
+<div itemscope itemtype="https://schema.org/Person">
+
+  
+    <div class="author__avatar">
+      
+        <img src="/assets/eu-e-nila.webp" alt="Eugenio Augusto Jimenes" itemprop="image">
+      
+    </div>
+  
+
+  <div class="author__content">
+    
+      <h3 class="author__name" itemprop="name">Eugenio Augusto Jimenes</h3>
+    
+    
+      <div class="author__bio" itemprop="description">
+        <p>Nerd, disléxico, viciado-hipster em café, desenvolvedor, linux fanboy e esquerdopata convicto - CallMarx, sacou?</p>
+
+      </div>
+    
+  </div>
+
+  <div class="author__urls-wrapper">
+    <button class="btn btn--inverse">Contatos</button>
+    <ul class="author__urls social-icons">
+      
+        <li itemprop="homeLocation" itemscope itemtype="https://schema.org/Place">
+          <i class="fas fa-fw fa-map-marker-alt" aria-hidden="true"></i> <span itemprop="name">São Paulo - SP</span>
+        </li>
+      
+
+      
+        
+          
+            <li><a href="mailto:eugeniojimenes@gmail" rel="nofollow noopener noreferrer"><i class="fas fa-fw fa-envelope-square" aria-hidden="true"></i><span class="label">Email</span></a></li>
+          
+        
+          
+            <li><a href="https://github.com/callmarx" rel="nofollow noopener noreferrer"><i class="fab fa-fw fa-github" aria-hidden="true"></i><span class="label">GitHub</span></a></li>
+          
+        
+          
+            <li><a href="https://twitter.com/leminski_se" rel="nofollow noopener noreferrer"><i class="fab fa-fw fa-twitter" aria-hidden="true"></i><span class="label">Twitter</span></a></li>
+          
+        
+          
+            <li><a href="https://www.linkedin.com/in/eugenio-augusto-jimenes/" rel="nofollow noopener noreferrer"><i class="fab fa-fw fa-linkedin" aria-hidden="true"></i><span class="label">LinkedIn</span></a></li>
+          
+        
+      
+
+      
+
+      
+
+      
+
+      
+
+      
+
+      
+
+      
+
+      
+
+      
+
+      
+
+      
+
+      
+
+      
+
+      
+
+      
+
+      
+
+      
+
+      
+
+      
+
+      
+
+      
+
+      
+
+      
+
+      
+
+      <!--
+  <li>
+    <a href="http://link-to-whatever-social-network.com/user/" itemprop="sameAs" rel="nofollow noopener noreferrer">
+      <i class="fas fa-fw" aria-hidden="true"></i> Custom Social Profile Link
+    </a>
+  </li>
+-->
+    </ul>
+  </div>
+</div>
+
+  
+  </div>
+
+
+
+  <article class="page" itemscope itemtype="https://schema.org/CreativeWork">
+    <meta itemprop="headline" content="Diário disléxico - Elixir: Os primeiros exercícios">
+    <meta itemprop="description" content="Volto aqui para falar um pouco sobre o que eu aprendi com os exercícios básicos e iniciantes dohttps://exercism.io sobre Elixir. Abaixo segue o que eu resolvi da trilha atéagora e o que eu aprendi/utilizei em cada.">
+    <meta itemprop="datePublished" content="2021-08-29T21:49:12-03:00">
+    
+
+    <div class="page__inner-wrap">
+      
+        <header>
+          <h1 id="page-title" class="page__title" itemprop="headline">Diário disléxico - Elixir: Os primeiros exercícios
+</h1>
+          
+
+  <p class="page__meta">
+    
+      
+      <span class="page__meta-date">
+        <i class="far fa-calendar-alt" aria-hidden="true"></i>
+        
+        <time datetime="2021-08-29T21:49:12-03:00">2021-08-29</time>
+      </span>
+    
+
+    <span class="page__meta-sep"></span>
+
+    
+      
+      
+
+      <span class="page__meta-readtime">
+        <i class="far fa-clock" aria-hidden="true"></i>
+        
+          15 minuto(s) de leitura
+        
+      </span>
+    
+  </p>
+
+
+        </header>
+      
+
+      <section class="page__content" itemprop="text">
+        
+        <div class="tenor-gif-embed" data-postid="7770370" data-share-method="host" data-aspect-ratio="1.16602" data-width="100%"><a href="https://tenor.com/view/gim-gimnasio-pesas-fuerte-james-corden-gif-7770370"></a></div>
+<script type="text/javascript" async="" src="https://tenor.com/embed.js"></script>
+
+<p><br />
+Volto aqui para falar um pouco sobre o que eu aprendi com os exercícios básicos e iniciantes do
+<a href="https://exercism.io" target="_blank">https://exercism.io</a> sobre Elixir. Abaixo segue o que eu resolvi da trilha até
+agora e o que eu aprendi/utilizei em cada.
+<!-- excerpt-separator --></p>
+<ul>
+  <li><strong>Word Count</strong>: <em>Pipe</em>, <code class="language-plaintext highlighter-rouge">String.split</code> e <em>regex</em></li>
+  <li><strong>RNA Transcription</strong>: <em>map</em>, <code class="language-plaintext highlighter-rouge">Enum.map</code> e <em>codepoint</em> de um caractere</li>
+  <li><strong>Nucleotide Count</strong>: <em>map</em>, <code class="language-plaintext highlighter-rouge">Enum.reduce</code> e <em>codepoint</em> de um caractere</li>
+  <li><strong>Accumulate</strong>: Múltipla definição de funções (nome + aridade) e recursão</li>
+  <li><strong>Secret Handshake</strong>: <em>Bitwise</em> e <code class="language-plaintext highlighter-rouge">Enum.reduce</code></li>
+  <li><strong>Roman Numerals</strong>: Recursão e argumento opcional</li>
+  <li><strong>Beer Song</strong>: <em>case</em>, argumento opcional e <code class="language-plaintext highlighter-rouge">Enum.map_join</code></li>
+  <li><strong>Bob</strong>: <em>Regex</em> com <code class="language-plaintext highlighter-rouge">String.match?</code> vs funções auxiliares como <code class="language-plaintext highlighter-rouge">String.trim</code>,
+<code class="language-plaintext highlighter-rouge">String.downcase</code> e <code class="language-plaintext highlighter-rouge">String.ends_with?</code></li>
+</ul>
+
+<h2 id="word-count">Word Count</h2>
+
+<p class="notice--primary">O enunciado pode ser obtido <a href="https://exercism.org/tracks/elixir/exercises/word-count" target="_blank">aqui</a>.</p>
+
+<p>Exercício simples, perfeito para aplicar a estrutura <em>pipe</em> sem muita dificuldade. Entendi melhor
+o uso de <code class="language-plaintext highlighter-rouge">String.split</code> que possui um terceiro argumento opcional, com <code class="language-plaintext highlighter-rouge">trim: true</code> strings vazias
+são excluídas da lista resultante.</p>
+
+<p>Solução:</p>
+<div class="language-elixir highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="k">defmodule</span> <span class="no">WordCount</span> <span class="k">do</span>
+  <span class="nv">@doc</span> <span class="sd">"""
+  Count the number of words in the sentence.
+  Words are compared case-insensitively.
+  """</span>
+  <span class="nv">@spec</span> <span class="n">count</span><span class="p">(</span><span class="no">String</span><span class="o">.</span><span class="n">t</span><span class="p">())</span> <span class="p">::</span> <span class="n">map</span>
+  <span class="k">def</span> <span class="n">count</span><span class="p">(</span><span class="n">sentence</span><span class="p">)</span> <span class="k">do</span>
+    <span class="no">String</span><span class="o">.</span><span class="n">downcase</span><span class="p">(</span><span class="n">sentence</span><span class="p">)</span>
+    <span class="o">|&gt;</span> <span class="no">String</span><span class="o">.</span><span class="n">split</span><span class="p">(</span><span class="sr">~r/[^[:alnum:]-]/u</span><span class="p">,</span> <span class="ss">trim:</span> <span class="no">true</span><span class="p">)</span>
+    <span class="o">|&gt;</span> <span class="no">Enum</span><span class="o">.</span><span class="n">frequencies</span>
+  <span class="k">end</span>
+<span class="k">end</span>
+</code></pre></div></div>
+
+<h2 id="rna-transcription">RNA Transcription</h2>
+
+<p class="notice--primary">O enunciado pode ser obtido <a href="https://exercism.org/tracks/elixir/exercises/rna-transcription" target="_blank">aqui</a>.</p>
+
+<p>Aprendi que <code class="language-plaintext highlighter-rouge">?</code> + <code class="language-plaintext highlighter-rouge">caractere</code> devolve o seu <em>codepoint</em>, além disso podemos usar o acesso de um
+<em>map</em> como função com uso de <code class="language-plaintext highlighter-rouge">&amp;</code>, ou seja, a consulta do valor de uma chave de um <em>map</em> pode ser
+tratada como função, no caso através de <code class="language-plaintext highlighter-rouge">&amp;(@dna_to_rna[&amp;1])</code>.</p>
+
+<p>Solução:</p>
+<div class="language-elixir highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="k">defmodule</span> <span class="no">RnaTranscription</span> <span class="k">do</span>
+  <span class="nv">@doc</span> <span class="sd">"""
+  Transcribes a character list representing DNA nucleotides to RNA
+
+  ## Examples
+
+  iex&gt; RnaTranscription.to_rna('ACTG')
+  'UGAC'
+  """</span>
+  <span class="nv">@dna_to_rna</span> <span class="p">%{</span>
+    <span class="sx">?G</span> <span class="o">=&gt;</span> <span class="sx">?C</span><span class="p">,</span>
+    <span class="sx">?C</span> <span class="o">=&gt;</span> <span class="sx">?G</span><span class="p">,</span>
+    <span class="sx">?T</span> <span class="o">=&gt;</span> <span class="sx">?A</span><span class="p">,</span>
+    <span class="sx">?A</span> <span class="o">=&gt;</span> <span class="sx">?U</span>
+  <span class="p">}</span>
+
+  <span class="nv">@spec</span> <span class="n">to_rna</span><span class="p">([</span><span class="n">char</span><span class="p">])</span> <span class="p">::</span> <span class="p">[</span><span class="n">char</span><span class="p">]</span>
+  <span class="k">def</span> <span class="n">to_rna</span><span class="p">(</span><span class="n">dna</span><span class="p">)</span> <span class="k">do</span>
+    <span class="no">Enum</span><span class="o">.</span><span class="n">map</span><span class="p">(</span><span class="n">dna</span><span class="p">,</span> <span class="o">&amp;</span><span class="p">(</span><span class="nv">@dna_to_rna</span><span class="p">[</span><span class="nv">&amp;1</span><span class="p">]))</span>
+  <span class="k">end</span>
+<span class="k">end</span>
+</code></pre></div></div>
+
+<h2 id="nucleotide-count">Nucleotide Count</h2>
+
+<p class="notice--primary">O enunciado pode ser obtido <a href="https://exercism.org/tracks/elixir/exercises/nucleotide-count" target="_blank">aqui</a>.</p>
+
+<p>Além de reaplicar os conceitos de <em>codepoint</em> e <em>map</em> do problema anterior, foi possível verificar
+como <code class="language-plaintext highlighter-rouge">Enum.reduce</code> pode trazer uma solução de melhor performance.</p>
+
+<p>Solução:</p>
+<div class="language-elixir highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="k">defmodule</span> <span class="no">NucleotideCount</span> <span class="k">do</span>
+  <span class="nv">@nucleotides</span> <span class="p">[</span><span class="sx">?A</span><span class="p">,</span> <span class="sx">?C</span><span class="p">,</span> <span class="sx">?G</span><span class="p">,</span> <span class="sx">?T</span><span class="p">]</span>
+
+  <span class="nv">@doc</span> <span class="sd">"""
+  Counts individual nucleotides in a DNA strand.
+
+  ## Examples
+
+  iex&gt; NucleotideCount.count('AATAA', ?A)
+  4
+
+  iex&gt; NucleotideCount.count('AATAA', ?T)
+  1
+  """</span>
+  <span class="nv">@spec</span> <span class="n">count</span><span class="p">(</span><span class="n">charlist</span><span class="p">(),</span> <span class="n">char</span><span class="p">())</span> <span class="p">::</span> <span class="n">non_neg_integer</span><span class="p">()</span>
+  <span class="k">def</span> <span class="n">count</span><span class="p">(</span><span class="n">strand</span><span class="p">,</span> <span class="n">nucleotide</span><span class="p">)</span> <span class="k">do</span>
+    <span class="no">Enum</span><span class="o">.</span><span class="n">count</span><span class="p">(</span><span class="n">strand</span><span class="p">,</span> <span class="k">fn</span> <span class="n">char</span> <span class="o">-&gt;</span> <span class="n">char</span> <span class="o">==</span> <span class="n">nucleotide</span> <span class="k">end</span> <span class="p">)</span>
+  <span class="k">end</span>
+
+  <span class="nv">@doc</span> <span class="sd">"""
+  Returns a summary of counts by nucleotide.
+
+  ## Examples
+
+  iex&gt; NucleotideCount.histogram('AATAA')
+  %{?A =&gt; 4, ?T =&gt; 1, ?C =&gt; 0, ?G =&gt; 0}
+  """</span>
+  <span class="nv">@spec</span> <span class="n">histogram</span><span class="p">(</span><span class="n">charlist</span><span class="p">())</span> <span class="p">::</span> <span class="n">map</span><span class="p">()</span>
+  <span class="k">def</span> <span class="n">histogram</span><span class="p">(</span><span class="n">strand</span><span class="p">)</span> <span class="k">do</span>
+    <span class="c1">## Solution 1:</span>
+    <span class="c1"># Map.new(@nucleotides, fn key -&gt; {key, count(strand, key)} end)</span>
+
+    <span class="c1">## Solution 2:</span>
+    <span class="n">result</span> <span class="o">=</span> <span class="no">Map</span><span class="o">.</span><span class="n">new</span><span class="p">(</span><span class="nv">@nucleotides</span><span class="p">,</span> <span class="o">&amp;</span><span class="p">{</span><span class="nv">&amp;1</span><span class="p">,</span> <span class="mi">0</span><span class="p">})</span>
+    <span class="no">Enum</span><span class="o">.</span><span class="n">reduce</span><span class="p">(</span>
+      <span class="n">strand</span><span class="p">,</span>
+      <span class="n">result</span><span class="p">,</span>
+      <span class="k">fn</span> <span class="p">(</span><span class="n">char</span><span class="p">,</span> <span class="n">acc</span><span class="p">)</span> <span class="o">-&gt;</span>
+        <span class="no">Map</span><span class="o">.</span><span class="n">update!</span><span class="p">(</span><span class="n">acc</span><span class="p">,</span> <span class="n">char</span><span class="p">,</span> <span class="o">&amp;</span><span class="p">(</span><span class="nv">&amp;1</span> <span class="o">+</span> <span class="mi">1</span><span class="p">))</span>
+      <span class="k">end</span>
+    <span class="p">)</span>
+  <span class="k">end</span>
+<span class="k">end</span>
+</code></pre></div></div>
+
+<h2 id="accumulate">Accumulate</h2>
+
+<p class="notice--primary">O enunciado pode ser obtido <a href="https://exercism.org/tracks/elixir/exercises/accumulate" target="_blank">aqui</a>.</p>
+
+<p>Gostei bastante deste exercício. Mesmo tendo uma solução aparentemente direta e simples, pude
+compreender o ganho que temos com a múltipla definição de funções, já que o Elixir distingue cada
+função pelo seu nome + aridade. O uso de recursão torna-se ainda mais empírica, por mais que seja
+algo já esperado de uma linguagem funcional. Não posso também deixar de comentar como o uso do
+recurso <code class="language-plaintext highlighter-rouge">[ head | tail ]</code> é bonito demais!</p>
+
+<p>Solução:</p>
+<div class="language-elixir highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="k">defmodule</span> <span class="no">Accumulate</span> <span class="k">do</span>
+  <span class="nv">@doc</span> <span class="sd">"""
+    Given a list and a function, apply the function to each list item and
+    replace it with the function's return value.
+
+    Returns a list.
+
+    ## Examples
+
+      iex&gt; Accumulate.accumulate([], fn(x) -&gt; x * 2 end)
+      []
+
+      iex&gt; Accumulate.accumulate([1, 2, 3], fn(x) -&gt; x * 2 end)
+      [2, 4, 6]
+
+  """</span>
+
+  <span class="nv">@spec</span> <span class="n">accumulate</span><span class="p">(</span><span class="n">list</span><span class="p">,</span> <span class="p">(</span><span class="n">any</span> <span class="o">-&gt;</span> <span class="n">any</span><span class="p">))</span> <span class="p">::</span> <span class="n">list</span>
+  <span class="k">def</span> <span class="n">accumulate</span><span class="p">([],</span> <span class="n">_</span><span class="p">),</span> <span class="k">do</span><span class="p">:</span> <span class="p">[]</span>
+  <span class="k">def</span> <span class="n">accumulate</span><span class="p">([</span><span class="n">h</span> <span class="o">|</span> <span class="n">t</span><span class="p">],</span> <span class="n">fun</span><span class="p">),</span> <span class="k">do</span><span class="p">:</span> <span class="p">[</span><span class="n">fun</span><span class="o">.</span><span class="p">(</span><span class="n">h</span><span class="p">)</span> <span class="o">|</span> <span class="n">accumulate</span><span class="p">(</span><span class="n">t</span><span class="p">,</span> <span class="n">fun</span><span class="p">)]</span>
+<span class="k">end</span>
+</code></pre></div></div>
+
+<h2 id="secret-handshake">Secret Handshake</h2>
+
+<p class="notice--primary">O enunciado pode ser obtido <a href="https://exercism.org/tracks/elixir/exercises/secret-handshake" target="_blank">aqui</a>.</p>
+
+<p>Foi ótimo para relembrar os conceitos de
+<a href="https://pt.wikipedia.org/wiki/L%C3%B3gica_bin%C3%A1ria" target="_blank">Lógica binária</a>. Com a
+linha <code class="language-plaintext highlighter-rouge">use Bitwise, only_operators: true</code> temos acesso a todos os operadores de lógica binária, por
+mais que este exercício trabalhe apenas como AND, representado por <code class="language-plaintext highlighter-rouge">&amp;&amp;&amp;</code>.</p>
+
+<p>Solução:</p>
+<div class="language-elixir highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="k">defmodule</span> <span class="no">SecretHandshake</span> <span class="k">do</span>
+  <span class="kn">use</span> <span class="no">Bitwise</span><span class="p">,</span> <span class="ss">only_operators:</span> <span class="no">true</span>
+
+  <span class="nv">@doc</span> <span class="sd">"""
+  Determine the actions of a secret handshake based on the binary
+  representation of the given `code`.
+
+  If the following bits are set, include the corresponding action in your list
+  of commands, in order from lowest to highest.
+
+  1 = wink
+  10 = double blink
+  100 = close your eyes
+  1000 = jump
+
+  10000 = Reverse the order of the operations in the secret handshake
+  """</span>
+  <span class="nv">@binary_to_handshake</span> <span class="p">%{</span>
+    <span class="mi">1</span> <span class="o">=&gt;</span> <span class="s2">"wink"</span><span class="p">,</span>
+    <span class="mi">2</span> <span class="o">=&gt;</span> <span class="s2">"double blink"</span><span class="p">,</span>
+    <span class="mi">4</span> <span class="o">=&gt;</span> <span class="s2">"close your eyes"</span><span class="p">,</span>
+    <span class="mi">8</span> <span class="o">=&gt;</span> <span class="s2">"jump"</span>
+  <span class="p">}</span>
+  <span class="nv">@spec</span> <span class="n">commands</span><span class="p">(</span><span class="n">code</span> <span class="p">::</span> <span class="n">integer</span><span class="p">)</span> <span class="p">::</span> <span class="n">list</span><span class="p">(</span><span class="no">String</span><span class="o">.</span><span class="n">t</span><span class="p">())</span>
+  <span class="k">def</span> <span class="n">commands</span><span class="p">(</span><span class="n">code</span><span class="p">)</span> <span class="k">do</span>
+    <span class="n">result</span> <span class="o">=</span> <span class="no">Enum</span><span class="o">.</span><span class="n">reduce</span><span class="p">(</span><span class="nv">@binary_to_handshake</span><span class="p">,</span> <span class="p">[],</span> <span class="k">fn</span> <span class="p">{</span><span class="n">command</span><span class="p">,</span> <span class="n">action</span><span class="p">},</span> <span class="n">acc</span> <span class="o">-&gt;</span>
+      <span class="k">if</span> <span class="p">(</span><span class="n">code</span> <span class="o">&amp;&amp;&amp;</span> <span class="n">command</span><span class="p">)</span> <span class="o">!=</span> <span class="mi">0</span><span class="p">,</span> <span class="k">do</span><span class="p">:</span> <span class="n">acc</span> <span class="o">++</span> <span class="p">[</span><span class="n">action</span><span class="p">],</span> <span class="k">else</span><span class="p">:</span> <span class="n">acc</span>
+    <span class="k">end</span><span class="p">)</span>
+
+    <span class="k">if</span> <span class="p">(</span><span class="n">code</span> <span class="o">&amp;&amp;&amp;</span> <span class="mi">16</span><span class="p">)</span> <span class="o">!=</span> <span class="mi">0</span><span class="p">,</span> <span class="k">do</span><span class="p">:</span> <span class="no">Enum</span><span class="o">.</span><span class="n">reverse</span><span class="p">(</span><span class="n">result</span><span class="p">),</span> <span class="k">else</span><span class="p">:</span> <span class="n">result</span>
+  <span class="k">end</span>
+<span class="k">end</span>
+</code></pre></div></div>
+
+<p class="notice--info"><strong>OBS</strong>: Caso ainda o uso de <code class="language-plaintext highlighter-rouge">Enum.reduce/3</code> esteja confuso para você, recomendo muito a leitura
+<a href="https://inquisitivedeveloper.com/lwm-elixir-31/#enumreduce3" target="_blank">disso</a> para além do
+que explica na <a href="https://hexdocs.pm/elixir/1.12/Enum.html#reduce/3" target="_blank">documentação oficial</a></p>
+
+<h2 id="roman-numerals">Roman Numerals</h2>
+
+<p class="notice--primary">O enunciado pode ser obtido <a href="https://exercism.org/tracks/elixir/exercises/roman-numerals" target="_blank">aqui</a>.</p>
+
+<p>O divertido mesmo foi descobrir que números romanos possuem uma lógica recursiva de tradução da
+base decimal. Acabei fazendo duas soluções: uma “manual” e outra recursiva (confesso que vi a
+segunda solução bem depois).</p>
+
+<p>Solução:</p>
+<div class="language-elixir highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="k">defmodule</span> <span class="no">RomanNumerals</span> <span class="k">do</span>
+  <span class="nv">@doc</span> <span class="sd">"""
+  Convert the number to a roman number.
+  """</span>
+
+  <span class="nv">@base_latters</span> <span class="p">%{</span>
+    <span class="mi">1</span> <span class="o">=&gt;</span> <span class="s2">"I"</span><span class="p">,</span>
+    <span class="mi">5</span> <span class="o">=&gt;</span> <span class="s2">"V"</span><span class="p">,</span>
+    <span class="mi">10</span> <span class="o">=&gt;</span> <span class="s2">"X"</span><span class="p">,</span>
+    <span class="mi">50</span> <span class="o">=&gt;</span> <span class="s2">"L"</span><span class="p">,</span>
+    <span class="mi">100</span> <span class="o">=&gt;</span> <span class="s2">"C"</span><span class="p">,</span>
+    <span class="mi">500</span> <span class="o">=&gt;</span> <span class="s2">"D"</span><span class="p">,</span>
+    <span class="mi">1000</span> <span class="o">=&gt;</span> <span class="s2">"M"</span>
+  <span class="p">}</span>
+  <span class="nv">@spec</span> <span class="n">numeral</span><span class="p">(</span><span class="n">pos_integer</span><span class="p">)</span> <span class="p">::</span> <span class="no">String</span><span class="o">.</span><span class="n">t</span><span class="p">()</span>
+  <span class="k">def</span> <span class="n">numeral</span><span class="p">(</span><span class="n">number</span><span class="p">,</span> <span class="n">recursive_opt</span> <span class="p">\\</span> <span class="no">true</span><span class="p">)</span> <span class="k">do</span>
+    <span class="k">if</span> <span class="n">recursive_opt</span><span class="p">,</span> <span class="k">do</span><span class="p">:</span> <span class="n">recursive_solution</span><span class="p">(</span><span class="n">number</span><span class="p">),</span> <span class="k">else</span><span class="p">:</span> <span class="n">manual_solution</span><span class="p">(</span><span class="n">number</span><span class="p">)</span>
+  <span class="k">end</span>
+
+  <span class="k">defp</span> <span class="n">recursive_solution</span><span class="p">(</span><span class="n">number</span><span class="p">)</span> <span class="k">do</span>
+    <span class="k">cond</span> <span class="k">do</span>
+      <span class="n">number</span> <span class="o">&gt;=</span> <span class="mi">1000</span> <span class="o">-&gt;</span> <span class="s2">"M"</span> <span class="o">&lt;&gt;</span> <span class="n">recursive_solution</span><span class="p">(</span><span class="n">number</span> <span class="o">-</span> <span class="mi">1000</span><span class="p">)</span>
+      <span class="n">number</span> <span class="o">&gt;=</span> <span class="mi">900</span> <span class="o">-&gt;</span> <span class="s2">"CM"</span> <span class="o">&lt;&gt;</span> <span class="n">recursive_solution</span><span class="p">(</span><span class="n">number</span> <span class="o">-</span> <span class="mi">900</span><span class="p">)</span>
+      <span class="n">number</span> <span class="o">&gt;=</span> <span class="mi">500</span> <span class="o">-&gt;</span> <span class="s2">"D"</span> <span class="o">&lt;&gt;</span> <span class="n">recursive_solution</span><span class="p">(</span><span class="n">number</span> <span class="o">-</span> <span class="mi">500</span><span class="p">)</span>
+      <span class="n">number</span> <span class="o">&gt;=</span> <span class="mi">400</span> <span class="o">-&gt;</span> <span class="s2">"CD"</span> <span class="o">&lt;&gt;</span> <span class="n">recursive_solution</span><span class="p">(</span><span class="n">number</span> <span class="o">-</span> <span class="mi">400</span><span class="p">)</span>
+      <span class="n">number</span> <span class="o">&gt;=</span> <span class="mi">100</span> <span class="o">-&gt;</span> <span class="s2">"C"</span> <span class="o">&lt;&gt;</span> <span class="n">recursive_solution</span><span class="p">(</span><span class="n">number</span> <span class="o">-</span> <span class="mi">100</span><span class="p">)</span>
+      <span class="n">number</span> <span class="o">&gt;=</span> <span class="mi">90</span> <span class="o">-&gt;</span> <span class="s2">"XC"</span> <span class="o">&lt;&gt;</span> <span class="n">recursive_solution</span><span class="p">(</span><span class="n">number</span> <span class="o">-</span> <span class="mi">90</span><span class="p">)</span>
+      <span class="n">number</span> <span class="o">&gt;=</span> <span class="mi">50</span> <span class="o">-&gt;</span> <span class="s2">"L"</span> <span class="o">&lt;&gt;</span> <span class="n">recursive_solution</span><span class="p">(</span><span class="n">number</span> <span class="o">-</span> <span class="mi">50</span><span class="p">)</span>
+      <span class="n">number</span> <span class="o">&gt;=</span> <span class="mi">40</span> <span class="o">-&gt;</span> <span class="s2">"XL"</span> <span class="o">&lt;&gt;</span> <span class="n">recursive_solution</span><span class="p">(</span><span class="n">number</span> <span class="o">-</span> <span class="mi">40</span><span class="p">)</span>
+      <span class="n">number</span> <span class="o">&gt;=</span> <span class="mi">10</span> <span class="o">-&gt;</span> <span class="s2">"X"</span> <span class="o">&lt;&gt;</span> <span class="n">recursive_solution</span><span class="p">(</span><span class="n">number</span> <span class="o">-</span> <span class="mi">10</span><span class="p">)</span>
+      <span class="n">number</span> <span class="o">&gt;=</span> <span class="mi">9</span> <span class="o">-&gt;</span> <span class="s2">"IX"</span> <span class="o">&lt;&gt;</span> <span class="n">recursive_solution</span><span class="p">(</span><span class="n">number</span> <span class="o">-</span> <span class="mi">9</span><span class="p">)</span>
+      <span class="n">number</span> <span class="o">&gt;=</span> <span class="mi">5</span> <span class="o">-&gt;</span> <span class="s2">"V"</span> <span class="o">&lt;&gt;</span> <span class="n">recursive_solution</span><span class="p">(</span><span class="n">number</span> <span class="o">-</span> <span class="mi">5</span><span class="p">)</span>
+      <span class="n">number</span> <span class="o">&gt;=</span> <span class="mi">4</span> <span class="o">-&gt;</span> <span class="s2">"IV"</span> <span class="o">&lt;&gt;</span> <span class="n">recursive_solution</span><span class="p">(</span><span class="n">number</span> <span class="o">-</span> <span class="mi">4</span><span class="p">)</span>
+      <span class="n">number</span> <span class="o">&gt;=</span> <span class="mi">1</span> <span class="o">-&gt;</span> <span class="s2">"I"</span> <span class="o">&lt;&gt;</span> <span class="n">recursive_solution</span><span class="p">(</span><span class="n">number</span> <span class="o">-</span> <span class="mi">1</span><span class="p">)</span>
+      <span class="no">true</span> <span class="o">-&gt;</span> <span class="s2">""</span>
+    <span class="k">end</span>
+  <span class="k">end</span>
+
+  <span class="k">defp</span> <span class="n">manual_solution</span><span class="p">(</span><span class="n">number</span><span class="p">)</span> <span class="k">do</span>
+    <span class="n">list</span> <span class="o">=</span> <span class="no">Integer</span><span class="o">.</span><span class="n">digits</span><span class="p">(</span><span class="n">number</span><span class="p">)</span>
+    <span class="n">size</span> <span class="o">=</span> <span class="n">length</span><span class="p">(</span><span class="n">list</span><span class="p">)</span>
+    <span class="no">Enum</span><span class="o">.</span><span class="n">with_index</span><span class="p">(</span><span class="n">list</span><span class="p">)</span>
+    <span class="o">|&gt;</span> <span class="no">Enum</span><span class="o">.</span><span class="n">reduce</span><span class="p">(</span><span class="s2">""</span><span class="p">,</span> <span class="k">fn</span> <span class="p">{</span><span class="n">num</span><span class="p">,</span> <span class="n">idx</span><span class="p">},</span> <span class="n">acc</span> <span class="o">-&gt;</span>
+      <span class="n">acc</span> <span class="o">&lt;&gt;</span> <span class="n">composed</span><span class="p">(</span><span class="n">num</span><span class="p">,</span> <span class="no">Integer</span><span class="o">.</span><span class="n">pow</span><span class="p">(</span><span class="mi">10</span><span class="p">,</span> <span class="n">size</span> <span class="o">-</span> <span class="n">idx</span> <span class="o">-</span> <span class="mi">1</span><span class="p">))</span>
+    <span class="k">end</span><span class="p">)</span>
+  <span class="k">end</span>
+
+  <span class="k">defp</span> <span class="n">composed</span><span class="p">(</span><span class="n">num</span><span class="p">,</span> <span class="n">base</span><span class="p">)</span> <span class="k">do</span>
+    <span class="k">cond</span> <span class="k">do</span>
+      <span class="n">num</span> <span class="o">&lt;=</span> <span class="mi">3</span> <span class="o">-&gt;</span>
+        <span class="no">String</span><span class="o">.</span><span class="n">duplicate</span><span class="p">(</span><span class="nv">@base_latters</span><span class="p">[</span><span class="n">base</span><span class="p">],</span> <span class="n">num</span><span class="p">)</span>
+      <span class="n">num</span> <span class="o">&lt;</span> <span class="mi">5</span> <span class="o">-&gt;</span>
+        <span class="no">String</span><span class="o">.</span><span class="n">duplicate</span><span class="p">(</span><span class="nv">@base_latters</span><span class="p">[</span><span class="n">base</span><span class="p">],</span> <span class="mi">5</span> <span class="o">-</span> <span class="n">num</span><span class="p">)</span> <span class="o">&lt;&gt;</span> <span class="nv">@base_latters</span><span class="p">[</span><span class="mi">5</span> <span class="o">*</span> <span class="n">base</span><span class="p">]</span>
+      <span class="n">num</span> <span class="o">==</span> <span class="mi">5</span> <span class="o">-&gt;</span>
+        <span class="nv">@base_latters</span><span class="p">[</span><span class="mi">5</span> <span class="o">*</span> <span class="n">base</span><span class="p">]</span>
+      <span class="n">num</span> <span class="o">&lt;</span> <span class="mi">9</span> <span class="o">-&gt;</span>
+        <span class="nv">@base_latters</span><span class="p">[</span><span class="mi">5</span> <span class="o">*</span> <span class="n">base</span><span class="p">]</span> <span class="o">&lt;&gt;</span> <span class="no">String</span><span class="o">.</span><span class="n">duplicate</span><span class="p">(</span><span class="nv">@base_latters</span><span class="p">[</span><span class="n">base</span><span class="p">],</span> <span class="n">num</span> <span class="o">-</span> <span class="mi">5</span><span class="p">)</span>
+      <span class="no">true</span> <span class="o">-&gt;</span> <span class="c1"># num == 9</span>
+         <span class="nv">@base_latters</span><span class="p">[</span><span class="n">base</span><span class="p">]</span> <span class="o">&lt;&gt;</span> <span class="nv">@base_latters</span><span class="p">[</span><span class="mi">10</span> <span class="o">*</span> <span class="n">base</span><span class="p">]</span>
+    <span class="k">end</span>
+  <span class="k">end</span>
+<span class="k">end</span>
+</code></pre></div></div>
+
+<h2 id="beer-song">Beer Song</h2>
+
+<p class="notice--primary">O enunciado pode ser obtido <a href="https://exercism.org/tracks/elixir/exercises/beer-song" target="_blank">aqui</a>.</p>
+
+<p>Nada muito sofisticado, apenas te “empurra” a conhecer/utilizar <code class="language-plaintext highlighter-rouge">Enum.map_join</code> e de beber umas com
+os amigos (te odeio Covid).</p>
+
+<p>Solução:</p>
+<div class="language-elixir highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="k">defmodule</span> <span class="no">BeerSong</span> <span class="k">do</span>
+  <span class="nv">@doc</span> <span class="sd">"""
+  Get a single verse of the beer song
+  """</span>
+  <span class="nv">@spec</span> <span class="n">verse</span><span class="p">(</span><span class="n">integer</span><span class="p">)</span> <span class="p">::</span> <span class="no">String</span><span class="o">.</span><span class="n">t</span><span class="p">()</span>
+  <span class="k">def</span> <span class="n">verse</span><span class="p">(</span><span class="n">number</span><span class="p">)</span> <span class="k">do</span>
+    <span class="k">case</span> <span class="n">number</span> <span class="k">do</span>
+      <span class="mi">0</span> <span class="o">-&gt;</span>
+        <span class="sd">"""
+        No more bottles of beer on the wall, no more bottles of beer.
+        Go to the store and buy some more, 99 bottles of beer on the wall.
+        """</span>
+      <span class="mi">1</span> <span class="o">-&gt;</span>
+        <span class="sd">"""
+        1 bottle of beer on the wall, 1 bottle of beer.
+        Take it down and pass it around, no more bottles of beer on the wall.
+        """</span>
+      <span class="mi">2</span> <span class="o">-&gt;</span>
+        <span class="sd">"""
+        2 bottles of beer on the wall, 2 bottles of beer.
+        Take one down and pass it around, 1 bottle of beer on the wall.
+        """</span>
+      <span class="n">_</span> <span class="o">-&gt;</span>
+        <span class="sd">"""
+        #{number} bottles of beer on the wall, #{number} bottles of beer.
+        Take one down and pass it around, #{number - 1} bottles of beer on the wall.
+        """</span>
+    <span class="k">end</span>
+  <span class="k">end</span>
+
+  <span class="nv">@doc</span> <span class="sd">"""
+  Get the entire beer song for a given range of numbers of bottles.
+  """</span>
+  <span class="nv">@spec</span> <span class="n">lyrics</span><span class="p">(</span><span class="no">Range</span><span class="o">.</span><span class="n">t</span><span class="p">())</span> <span class="p">::</span> <span class="no">String</span><span class="o">.</span><span class="n">t</span><span class="p">()</span>
+  <span class="k">def</span> <span class="n">lyrics</span><span class="p">(</span><span class="n">range</span> <span class="p">\\</span> <span class="mi">99</span><span class="o">..</span><span class="mi">0</span><span class="p">)</span> <span class="k">do</span>
+    <span class="no">Enum</span><span class="o">.</span><span class="n">map_join</span><span class="p">(</span><span class="n">range</span><span class="p">,</span> <span class="s2">"</span><span class="se">\n</span><span class="s2">"</span><span class="p">,</span> <span class="o">&amp;</span><span class="n">verse</span><span class="o">/</span><span class="mi">1</span><span class="p">)</span>
+  <span class="k">end</span>
+<span class="k">end</span>
+</code></pre></div></div>
+
+<h2 id="bob">Bob</h2>
+
+<p class="notice--primary">O enunciado pode ser obtido <a href="https://exercism.org/tracks/elixir/exercises/bob" target="_blank">aqui</a>.</p>
+
+<p>Confesso que dei umas coladinhas em outras soluções para fazer este exercício. Sempre tive uma
+preguiça monumental de apreender profundamente <em>regex</em>, no final das contas pode ser solucionado com
+outras funções do modulo <code class="language-plaintext highlighter-rouge">String</code>.</p>
+
+<p>Solução:</p>
+<div class="language-elixir highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="k">defmodule</span> <span class="no">Bob</span> <span class="k">do</span>
+
+  <span class="c1"># Bob answers 'Sure.' if you ask him a question.</span>
+
+  <span class="c1"># He answers 'Whoa, chill out!' if you yell at him.</span>
+
+  <span class="c1"># He answers 'Calm down, I know what I'm doing!' if you yell a question at him.</span>
+  <span class="c1"># He says 'Fine. Be that way!' if you address him without actually saying</span>
+  <span class="c1"># anything.</span>
+
+  <span class="c1"># He answers 'Whatever.' to anything else.</span>
+  <span class="k">def</span> <span class="n">hey</span><span class="p">(</span><span class="n">input</span><span class="p">)</span> <span class="k">do</span>
+    <span class="n">trim</span> <span class="o">=</span> <span class="no">String</span><span class="o">.</span><span class="n">trim</span> <span class="n">input</span>
+    <span class="k">cond</span> <span class="k">do</span>
+      <span class="n">trim</span> <span class="o">==</span> <span class="s2">""</span> <span class="o">-&gt;</span>
+        <span class="s2">"Fine. Be that way!"</span>
+      <span class="n">trim</span> <span class="o">==</span> <span class="no">String</span><span class="o">.</span><span class="n">upcase</span><span class="p">(</span><span class="n">trim</span><span class="p">)</span> <span class="ow">and</span> <span class="n">trim</span> <span class="o">!=</span> <span class="no">String</span><span class="o">.</span><span class="n">downcase</span><span class="p">(</span><span class="n">trim</span><span class="p">)</span> <span class="o">-&gt;</span>
+        <span class="k">if</span> <span class="no">String</span><span class="o">.</span><span class="n">ends_with?</span><span class="p">(</span><span class="n">trim</span><span class="p">,</span> <span class="s2">"?"</span><span class="p">),</span> <span class="k">do</span><span class="p">:</span> <span class="s2">"Calm down, I know what I'm doing!"</span><span class="p">,</span> <span class="k">else</span><span class="p">:</span> <span class="s2">"Whoa, chill out!"</span>
+      <span class="no">String</span><span class="o">.</span><span class="n">ends_with?</span><span class="p">(</span><span class="n">trim</span><span class="p">,</span> <span class="s2">"?"</span><span class="p">)</span> <span class="o">-&gt;</span>
+        <span class="s2">"Sure."</span>
+      <span class="no">true</span> <span class="o">-&gt;</span>
+        <span class="s2">"Whatever."</span>
+    <span class="k">end</span>
+  <span class="k">end</span>
+<span class="k">end</span>
+</code></pre></div></div>
+
+<h1 id="meu-aprendizado-com-elixir-e-a-trilha-do-exercismio">Meu aprendizado com Elixir e a trilha do exercism.io</h1>
+
+<p>Fiquei encantado com a plataforma. Os exercícios são muito bem feitos e os instrutores que revisam,
+corrigem ou aprovam sua solução, foram todos muito legais. É a polemica pedagogia do “se vira” -
+você se vê ali com um problema e precisa correr atrás para desenvolver uma resposta que muitas
+vezes não será otimizada e/ou 100% correta.</p>
+
+<p>Tenho outras demandas de estudo, não sei quando vou conseguir voltar a mexer, mas pretendo
+continuar essa trilha até o final. Todas as minhas soluções e avanços mantenho no repositório
+<a href="https://github.com/callmarx/aprendendo_elixir" target="_blank">https://github.com/callmarx/aprendendo_elixir</a>.</p>
+
+<p>Por agora, é isso.</p>
+<div class="tenor-gif-embed" data-postid="10835076" data-share-method="host" data-aspect-ratio="1.22293" data-width="100%"><a href="https://tenor.com/view/cat-ignore-gotta-sleep-now-night-gif-10835076"></a></div>
+<script type="text/javascript" async="" src="https://tenor.com/embed.js"></script>
+
+
+        
+      </section>
+
+      <footer class="page__meta">
+        
+        
+  
+
+
+  
+
+  <p class="page__taxonomy">
+    <strong><i class="fas fa-fw fa-tags" aria-hidden="true"></i> Tags: </strong>
+    <span itemprop="keywords">
+    
+      <a href="/tags/#elixir" class="page__taxonomy-item" rel="tag">Elixir</a><span class="sep">, </span>
+    
+      <a href="/tags/#learn" class="page__taxonomy-item" rel="tag">Learn</a>
+    
+    </span>
+  </p>
+
+
+
+
+  
+
+
+  
+
+  <p class="page__taxonomy">
+    <strong><i class="fas fa-fw fa-folder-open" aria-hidden="true"></i> Categorias: </strong>
+    <span itemprop="keywords">
+    
+      <a href="/categories/#blog" class="page__taxonomy-item" rel="tag">blog</a>
+    
+    </span>
+  </p>
+
+
+        
+
+  <p class="page__date"><strong><i class="fas fa-fw fa-calendar-alt" aria-hidden="true"></i> Atualizado em:</strong> <time datetime="2021-08-29T21:49:12-03:00">2021-08-29</time></p>
+
+
+      </footer>
+
+      <section class="page__share">
+  
+    <h4 class="page__share-title">Compartilhe</h4>
+  
+
+  <a href="https://twitter.com/intent/tweet?via=leminski_se&text=Di%C3%A1rio+disl%C3%A9xico+-+Elixir%3A+Os+primeiros+exerc%C3%ADcios%20https%3A%2F%2Fcallmarx.github.io%2Fblog%2F2021%2F08%2F29%2Fdiario-dislexico-elixir-primeiros-exercicios.html" class="btn btn--twitter" onclick="window.open(this.href, 'window', 'left=20,top=20,width=500,height=500,toolbar=1,resizable=0'); return false;" title="Compartilhe Twitter"><i class="fab fa-fw fa-twitter" aria-hidden="true"></i><span> Twitter</span></a>
+
+  <a href="https://www.facebook.com/sharer/sharer.php?u=https%3A%2F%2Fcallmarx.github.io%2Fblog%2F2021%2F08%2F29%2Fdiario-dislexico-elixir-primeiros-exercicios.html" class="btn btn--facebook" onclick="window.open(this.href, 'window', 'left=20,top=20,width=500,height=500,toolbar=1,resizable=0'); return false;" title="Compartilhe Facebook"><i class="fab fa-fw fa-facebook" aria-hidden="true"></i><span> Facebook</span></a>
+
+  <a href="https://www.linkedin.com/shareArticle?mini=true&url=https%3A%2F%2Fcallmarx.github.io%2Fblog%2F2021%2F08%2F29%2Fdiario-dislexico-elixir-primeiros-exercicios.html" class="btn btn--linkedin" onclick="window.open(this.href, 'window', 'left=20,top=20,width=500,height=500,toolbar=1,resizable=0'); return false;" title="Compartilhe LinkedIn"><i class="fab fa-fw fa-linkedin" aria-hidden="true"></i><span> LinkedIn</span></a>
+</section>
+
+
+      
+  <nav class="pagination">
+    
+      <a href="/blog/2021/05/23/diario-dislexico-elixir-classico-apanhadao.html" class="pagination--pager" title="Diário disléxico - Elixir: Aquele clássico apanhadão
+">Anterior</a>
+    
+    
+      <a href="/blog/2021/09/03/dockers-e-portainer.html" class="pagination--pager" title="Hoje eu aprendi: Gerenciar dockers locais com Portainer CE
+">Próxima</a>
+    
+  </nav>
+
+    </div>
+
+    
+  </article>
+
+  
+  
+    <div class="page__related">
+      <h4 class="page__related-title">Talvez você também goste</h4>
+      <div class="grid__wrapper">
+        
+          
+
+
+
+<div class="grid__item">
+  <article class="archive__item" itemscope itemtype="https://schema.org/CreativeWork">
+    
+    <h2 class="archive__item-title no_toc" itemprop="headline">
+      
+        <a href="/blog/2022/06/29/tutorial-rails7-hotwire-parte-3.html" rel="permalink">Tutorial: Rails7, Tailwind e Hotwire - Parte 3
+</a>
+      
+    </h2>
+    
+
+  <p class="page__meta">
+    
+      
+      <span class="page__meta-date">
+        <i class="far fa-fw fa-calendar-alt" aria-hidden="true"></i>
+        
+        <time datetime="2022-06-29T21:34:03-03:00">2022-06-29</time>
+      </span>
+    
+
+    <span class="page__meta-sep"></span>
+
+    
+      
+      
+
+      <span class="page__meta-readtime">
+        <i class="far fa-fw fa-clock" aria-hidden="true"></i>
+        
+          18 minuto(s) de leitura
+        
+      </span>
+    
+  </p>
+
+
+    <p class="archive__item-excerpt" itemprop="description">
+
+Na parte anterior
+deste tutorial eu expliquei como utilizar a renderização parcial de html com turbo_stream do
+Hotwire Turbo, o que nos permitiu mostrar os cards
+recém inseridos ou excluídos do nosso humilde protótipo de Kanban. Agora ...</p>
+  </article>
+</div>
+
+        
+          
+
+
+
+<div class="grid__item">
+  <article class="archive__item" itemscope itemtype="https://schema.org/CreativeWork">
+    
+    <h2 class="archive__item-title no_toc" itemprop="headline">
+      
+        <a href="/blog/2022/06/08/dotfiles.html" rel="permalink">Hoje eu aprendi: Vale a pena configurar seus dotfiles
+</a>
+      
+    </h2>
+    
+
+  <p class="page__meta">
+    
+      
+      <span class="page__meta-date">
+        <i class="far fa-fw fa-calendar-alt" aria-hidden="true"></i>
+        
+        <time datetime="2022-06-08T16:58:19-03:00">2022-06-08</time>
+      </span>
+    
+
+    <span class="page__meta-sep"></span>
+
+    
+      
+      
+
+      <span class="page__meta-readtime">
+        <i class="far fa-fw fa-clock" aria-hidden="true"></i>
+        
+          5 minuto(s) de leitura
+        
+      </span>
+    
+  </p>
+
+
+    <p class="archive__item-excerpt" itemprop="description">
+
+Depois de mais de 3 anos usando Vim como IDE (Integrated Development Environment), migrando no
+caminho para o Neovim com o shell zsh, o gerenciador
+Oh My Zsh e o tema
+Powerlevel10k, percebi como eu
+dependia dessas configurações e como ...</p>
+  </article>
+</div>
+
+        
+          
+
+
+
+<div class="grid__item">
+  <article class="archive__item" itemscope itemtype="https://schema.org/CreativeWork">
+    
+    <h2 class="archive__item-title no_toc" itemprop="headline">
+      
+        <a href="/blog/2021/12/19/tutorial-rails7-hotwire-parte-2.html" rel="permalink">Tutorial: Rails7, Tailwind e Hotwire - Parte 2
+</a>
+      
+    </h2>
+    
+
+  <p class="page__meta">
+    
+      
+      <span class="page__meta-date">
+        <i class="far fa-fw fa-calendar-alt" aria-hidden="true"></i>
+        
+        <time datetime="2021-12-19T14:42:03-03:00">2021-12-19</time>
+      </span>
+    
+
+    <span class="page__meta-sep"></span>
+
+    
+      
+      
+
+      <span class="page__meta-readtime">
+        <i class="far fa-fw fa-clock" aria-hidden="true"></i>
+        
+          14 minuto(s) de leitura
+        
+      </span>
+    
+  </p>
+
+
+    <p class="archive__item-excerpt" itemprop="description">
+
+Na parte anterior
+deste tutorial eu expliquei como customizar e utilizar o Tailwind sem uma linha sequer de CSS e
+JavaScript. Agora vou abordar um pouco sobre o pacote
+Hotwire Turbo.
+</p>
+  </article>
+</div>
+
+        
+          
+
+
+
+<div class="grid__item">
+  <article class="archive__item" itemscope itemtype="https://schema.org/CreativeWork">
+    
+    <h2 class="archive__item-title no_toc" itemprop="headline">
+      
+        <a href="/blog/2021/12/09/tutorial-rails7-hotwire-parte-1.html" rel="permalink">Tutorial: Rails7, Tailwind e Hotwire - Parte 1
+</a>
+      
+    </h2>
+    
+
+  <p class="page__meta">
+    
+      
+      <span class="page__meta-date">
+        <i class="far fa-fw fa-calendar-alt" aria-hidden="true"></i>
+        
+        <time datetime="2021-12-09T11:12:54-03:00">2021-12-09</time>
+      </span>
+    
+
+    <span class="page__meta-sep"></span>
+
+    
+      
+      
+
+      <span class="page__meta-readtime">
+        <i class="far fa-fw fa-clock" aria-hidden="true"></i>
+        
+          13 minuto(s) de leitura
+        
+      </span>
+    
+  </p>
+
+
+    <p class="archive__item-excerpt" itemprop="description">
+
+Na parte anterior deste
+tutorial, expliquei como configurar o Rails 7, com suas novas opções e como “dockerizei” os bancos
+de dados PostgreSQL e Redis. Agora vou abordar um pouco sobre Tailwind.
+</p>
+  </article>
+</div>
+
+        
+      </div>
+    </div>
+  
+  
+</div>
+
+    </div>
+
+    
+      <div class="search-content">
+        <div class="search-content__inner-wrap"><form class="search-content__form" onkeydown="return event.key != 'Enter';">
+    <label class="sr-only" for="search">
+      Enter your search term...
+    </label>
+    <input type="search" id="search" class="search-input" tabindex="-1" placeholder="Pesquisar..." />
+  </form>
+  <div id="results" class="results"></div></div>
+
+      </div>
+    
+
+    <div id="footer" class="page__footer">
+      <footer>
+        <!-- start custom footer snippets -->
+
+<!-- end custom footer snippets -->
+        <div class="page__footer-follow">
+  <ul class="social-icons">
+    
+      
+        
+          <li><a href="https://github.com/callmarx" rel="nofollow noopener noreferrer"><i class="fab fa-fw fa-github" aria-hidden="true"></i> GitHub</a></li>
+        
+      
+        
+          <li><a href="https://www.linkedin.com/in/eugenio-augusto-jimenes/" rel="nofollow noopener noreferrer"><i class="fab fa-fw fa-linkedin" aria-hidden="true"></i> LinkedIn</a></li>
+        
+      
+    
+
+    
+      <li><a href="/feed.xml"><i class="fas fa-fw fa-rss-square" aria-hidden="true"></i> Feed</a></li>
+    
+  </ul>
+</div>
+
+<div class="page__footer-copyright">&copy; 2022 CallMarx. Desenvolvido com o <a href=/code-of-conduct/><b>Código de Conduta</b></a> para comunidade de código aberto, sob a licença <a href=/mit-license/><b>MIT</b></a>, framework <a href="https://jekyllrb.com" rel="nofollow"><b>Jekyll</b></a> e tema <a href="https://github.com/mmistakes/minimal-mistakes" rel="nofollow"><b>Minimal Mistakes</b></a>.</div>
+
+      </footer>
+    </div>
+
+    
+  <script src="/assets/js/main.min.js"></script>
+
+
+
+
+<script src="/assets/js/lunr/lunr.min.js"></script>
+<script src="/assets/js/lunr/lunr-store.js"></script>
+<script src="/assets/js/lunr/lunr-en.js"></script>
+
+
+
+
+
+
+
+  </body>
+</html>

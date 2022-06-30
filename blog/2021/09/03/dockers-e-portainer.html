@@ -1,0 +1,744 @@
+<!doctype html>
+<!--
+  Minimal Mistakes Jekyll Theme 4.24.0 by Michael Rose
+  Copyright 2013-2020 Michael Rose - mademistakes.com | @mmistakes
+  Free for personal and commercial use under the MIT license
+  https://github.com/mmistakes/minimal-mistakes/blob/master/LICENSE
+-->
+<html lang="pt" class="no-js">
+  <head>
+    <meta charset="utf-8">
+
+<!-- begin _includes/seo.html --><title>Hoje eu aprendi: Gerenciar dockers locais com Portainer CE - CallMarx</title>
+<meta name="description" content="Mini tutorial de gerenciamento local de contêineres com Portainer CE.">
+
+
+  <meta name="author" content="Eugenio Augusto Jimenes">
+  
+  <meta property="article:author" content="Eugenio Augusto Jimenes">
+  
+
+
+<meta property="og:type" content="article">
+<meta property="og:locale" content="pt_BR">
+<meta property="og:site_name" content="CallMarx">
+<meta property="og:title" content="Hoje eu aprendi: Gerenciar dockers locais com Portainer CE">
+<meta property="og:url" content="https://callmarx.github.io/blog/2021/09/03/dockers-e-portainer.html">
+
+
+  <meta property="og:description" content="Mini tutorial de gerenciamento local de contêineres com Portainer CE.">
+
+
+
+  <meta property="og:image" content="https://callmarx.github.io/assets/posts/portainer-docker-ogimage.webp">
+
+
+
+  <meta name="twitter:site" content="@leminski_se">
+  <meta name="twitter:title" content="Hoje eu aprendi: Gerenciar dockers locais com Portainer CE">
+  <meta name="twitter:description" content="Mini tutorial de gerenciamento local de contêineres com Portainer CE.">
+  <meta name="twitter:url" content="https://callmarx.github.io/blog/2021/09/03/dockers-e-portainer.html">
+
+  
+    <meta name="twitter:card" content="summary_large_image">
+    <meta name="twitter:image" content="https://callmarx.github.io/assets/posts/portainer-docker-ogimage.webp">
+  
+
+  
+
+
+
+  <meta property="article:published_time" content="2021-09-03T12:09:32-03:00">
+
+
+
+
+
+
+<link rel="canonical" href="https://callmarx.github.io/blog/2021/09/03/dockers-e-portainer.html">
+
+
+
+
+<script type="application/ld+json">
+  {
+    "@context": "https://schema.org",
+    
+      "@type": "Person",
+      "name": null,
+      "url": "https://callmarx.github.io/"
+    
+  }
+</script>
+
+
+
+
+
+
+
+<!-- end _includes/seo.html -->
+
+
+
+  <link href="/feed.xml" type="application/atom+xml" rel="alternate" title="CallMarx Feed">
+
+
+<!-- https://t.co/dKP3o1e -->
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+<script>
+  document.documentElement.className = document.documentElement.className.replace(/\bno-js\b/g, '') + ' js ';
+</script>
+
+<!-- For all browsers -->
+<link rel="stylesheet" href="/assets/css/main.css">
+<link rel="preload" href="https://cdn.jsdelivr.net/npm/@fortawesome/fontawesome-free@5/css/all.min.css" as="style" onload="this.onload=null;this.rel='stylesheet'">
+<noscript><link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@fortawesome/fontawesome-free@5/css/all.min.css"></noscript>
+
+
+
+    <!-- start custom head snippets -->
+
+<!-- insert favicons. use https://realfavicongenerator.net/ -->
+
+<!-- end custom head snippets -->
+
+  </head>
+
+  <body class="layout--single">
+    <nav class="skip-links">
+  <ul>
+    <li><a href="#site-nav" class="screen-reader-shortcut">Skip to primary navigation</a></li>
+    <li><a href="#main" class="screen-reader-shortcut">Skip to content</a></li>
+    <li><a href="#footer" class="screen-reader-shortcut">Skip to footer</a></li>
+  </ul>
+</nav>
+
+    <!--[if lt IE 9]>
+<div class="notice--danger align-center" style="margin: 0;">You are using an <strong>outdated</strong> browser. Please <a href="https://browsehappy.com/">upgrade your browser</a> to improve your experience.</div>
+<![endif]-->
+
+    
+
+<div class="masthead">
+  <div class="masthead__inner-wrap">
+    <div class="masthead__menu">
+      <nav id="site-nav" class="greedy-nav">
+        
+        <a class="site-title" href="/">
+          CallMarx
+          
+        </a>
+        <ul class="visible-links"><li class="masthead__menu-item">
+              <a href="/tags/">Posts por tags</a>
+            </li><li class="masthead__menu-item">
+              <a href="/about/">Sobre mim</a>
+            </li></ul>
+        
+        <button class="search__toggle" type="button">
+          <span class="visually-hidden">Buscar</span>
+          <i class="fas fa-search"></i>
+        </button>
+        
+        <button class="greedy-nav__toggle hidden" type="button">
+          <span class="visually-hidden">Toggle menu</span>
+          <div class="navicon"></div>
+        </button>
+        <ul class="hidden-links hidden"></ul>
+      </nav>
+    </div>
+  </div>
+</div>
+
+
+    <div class="initial-content">
+      
+
+
+
+<div id="main" role="main">
+  
+  <div class="sidebar sticky">
+  
+
+
+<div itemscope itemtype="https://schema.org/Person">
+
+  
+    <div class="author__avatar">
+      
+        <img src="/assets/eu-e-nila.webp" alt="Eugenio Augusto Jimenes" itemprop="image">
+      
+    </div>
+  
+
+  <div class="author__content">
+    
+      <h3 class="author__name" itemprop="name">Eugenio Augusto Jimenes</h3>
+    
+    
+      <div class="author__bio" itemprop="description">
+        <p>Nerd, disléxico, viciado-hipster em café, desenvolvedor, linux fanboy e esquerdopata convicto - CallMarx, sacou?</p>
+
+      </div>
+    
+  </div>
+
+  <div class="author__urls-wrapper">
+    <button class="btn btn--inverse">Contatos</button>
+    <ul class="author__urls social-icons">
+      
+        <li itemprop="homeLocation" itemscope itemtype="https://schema.org/Place">
+          <i class="fas fa-fw fa-map-marker-alt" aria-hidden="true"></i> <span itemprop="name">São Paulo - SP</span>
+        </li>
+      
+
+      
+        
+          
+            <li><a href="mailto:eugeniojimenes@gmail" rel="nofollow noopener noreferrer"><i class="fas fa-fw fa-envelope-square" aria-hidden="true"></i><span class="label">Email</span></a></li>
+          
+        
+          
+            <li><a href="https://github.com/callmarx" rel="nofollow noopener noreferrer"><i class="fab fa-fw fa-github" aria-hidden="true"></i><span class="label">GitHub</span></a></li>
+          
+        
+          
+            <li><a href="https://twitter.com/leminski_se" rel="nofollow noopener noreferrer"><i class="fab fa-fw fa-twitter" aria-hidden="true"></i><span class="label">Twitter</span></a></li>
+          
+        
+          
+            <li><a href="https://www.linkedin.com/in/eugenio-augusto-jimenes/" rel="nofollow noopener noreferrer"><i class="fab fa-fw fa-linkedin" aria-hidden="true"></i><span class="label">LinkedIn</span></a></li>
+          
+        
+      
+
+      
+
+      
+
+      
+
+      
+
+      
+
+      
+
+      
+
+      
+
+      
+
+      
+
+      
+
+      
+
+      
+
+      
+
+      
+
+      
+
+      
+
+      
+
+      
+
+      
+
+      
+
+      
+
+      
+
+      
+
+      <!--
+  <li>
+    <a href="http://link-to-whatever-social-network.com/user/" itemprop="sameAs" rel="nofollow noopener noreferrer">
+      <i class="fas fa-fw" aria-hidden="true"></i> Custom Social Profile Link
+    </a>
+  </li>
+-->
+    </ul>
+  </div>
+</div>
+
+  
+  </div>
+
+
+
+  <article class="page" itemscope itemtype="https://schema.org/CreativeWork">
+    <meta itemprop="headline" content="Hoje eu aprendi: Gerenciar dockers locais com Portainer CE">
+    <meta itemprop="description" content="Mesmo não sendo um especialista, e tendo bem claro isso, ficou óbvio que definitivamente sou umentusiasta de contêineres. Hoje me deparei com a minha partição root do Linux quase cheia e porqual motivo? Inúmeras imagens, volumes e contêineres, que a maior parte eu nem estava maisutilizando, ocupando grande parte do espaço. Eis que o Google me sugere o mamão com mel que éPortainer CE.">
+    <meta itemprop="datePublished" content="2021-09-03T12:09:32-03:00">
+    
+
+    <div class="page__inner-wrap">
+      
+        <header>
+          <h1 id="page-title" class="page__title" itemprop="headline">Hoje eu aprendi: Gerenciar dockers locais com Portainer CE
+</h1>
+          
+
+  <p class="page__meta">
+    
+      
+      <span class="page__meta-date">
+        <i class="far fa-calendar-alt" aria-hidden="true"></i>
+        
+        <time datetime="2021-09-03T12:09:32-03:00">2021-09-03</time>
+      </span>
+    
+
+    <span class="page__meta-sep"></span>
+
+    
+      
+      
+
+      <span class="page__meta-readtime">
+        <i class="far fa-clock" aria-hidden="true"></i>
+        
+          3 minuto(s) de leitura
+        
+      </span>
+    
+  </p>
+
+
+        </header>
+      
+
+      <section class="page__content" itemprop="text">
+        
+        <p><img src="/assets/posts/portainer+docker.webp" alt="Portainer + Docker" /></p>
+
+<p><br />
+Mesmo não sendo um especialista, e tendo bem claro isso, ficou óbvio que definitivamente sou um
+entusiasta de contêineres. Hoje me deparei com a minha partição <em>root</em> do Linux quase cheia e por
+qual motivo? Inúmeras imagens, volumes e contêineres, que a maior parte eu nem estava mais
+utilizando, ocupando grande parte do espaço. Eis que o Google me sugere o mamão com mel que é
+<a href="https://github.com/portainer/portainer" target="_blank">Portainer CE</a>.
+<!-- excerpt-separator --></p>
+
+<h2 id="primeiro-de-tudo">Primeiro de tudo</h2>
+
+<p>Ok vai… Isso de encher minha <em>root</em> por conta do docker já tinha ocorrido outras vezes, confesso.
+O que fazia era <em>excluir tudo</em> e então baixar novamente o que fosse precisar. Até porque os
+projetos em que atuo (pessoais e do trabalho) estão todos com
+<a href="https://docs.docker.com/compose/" target="_blank">docker compose</a> e até um <em>make file</em> com os
+comandos pra subir tudo bonitinho,
+<a href="https://youtu.be/w-8A4DbXcy4" target="_blank">podem me julgar</a>. Acho legal fazer essa “limpeza”
+de tempos em tempos, então segue o comando <strong>por sua conta e risco</strong></p>
+
+<div class="language-bash highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="nv">$ </span>docker container stop <span class="si">$(</span>docker container <span class="nb">ls</span> <span class="nt">--all</span> <span class="nt">-q</span><span class="si">)</span>  <span class="c"># para todos os containers</span>
+<span class="nv">$ </span>docker system prune <span class="nt">-a</span> <span class="nt">-f</span> <span class="nt">--volumes</span>                    <span class="c"># exclui tudo, CUIDADO!</span>
+</code></pre></div></div>
+<p class="notice--warning"><strong>Cuidado</strong>: Com esses comandos você vai <u>EXCLUIR TODOS OS contêineres, imagens e volumes</u>
+da onde for executado.</p>
+
+<h2 id="mamão-com-mel">Mamão com mel</h2>
+
+<p>Para “instalar” o Portainer CE você precisa de duas linhas de comando, essa GUI é ironicamente
+executada em docker :)</p>
+
+<div class="language-bash highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="nv">$ </span>docker volume create portainer_data
+<span class="nv">$ </span>docker run <span class="nt">-d</span> <span class="nt">-p</span> 8000:8000 <span class="nt">-p</span> 9000:9000 <span class="nt">--name</span><span class="o">=</span>portainer <span class="nt">--restart</span><span class="o">=</span>always <span class="nt">-v</span> /var/run/docker.sock:/var/run/docker.sock <span class="nt">-v</span> portainer_data:/data portainer/portainer-ce
+</code></pre></div></div>
+
+<p>O primeiro comando cria um volume que será utilizado pelo Portainer que é executado pelo segundo
+comando. Nada mais preciso ser feito, basta acessar o endereço <a href="http://localhost:9000/">http://localhost:9000/</a>. No
+primeiro acesso ele vai pedir o pra você criar um login de acesso, pessoalmente não ligo isso,
+ponho qualquer coisa, afinal é para uso pessoal e local para desenvolvimento.</p>
+
+<p>Você deve ver algo assim na <em>home</em> se tudo der certo:
+<img src="/assets/posts/portainer-home.webp" alt="Portainer Home" /></p>
+
+<h2 id="já-passei-por-isso">Já passei por isso</h2>
+
+<p>Talvez você não obtenha um endpoint listando seus contêineres, volumes e imagens, com uma
+notificação “<em>Object not found inside the database</em>”, algo como a imagem a seguir.</p>
+
+<p><img src="/assets/posts/portainer-error.webp" alt="Portainer Error" /></p>
+
+<p>Depois de pesquisar um pouco encontrei a solução
+<a href="https://github.com/portainer/portainer/issues/3562#issuecomment-620579326" target="_blank">aqui</a>.
+Bastou limpar o <em>Storage</em> de <a href="http://localhost:9000">http://localhost:9000</a> do meu navegador. No chromium você faz isso em
+“<em>Application</em> &gt; <em>Storage</em> &gt; <em>Clear site data</em>”. Como eu não soube fazer isso de cara (e ninguém
+têm obrigação de saber), fiz o <em>screenshot</em> abaixo para mostrar esse cominho.</p>
+
+<p><img src="/assets/posts/clear-storage.webp" alt="Clear Storage" /></p>
+
+<p>Por agora, é isso.</p>
+
+        
+      </section>
+
+      <footer class="page__meta">
+        
+        
+  
+
+
+  
+
+  <p class="page__taxonomy">
+    <strong><i class="fas fa-fw fa-tags" aria-hidden="true"></i> Tags: </strong>
+    <span itemprop="keywords">
+    
+      <a href="/tags/#config" class="page__taxonomy-item" rel="tag">Config</a><span class="sep">, </span>
+    
+      <a href="/tags/#docker" class="page__taxonomy-item" rel="tag">Docker</a><span class="sep">, </span>
+    
+      <a href="/tags/#hoje-eu-aprendi" class="page__taxonomy-item" rel="tag">Hoje-eu-aprendi</a>
+    
+    </span>
+  </p>
+
+
+
+
+  
+
+
+  
+
+  <p class="page__taxonomy">
+    <strong><i class="fas fa-fw fa-folder-open" aria-hidden="true"></i> Categorias: </strong>
+    <span itemprop="keywords">
+    
+      <a href="/categories/#blog" class="page__taxonomy-item" rel="tag">blog</a>
+    
+    </span>
+  </p>
+
+
+        
+
+  <p class="page__date"><strong><i class="fas fa-fw fa-calendar-alt" aria-hidden="true"></i> Atualizado em:</strong> <time datetime="2021-09-03T12:09:32-03:00">2021-09-03</time></p>
+
+
+      </footer>
+
+      <section class="page__share">
+  
+    <h4 class="page__share-title">Compartilhe</h4>
+  
+
+  <a href="https://twitter.com/intent/tweet?via=leminski_se&text=Hoje+eu+aprendi%3A+Gerenciar+dockers+locais+com+Portainer+CE%20https%3A%2F%2Fcallmarx.github.io%2Fblog%2F2021%2F09%2F03%2Fdockers-e-portainer.html" class="btn btn--twitter" onclick="window.open(this.href, 'window', 'left=20,top=20,width=500,height=500,toolbar=1,resizable=0'); return false;" title="Compartilhe Twitter"><i class="fab fa-fw fa-twitter" aria-hidden="true"></i><span> Twitter</span></a>
+
+  <a href="https://www.facebook.com/sharer/sharer.php?u=https%3A%2F%2Fcallmarx.github.io%2Fblog%2F2021%2F09%2F03%2Fdockers-e-portainer.html" class="btn btn--facebook" onclick="window.open(this.href, 'window', 'left=20,top=20,width=500,height=500,toolbar=1,resizable=0'); return false;" title="Compartilhe Facebook"><i class="fab fa-fw fa-facebook" aria-hidden="true"></i><span> Facebook</span></a>
+
+  <a href="https://www.linkedin.com/shareArticle?mini=true&url=https%3A%2F%2Fcallmarx.github.io%2Fblog%2F2021%2F09%2F03%2Fdockers-e-portainer.html" class="btn btn--linkedin" onclick="window.open(this.href, 'window', 'left=20,top=20,width=500,height=500,toolbar=1,resizable=0'); return false;" title="Compartilhe LinkedIn"><i class="fab fa-fw fa-linkedin" aria-hidden="true"></i><span> LinkedIn</span></a>
+</section>
+
+
+      
+  <nav class="pagination">
+    
+      <a href="/blog/2021/08/29/diario-dislexico-elixir-primeiros-exercicios.html" class="pagination--pager" title="Diário disléxico - Elixir: Os primeiros exercícios
+">Anterior</a>
+    
+    
+      <a href="/blog/2021/12/07/tutorial-rails7-hotwire.html" class="pagination--pager" title="Tutorial: Rails7, Tailwind e Hotwire
+">Próxima</a>
+    
+  </nav>
+
+    </div>
+
+    
+  </article>
+
+  
+  
+    <div class="page__related">
+      <h4 class="page__related-title">Talvez você também goste</h4>
+      <div class="grid__wrapper">
+        
+          
+
+
+
+<div class="grid__item">
+  <article class="archive__item" itemscope itemtype="https://schema.org/CreativeWork">
+    
+    <h2 class="archive__item-title no_toc" itemprop="headline">
+      
+        <a href="/blog/2022/06/29/tutorial-rails7-hotwire-parte-3.html" rel="permalink">Tutorial: Rails7, Tailwind e Hotwire - Parte 3
+</a>
+      
+    </h2>
+    
+
+  <p class="page__meta">
+    
+      
+      <span class="page__meta-date">
+        <i class="far fa-fw fa-calendar-alt" aria-hidden="true"></i>
+        
+        <time datetime="2022-06-29T21:34:03-03:00">2022-06-29</time>
+      </span>
+    
+
+    <span class="page__meta-sep"></span>
+
+    
+      
+      
+
+      <span class="page__meta-readtime">
+        <i class="far fa-fw fa-clock" aria-hidden="true"></i>
+        
+          18 minuto(s) de leitura
+        
+      </span>
+    
+  </p>
+
+
+    <p class="archive__item-excerpt" itemprop="description">
+
+Na parte anterior
+deste tutorial eu expliquei como utilizar a renderização parcial de html com turbo_stream do
+Hotwire Turbo, o que nos permitiu mostrar os cards
+recém inseridos ou excluídos do nosso humilde protótipo de Kanban. Agora ...</p>
+  </article>
+</div>
+
+        
+          
+
+
+
+<div class="grid__item">
+  <article class="archive__item" itemscope itemtype="https://schema.org/CreativeWork">
+    
+    <h2 class="archive__item-title no_toc" itemprop="headline">
+      
+        <a href="/blog/2022/06/08/dotfiles.html" rel="permalink">Hoje eu aprendi: Vale a pena configurar seus dotfiles
+</a>
+      
+    </h2>
+    
+
+  <p class="page__meta">
+    
+      
+      <span class="page__meta-date">
+        <i class="far fa-fw fa-calendar-alt" aria-hidden="true"></i>
+        
+        <time datetime="2022-06-08T16:58:19-03:00">2022-06-08</time>
+      </span>
+    
+
+    <span class="page__meta-sep"></span>
+
+    
+      
+      
+
+      <span class="page__meta-readtime">
+        <i class="far fa-fw fa-clock" aria-hidden="true"></i>
+        
+          5 minuto(s) de leitura
+        
+      </span>
+    
+  </p>
+
+
+    <p class="archive__item-excerpt" itemprop="description">
+
+Depois de mais de 3 anos usando Vim como IDE (Integrated Development Environment), migrando no
+caminho para o Neovim com o shell zsh, o gerenciador
+Oh My Zsh e o tema
+Powerlevel10k, percebi como eu
+dependia dessas configurações e como ...</p>
+  </article>
+</div>
+
+        
+          
+
+
+
+<div class="grid__item">
+  <article class="archive__item" itemscope itemtype="https://schema.org/CreativeWork">
+    
+    <h2 class="archive__item-title no_toc" itemprop="headline">
+      
+        <a href="/blog/2021/12/19/tutorial-rails7-hotwire-parte-2.html" rel="permalink">Tutorial: Rails7, Tailwind e Hotwire - Parte 2
+</a>
+      
+    </h2>
+    
+
+  <p class="page__meta">
+    
+      
+      <span class="page__meta-date">
+        <i class="far fa-fw fa-calendar-alt" aria-hidden="true"></i>
+        
+        <time datetime="2021-12-19T14:42:03-03:00">2021-12-19</time>
+      </span>
+    
+
+    <span class="page__meta-sep"></span>
+
+    
+      
+      
+
+      <span class="page__meta-readtime">
+        <i class="far fa-fw fa-clock" aria-hidden="true"></i>
+        
+          14 minuto(s) de leitura
+        
+      </span>
+    
+  </p>
+
+
+    <p class="archive__item-excerpt" itemprop="description">
+
+Na parte anterior
+deste tutorial eu expliquei como customizar e utilizar o Tailwind sem uma linha sequer de CSS e
+JavaScript. Agora vou abordar um pouco sobre o pacote
+Hotwire Turbo.
+</p>
+  </article>
+</div>
+
+        
+          
+
+
+
+<div class="grid__item">
+  <article class="archive__item" itemscope itemtype="https://schema.org/CreativeWork">
+    
+    <h2 class="archive__item-title no_toc" itemprop="headline">
+      
+        <a href="/blog/2021/12/09/tutorial-rails7-hotwire-parte-1.html" rel="permalink">Tutorial: Rails7, Tailwind e Hotwire - Parte 1
+</a>
+      
+    </h2>
+    
+
+  <p class="page__meta">
+    
+      
+      <span class="page__meta-date">
+        <i class="far fa-fw fa-calendar-alt" aria-hidden="true"></i>
+        
+        <time datetime="2021-12-09T11:12:54-03:00">2021-12-09</time>
+      </span>
+    
+
+    <span class="page__meta-sep"></span>
+
+    
+      
+      
+
+      <span class="page__meta-readtime">
+        <i class="far fa-fw fa-clock" aria-hidden="true"></i>
+        
+          13 minuto(s) de leitura
+        
+      </span>
+    
+  </p>
+
+
+    <p class="archive__item-excerpt" itemprop="description">
+
+Na parte anterior deste
+tutorial, expliquei como configurar o Rails 7, com suas novas opções e como “dockerizei” os bancos
+de dados PostgreSQL e Redis. Agora vou abordar um pouco sobre Tailwind.
+</p>
+  </article>
+</div>
+
+        
+      </div>
+    </div>
+  
+  
+</div>
+
+    </div>
+
+    
+      <div class="search-content">
+        <div class="search-content__inner-wrap"><form class="search-content__form" onkeydown="return event.key != 'Enter';">
+    <label class="sr-only" for="search">
+      Enter your search term...
+    </label>
+    <input type="search" id="search" class="search-input" tabindex="-1" placeholder="Pesquisar..." />
+  </form>
+  <div id="results" class="results"></div></div>
+
+      </div>
+    
+
+    <div id="footer" class="page__footer">
+      <footer>
+        <!-- start custom footer snippets -->
+
+<!-- end custom footer snippets -->
+        <div class="page__footer-follow">
+  <ul class="social-icons">
+    
+      
+        
+          <li><a href="https://github.com/callmarx" rel="nofollow noopener noreferrer"><i class="fab fa-fw fa-github" aria-hidden="true"></i> GitHub</a></li>
+        
+      
+        
+          <li><a href="https://www.linkedin.com/in/eugenio-augusto-jimenes/" rel="nofollow noopener noreferrer"><i class="fab fa-fw fa-linkedin" aria-hidden="true"></i> LinkedIn</a></li>
+        
+      
+    
+
+    
+      <li><a href="/feed.xml"><i class="fas fa-fw fa-rss-square" aria-hidden="true"></i> Feed</a></li>
+    
+  </ul>
+</div>
+
+<div class="page__footer-copyright">&copy; 2022 CallMarx. Desenvolvido com o <a href=/code-of-conduct/><b>Código de Conduta</b></a> para comunidade de código aberto, sob a licença <a href=/mit-license/><b>MIT</b></a>, framework <a href="https://jekyllrb.com" rel="nofollow"><b>Jekyll</b></a> e tema <a href="https://github.com/mmistakes/minimal-mistakes" rel="nofollow"><b>Minimal Mistakes</b></a>.</div>
+
+      </footer>
+    </div>
+
+    
+  <script src="/assets/js/main.min.js"></script>
+
+
+
+
+<script src="/assets/js/lunr/lunr.min.js"></script>
+<script src="/assets/js/lunr/lunr-store.js"></script>
+<script src="/assets/js/lunr/lunr-en.js"></script>
+
+
+
+
+
+
+
+  </body>
+</html>

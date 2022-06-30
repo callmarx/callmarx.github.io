@@ -1,0 +1,1027 @@
+<!doctype html>
+<!--
+  Minimal Mistakes Jekyll Theme 4.24.0 by Michael Rose
+  Copyright 2013-2020 Michael Rose - mademistakes.com | @mmistakes
+  Free for personal and commercial use under the MIT license
+  https://github.com/mmistakes/minimal-mistakes/blob/master/LICENSE
+-->
+<html lang="pt" class="no-js">
+  <head>
+    <meta charset="utf-8">
+
+<!-- begin _includes/seo.html --><title>Busca em texto otimizada com a Gem pg_search - Parte II - CallMarx</title>
+<meta name="description" content="Destrinchando a funcionalidade “Full Text Searching” do PostgreSQL com a Gem pg_search em uma aplicação Ruby on Rails - Parte II">
+
+
+  <meta name="author" content="Eugenio Augusto Jimenes">
+  
+  <meta property="article:author" content="Eugenio Augusto Jimenes">
+  
+
+
+<meta property="og:type" content="article">
+<meta property="og:locale" content="pt_BR">
+<meta property="og:site_name" content="CallMarx">
+<meta property="og:title" content="Busca em texto otimizada com a Gem pg_search - Parte II">
+<meta property="og:url" content="https://callmarx.github.io/blog/2021/04/08/busca-texto-otimizada-com-pg-search-p2.html">
+
+
+  <meta property="og:description" content="Destrinchando a funcionalidade “Full Text Searching” do PostgreSQL com a Gem pg_search em uma aplicação Ruby on Rails - Parte II">
+
+
+
+  <meta property="og:image" content="https://callmarx.github.io/assets/posts/text-search.webp">
+
+
+
+  <meta name="twitter:site" content="@leminski_se">
+  <meta name="twitter:title" content="Busca em texto otimizada com a Gem pg_search - Parte II">
+  <meta name="twitter:description" content="Destrinchando a funcionalidade “Full Text Searching” do PostgreSQL com a Gem pg_search em uma aplicação Ruby on Rails - Parte II">
+  <meta name="twitter:url" content="https://callmarx.github.io/blog/2021/04/08/busca-texto-otimizada-com-pg-search-p2.html">
+
+  
+    <meta name="twitter:card" content="summary_large_image">
+    <meta name="twitter:image" content="https://callmarx.github.io/assets/posts/text-search.webp">
+  
+
+  
+
+
+
+  <meta property="article:published_time" content="2021-04-08T19:18:53-03:00">
+
+
+
+
+
+
+<link rel="canonical" href="https://callmarx.github.io/blog/2021/04/08/busca-texto-otimizada-com-pg-search-p2.html">
+
+
+
+
+<script type="application/ld+json">
+  {
+    "@context": "https://schema.org",
+    
+      "@type": "Person",
+      "name": null,
+      "url": "https://callmarx.github.io/"
+    
+  }
+</script>
+
+
+
+
+
+
+
+<!-- end _includes/seo.html -->
+
+
+
+  <link href="/feed.xml" type="application/atom+xml" rel="alternate" title="CallMarx Feed">
+
+
+<!-- https://t.co/dKP3o1e -->
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+<script>
+  document.documentElement.className = document.documentElement.className.replace(/\bno-js\b/g, '') + ' js ';
+</script>
+
+<!-- For all browsers -->
+<link rel="stylesheet" href="/assets/css/main.css">
+<link rel="preload" href="https://cdn.jsdelivr.net/npm/@fortawesome/fontawesome-free@5/css/all.min.css" as="style" onload="this.onload=null;this.rel='stylesheet'">
+<noscript><link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@fortawesome/fontawesome-free@5/css/all.min.css"></noscript>
+
+
+
+    <!-- start custom head snippets -->
+
+<!-- insert favicons. use https://realfavicongenerator.net/ -->
+
+<!-- end custom head snippets -->
+
+  </head>
+
+  <body class="layout--single">
+    <nav class="skip-links">
+  <ul>
+    <li><a href="#site-nav" class="screen-reader-shortcut">Skip to primary navigation</a></li>
+    <li><a href="#main" class="screen-reader-shortcut">Skip to content</a></li>
+    <li><a href="#footer" class="screen-reader-shortcut">Skip to footer</a></li>
+  </ul>
+</nav>
+
+    <!--[if lt IE 9]>
+<div class="notice--danger align-center" style="margin: 0;">You are using an <strong>outdated</strong> browser. Please <a href="https://browsehappy.com/">upgrade your browser</a> to improve your experience.</div>
+<![endif]-->
+
+    
+
+<div class="masthead">
+  <div class="masthead__inner-wrap">
+    <div class="masthead__menu">
+      <nav id="site-nav" class="greedy-nav">
+        
+        <a class="site-title" href="/">
+          CallMarx
+          
+        </a>
+        <ul class="visible-links"><li class="masthead__menu-item">
+              <a href="/tags/">Posts por tags</a>
+            </li><li class="masthead__menu-item">
+              <a href="/about/">Sobre mim</a>
+            </li></ul>
+        
+        <button class="search__toggle" type="button">
+          <span class="visually-hidden">Buscar</span>
+          <i class="fas fa-search"></i>
+        </button>
+        
+        <button class="greedy-nav__toggle hidden" type="button">
+          <span class="visually-hidden">Toggle menu</span>
+          <div class="navicon"></div>
+        </button>
+        <ul class="hidden-links hidden"></ul>
+      </nav>
+    </div>
+  </div>
+</div>
+
+
+    <div class="initial-content">
+      
+
+
+
+<div id="main" role="main">
+  
+  <div class="sidebar sticky">
+  
+
+
+<div itemscope itemtype="https://schema.org/Person">
+
+  
+    <div class="author__avatar">
+      
+        <img src="/assets/eu-e-nila.webp" alt="Eugenio Augusto Jimenes" itemprop="image">
+      
+    </div>
+  
+
+  <div class="author__content">
+    
+      <h3 class="author__name" itemprop="name">Eugenio Augusto Jimenes</h3>
+    
+    
+      <div class="author__bio" itemprop="description">
+        <p>Nerd, disléxico, viciado-hipster em café, desenvolvedor, linux fanboy e esquerdopata convicto - CallMarx, sacou?</p>
+
+      </div>
+    
+  </div>
+
+  <div class="author__urls-wrapper">
+    <button class="btn btn--inverse">Contatos</button>
+    <ul class="author__urls social-icons">
+      
+        <li itemprop="homeLocation" itemscope itemtype="https://schema.org/Place">
+          <i class="fas fa-fw fa-map-marker-alt" aria-hidden="true"></i> <span itemprop="name">São Paulo - SP</span>
+        </li>
+      
+
+      
+        
+          
+            <li><a href="mailto:eugeniojimenes@gmail" rel="nofollow noopener noreferrer"><i class="fas fa-fw fa-envelope-square" aria-hidden="true"></i><span class="label">Email</span></a></li>
+          
+        
+          
+            <li><a href="https://github.com/callmarx" rel="nofollow noopener noreferrer"><i class="fab fa-fw fa-github" aria-hidden="true"></i><span class="label">GitHub</span></a></li>
+          
+        
+          
+            <li><a href="https://twitter.com/leminski_se" rel="nofollow noopener noreferrer"><i class="fab fa-fw fa-twitter" aria-hidden="true"></i><span class="label">Twitter</span></a></li>
+          
+        
+          
+            <li><a href="https://www.linkedin.com/in/eugenio-augusto-jimenes/" rel="nofollow noopener noreferrer"><i class="fab fa-fw fa-linkedin" aria-hidden="true"></i><span class="label">LinkedIn</span></a></li>
+          
+        
+      
+
+      
+
+      
+
+      
+
+      
+
+      
+
+      
+
+      
+
+      
+
+      
+
+      
+
+      
+
+      
+
+      
+
+      
+
+      
+
+      
+
+      
+
+      
+
+      
+
+      
+
+      
+
+      
+
+      
+
+      
+
+      <!--
+  <li>
+    <a href="http://link-to-whatever-social-network.com/user/" itemprop="sameAs" rel="nofollow noopener noreferrer">
+      <i class="fas fa-fw" aria-hidden="true"></i> Custom Social Profile Link
+    </a>
+  </li>
+-->
+    </ul>
+  </div>
+</div>
+
+  
+  </div>
+
+
+
+  <article class="page" itemscope itemtype="https://schema.org/CreativeWork">
+    <meta itemprop="headline" content="Busca em texto otimizada com a Gem pg_search - Parte II">
+    <meta itemprop="description" content="Na parte Ideste post eu expliquei um pouco sobre o conceito e as funcionalidades deFull Text Searching do PostgreSQLe me comprometi a explicar com um projetinho Ruby on Rails através da GemaPgSearch, vamos lá então.">
+    <meta itemprop="datePublished" content="2021-04-08T19:18:53-03:00">
+    
+
+    <div class="page__inner-wrap">
+      
+        <header>
+          <h1 id="page-title" class="page__title" itemprop="headline">Busca em texto otimizada com a Gem pg_search - Parte II
+</h1>
+          
+
+  <p class="page__meta">
+    
+      
+      <span class="page__meta-date">
+        <i class="far fa-calendar-alt" aria-hidden="true"></i>
+        
+        <time datetime="2021-04-08T19:18:53-03:00">2021-04-08</time>
+      </span>
+    
+
+    <span class="page__meta-sep"></span>
+
+    
+      
+      
+
+      <span class="page__meta-readtime">
+        <i class="far fa-clock" aria-hidden="true"></i>
+        
+          14 minuto(s) de leitura
+        
+      </span>
+    
+  </p>
+
+
+        </header>
+      
+
+      <section class="page__content" itemprop="text">
+        
+        <p>Na <a href="/blog/2021/01/17/busca-texto-otimizada-com-pg-search-p1.html" target="_blank">parte I</a>
+deste post eu expliquei um pouco sobre o conceito e as funcionalidades de
+<a href="https://www.postgresql.org/docs/current/textsearch-intro.html" target="_blank">Full Text Searching do PostgreSQL</a>
+e me comprometi a explicar com um projetinho Ruby on Rails através da Gema
+<a href="https://github.com/Casecommons/pg_search" target="_blank">PgSearch</a>, vamos lá então.
+<!-- excerpt-separator --></p>
+
+<div style="left: 0; width: 100%; height: 0; position: relative; padding-bottom: 74.023%;"><iframe src="https://giphy.com/embed/VbnUQpnihPSIgIXuZv" style="border: 0; top: 0; left: 0; width: 100%; height: 100%; position: absolute;" allowfullscreen="" scrolling="no" allow="encrypted-media"></iframe></div>
+<p><br /></p>
+<h2 id="git-clone-e-diverta-se">Git clone e diverta-se!</h2>
+
+<p>O projeto completo está disponível em <a href="https://github.com/callmarx/fts_example" target="_blank">https://github.com/callmarx/fts_example</a>.
+Para executar basta ter o Docker instalado e configurado em seu linux e executar os seguintes
+comandos em distintos terminais:</p>
+
+<div class="language-bash highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="c"># em um terminal, dentro da pasta do projeto</span>
+<span class="nv">$ </span>make up
+
+<span class="c"># em outro terminal, também dentro da pasta do projeto</span>
+<span class="nv">$ </span>make prepare-db
+</code></pre></div></div>
+<p class="notice--info"><strong>Obs</strong>: O comando <code class="language-plaintext highlighter-rouge">make up</code> ocupa o terminal em questão pois exibe, em tempo real, o log do Rails. 
+Para sair, basta dar CTRL+C; isso interrompe o <code class="language-plaintext highlighter-rouge">rails server</code>, mas o <em>container</em> continuará
+rodando em segundo plano (<em>background</em>).</p>
+
+<p>Você pode testar o desempenho das buscas tanto em requisições completas com
+<a href="https://curl.se" target="_blank">cURL</a>, <a href="https://www.postman.com" target="_blank">Postman</a> ou
+qualquer outra ferramenta para consulta de API de sua preferência, quanto pelo console da aplicação
+invocando diretamente os métodos. No final deste post vou compartilhar os resultados que obtive.</p>
+
+<h2 id="como-eu-fiz">Como eu fiz</h2>
+
+<p>Primeiro eu montei um Rails API-Only, ou seja, uma aplicação
+<a href="https://en.wikipedia.org/wiki/Representational_state_transfer" target="_blank">RESTful</a> que
+responde apenas em JSON já que o objetivo aqui é testar buscas em textos <del>e não porque eu não
+tenho saco em ficar enfeitando HTML e CSS</del>. Com um único model e controller - Article - sob os
+campos <code class="language-plaintext highlighter-rouge">:title</code> e <code class="language-plaintext highlighter-rouge">:content</code>, podemos preenchê-los com algum texto e assim utilizar a gema.
+Para popular esses artigos utilizei o RSS do site da
+<a href="https://www.camara.leg.br/noticias/rss" target="_blank">câmara dos deputados</a> como demonstrado
+no script a seguir.</p>
+
+<div class="language-ruby highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="c1"># script disponível em db/seeds.rb</span>
+<span class="c1"># É executado em "make prepare-db"</span>
+
+<span class="nb">require</span> <span class="s1">'rss'</span>
+<span class="nb">require</span> <span class="s1">'open-uri'</span>
+
+<span class="n">dynamics</span> <span class="o">=</span> <span class="sx">%w[
+  ADMINISTRACAO-PUBLICA
+  AGROPECUARIA
+  ASSISTENCIA-SOCIAL
+  CIDADES
+  CIENCIA-E-TECNOLOGIA
+  COMUNICACAO
+  CONSUMIDOR
+  DIREITO-E-JUSTICA
+  DIREITOS-HUMANOS
+  ECONOMIA
+  EDUCACAO-E-CULTURA
+  INDUSTRIA-E-COMERCIO
+  MEIO-AMBIENTE
+  POLITICA
+  RELACOES-EXTERIORES
+  SAUDE
+  SEGURANCA
+  TRABALHO-E-PREVIDENCIA
+  TRANSPORTE-E-TRANSITO
+  TURISMO
+]</span>
+
+<span class="n">dynamics</span><span class="p">.</span><span class="nf">each</span> <span class="k">do</span> <span class="o">|</span><span class="n">dynamic</span><span class="o">|</span>
+  <span class="n">url</span> <span class="o">=</span> <span class="no">URI</span><span class="p">.</span><span class="nf">open</span><span class="p">(</span><span class="s2">"https://www.camara.leg.br/noticias/rss/dinamico/</span><span class="si">#{</span><span class="n">dynamic</span><span class="si">}</span><span class="s2">"</span><span class="p">)</span>
+  <span class="n">feed</span> <span class="o">=</span> <span class="no">RSS</span><span class="o">::</span><span class="no">Parser</span><span class="p">.</span><span class="nf">parse</span><span class="p">(</span><span class="n">url</span><span class="p">)</span>
+  <span class="n">feed</span><span class="p">.</span><span class="nf">items</span><span class="p">.</span><span class="nf">each</span> <span class="k">do</span> <span class="o">|</span><span class="n">item</span><span class="o">|</span>
+    <span class="no">Article</span><span class="p">.</span><span class="nf">create</span><span class="p">(</span>
+      <span class="ss">title: </span><span class="n">item</span><span class="p">.</span><span class="nf">title</span><span class="p">,</span>
+      <span class="ss">content: </span><span class="n">item</span><span class="p">.</span><span class="nf">content_encoded</span><span class="p">,</span>
+      <span class="ss">created_at: </span><span class="n">item</span><span class="p">.</span><span class="nf">pubDate</span>
+    <span class="p">)</span>
+  <span class="k">end</span>
+<span class="k">end</span>
+</code></pre></div></div>
+
+<p>Para utilizar <a href="https://github.com/Casecommons/pg_search" target="_blank">PgSearch</a> no Rails não é
+necessário nenhum arquivo de configuração ou inicialização, basta incluir no Gemfile e seguir as
+instruções de inclusão e escopo como a documentação da Gema explica em
+<a href="https://github.com/Casecommons/pg_search#pg_search_scope" target="_blank">https://github.com/Casecommons/pg_search#pg_search_scope</a>. Porém, precisamos
+configurar nosso banco para o <code class="language-plaintext highlighter-rouge">tsvector</code> do PostgreSQL, no caso especificamente para a tabela
+<em>articles</em> que contém o texto a ser buscado. Para isso incluí o seguinte <em>migrate</em>:</p>
+
+<div class="language-ruby highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="c1"># Código disponível em db/migrate/20210402195116_add_tsvector_to_article.rb</span>
+<span class="k">class</span> <span class="nc">AddTsvectorToArticle</span> <span class="o">&lt;</span> <span class="no">ActiveRecord</span><span class="o">::</span><span class="no">Migration</span><span class="p">[</span><span class="mf">6.1</span><span class="p">]</span>
+  <span class="k">def</span> <span class="nf">up</span>
+    <span class="n">add_column</span> <span class="ss">:articles</span><span class="p">,</span> <span class="ss">:tsv</span><span class="p">,</span> <span class="ss">:tsvector</span>
+    <span class="n">add_index</span> <span class="ss">:articles</span><span class="p">,</span> <span class="ss">:tsv</span><span class="p">,</span> <span class="ss">using: :gin</span>
+
+    <span class="n">execute</span> <span class="o">&lt;&lt;-</span><span class="no">SQL</span><span class="sh">
+      CREATE TEXT SEARCH CONFIGURATION custom_pt (COPY = pg_catalog.portuguese);
+      ALTER TEXT SEARCH CONFIGURATION custom_pt
+      ALTER MAPPING
+      FOR hword, hword_part, word
+      WITH unaccent, portuguese_stem;
+</span><span class="no">    SQL</span>
+
+    <span class="n">execute</span> <span class="o">&lt;&lt;-</span><span class="no">SQL</span><span class="sh">
+      CREATE TRIGGER articles_tsvector_update BEFORE INSERT OR UPDATE
+      ON articles FOR EACH ROW EXECUTE PROCEDURE
+      tsvector_update_trigger(
+        tsv, 'public.custom_pt', title, content
+      );
+
+      UPDATE articles SET tsv = (to_tsvector(
+        'public.custom_pt', title || content
+      ));
+</span><span class="no">    SQL</span>
+  <span class="k">end</span>
+
+  <span class="k">def</span> <span class="nf">down</span>
+    <span class="n">execute</span> <span class="o">&lt;&lt;-</span><span class="no">SQL</span><span class="sh">
+      DROP TRIGGER articles_tsvector_update
+      ON articles;
+
+      DROP TEXT SEARCH CONFIGURATION custom_pt;
+</span><span class="no">    SQL</span>
+
+    <span class="n">remove_index</span> <span class="ss">:articles</span><span class="p">,</span> <span class="ss">:tsv</span>
+    <span class="n">remove_column</span> <span class="ss">:articles</span><span class="p">,</span> <span class="ss">:tsv</span>
+  <span class="k">end</span>
+<span class="k">end</span>
+</code></pre></div></div>
+
+<p>Traduzindo em passos o <em>migrate</em> acima, temos o seguinte:</p>
+<ul>
+  <li>Cria uma nova coluna em <em>articles</em>, chamada <em>tsv</em> do tipo <code class="language-plaintext highlighter-rouge">tsvector</code></li>
+  <li>Cria uma indexação sob essa nova coluna do tipo <code class="language-plaintext highlighter-rouge">gin</code></li>
+  <li>Cria uma configuração de busca textual copiada da padrão <code class="language-plaintext highlighter-rouge">pg_catalog.portuguese</code> com nome
+<em>custom_pt</em></li>
+  <li>Edita essa busca textual para mapear as palavras com a extensão <code class="language-plaintext highlighter-rouge">unaccent</code></li>
+  <li>Cria um <em>trigger</em> que será invocado na inserção e edição para atualizar o novo campo <code class="language-plaintext highlighter-rouge">:tsv</code>
+com <code class="language-plaintext highlighter-rouge">tsvector</code> dos campos <code class="language-plaintext highlighter-rouge">:title, :content</code> do artigo em questão com a nova configuração
+de busca textual.</li>
+  <li>Atualiza todos os artigos para preencher <code class="language-plaintext highlighter-rouge">:tsv</code> da mesma forma que o <em>trigger</em> descrito.</li>
+</ul>
+
+<p class="notice--warning">Note que com isto utilizei uma estratégia dupla de otimização: <strong><em>tsvector</em></strong> + <strong><em>GIN index</em></strong>.</p>
+
+<p>Os métodos de busca estão no model, sendo <code class="language-plaintext highlighter-rouge">.bad_search</code> implementado com o simples <code class="language-plaintext highlighter-rouge">ilike</code>
+do SQL e <code class="language-plaintext highlighter-rouge">.good_search</code> com a gema. O código, disponível em <code class="language-plaintext highlighter-rouge">app/models/article.rb</code>, é o
+que segue:</p>
+<div class="language-ruby highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="c1"># Código disponível em app/models/article.rb</span>
+<span class="k">class</span> <span class="nc">Article</span> <span class="o">&lt;</span> <span class="no">ApplicationRecord</span>
+  <span class="kp">include</span> <span class="no">PgSearch</span><span class="o">::</span><span class="no">Model</span>
+
+  <span class="n">scope</span> <span class="ss">:ordered</span><span class="p">,</span> <span class="o">-&gt;</span> <span class="p">{</span> <span class="n">order</span><span class="p">(</span><span class="ss">created_at: :desc</span><span class="p">)</span> <span class="p">}</span>
+
+  <span class="n">validates</span> <span class="ss">:title</span><span class="p">,</span> <span class="ss">presence: </span><span class="kp">true</span>
+  <span class="n">validates</span> <span class="ss">:content</span><span class="p">,</span> <span class="ss">presence: </span><span class="kp">true</span>
+
+  <span class="n">pg_search_scope</span> <span class="ss">:pg_search</span><span class="p">,</span>
+                  <span class="ss">against: </span><span class="sx">%i[title content]</span><span class="p">,</span>
+                  <span class="ss">ignoring: :accents</span><span class="p">,</span>
+                  <span class="ss">using: </span><span class="p">{</span>
+                    <span class="ss">tsearch: </span><span class="p">{</span>
+                      <span class="ss">dictionary: </span><span class="s1">'custom_pt'</span><span class="p">,</span>
+                      <span class="ss">tsvector_column: </span><span class="s1">'tsv'</span>
+                    <span class="p">}</span>
+                  <span class="p">}</span>
+
+  <span class="k">class</span> <span class="o">&lt;&lt;</span> <span class="nb">self</span>
+    <span class="k">def</span> <span class="nf">bad_search</span><span class="p">(</span><span class="n">term</span><span class="p">)</span>
+      <span class="k">if</span> <span class="n">term</span><span class="p">.</span><span class="nf">present?</span>
+        <span class="nb">self</span><span class="p">.</span><span class="nf">where</span><span class="p">(</span>
+          <span class="sx">%(
+            unaccent(title) ilike unaccent(:term)
+            OR unaccent(content) ilike unaccent(:term)
+          )</span><span class="p">,</span>
+          <span class="ss">term: </span><span class="s2">"%</span><span class="si">#{</span><span class="n">term</span><span class="si">}</span><span class="s2">%"</span>
+        <span class="p">)</span>
+      <span class="k">else</span>
+        <span class="nb">self</span><span class="p">.</span><span class="nf">all</span>
+      <span class="k">end</span>
+    <span class="k">end</span>
+
+    <span class="k">def</span> <span class="nf">good_search</span><span class="p">(</span><span class="n">term</span><span class="p">)</span>
+      <span class="k">if</span> <span class="n">term</span><span class="p">.</span><span class="nf">present?</span>
+        <span class="nb">self</span><span class="p">.</span><span class="nf">pg_search</span><span class="p">(</span><span class="n">term</span><span class="p">)</span>
+      <span class="k">else</span>
+        <span class="nb">self</span><span class="p">.</span><span class="nf">all</span>
+      <span class="k">end</span>
+    <span class="k">end</span>
+  <span class="k">end</span>
+<span class="k">end</span>
+</code></pre></div></div>
+
+<p>Atente aqui que foi incluído <code class="language-plaintext highlighter-rouge">PgSearch::Model</code> e definido o escopo com <code class="language-plaintext highlighter-rouge">pg_search_scope</code>
+para que possamos dizer a gema quais configurações de busca estamos utilizando e sob quais campos
+do modelo. Defini em ambas os métodos de busca para quando o argumento for nulo retornar <code class="language-plaintext highlighter-rouge">.all</code>
+de maneira a simplificar a lógica no controller.</p>
+
+<h2 id="resultados">Resultados</h2>
+
+<div class="tenor-gif-embed" data-postid="8171427" data-share-method="host" data-width="100%" data-aspect-ratio="1.78494623655914"><a href="https://tenor.com/view/mysterious-mysteriousa-mysteriousb-gif-8171427">Mysterious GIF</a> from <a href="https://tenor.com/search/mysterious-gifs">Mysterious GIFs</a></div>
+<script type="text/javascript" async="" src="https://tenor.com/embed.js"></script>
+
+<p><br />
+<br />
+Antes de pontuarmos o desempenho, vale lembrar que inflexões de palavras como conjugação verbal,
+gênero, plural etc, não deveria interferir na integridade da busca, ou seja, no nosso contexto com
+essa API, na quantidade de artigos selecionados. Se um usuário busca, por exemplo, por <em>amendoins</em>,
+é intuitivo incluir também artigos que contenham a inflexão singular <em>amendoim</em>. Porém, como será
+mostrado, este não é o comportamento quando utilizamos <code class="language-plaintext highlighter-rouge">ilike</code> da linguagem SQL.</p>
+
+<p>Fazendo uma consulta simples na API (lembrando que é preciso ter um terminal com <code class="language-plaintext highlighter-rouge">make up</code>
+rodando), sem o parâmetro de url <code class="language-plaintext highlighter-rouge">:good_search == 'ok'</code>, o controller utiliza o método de busca
+<code class="language-plaintext highlighter-rouge">.bad_search</code> e fazendo isso para o termo <em>proibir</em> resulta em 4 artigos:</p>
+
+<p><img src="/assets/posts/bad_proibir.webp" alt="bad proibir" /></p>
+
+<p><br />
+<br />
+Fazendo agora uma consulta com o parâmetro de url, ou seja, com o método de busca <code class="language-plaintext highlighter-rouge">.good_search</code>,
+com o mesmo termo <em>proibir</em>, já obtemos 13 artigos:</p>
+
+<p><img src="/assets/posts/good_proibir.webp" alt="good proibir" /></p>
+
+<p><br />
+<br />
+Se repetirmos as buscas acima com alguma conjugação do mesmo verbo como <em>proibido</em>, a consulta
+<code class="language-plaintext highlighter-rouge">.bad_search</code> irá selecionar outros artigos, já com a <code class="language-plaintext highlighter-rouge">.good_search</code> mantemos os mesmos 13
+artigos já que o <code class="language-plaintext highlighter-rouge">tsvector</code> trabalha com
+<a href="https://radames.manosso.nom.br/linguagem/gramatica/morfologia/lexema/" target="_blank">lexemas</a>,
+o que garante abranger todas as inflexões do termo buscado. Essas consultas pelo Postman podem ser
+importadas pelo arquivo
+<a href="https://raw.githubusercontent.com/callmarx/fts_example/main/fts_example.postman_collection.json" target="_blank">fts_example.postman_collection.json</a>,
+também disponível no projeto.</p>
+
+<p>Para avaliar o desempenho implementei algumas tasks para medir o tempo de execução. As buscas são
+feitas através de uma
+<a href="https://raw.githubusercontent.com/callmarx/fts_example/main/lib/tasks/present_words.txt" target="_blank">lista de 485 palavras</a>,
+explicitamente presentes nos artigos, ou seja, cada uma das palavras retorna pelo menos um artigo
+com <code class="language-plaintext highlighter-rouge">.bad_search</code>. Dessa forma evitamos consultas vazias com o método ruim, mas presentes com o
+método bom, o que afetaria a qualidade do teste. De qualquer forma, como demonstrado anteriormente,
+<code class="language-plaintext highlighter-rouge">.good_search</code> tende a retornar mais artigos que o outro método, mesmo assim provou-se mais
+eficiente como veremos.</p>
+
+<p>Utilizei a gema <a href="https://github.com/ruby/benchmark" target="_blank">Benchmark</a> com o código
+seguinte:</p>
+<div class="language-ruby highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="c1"># Código disponível em lib/tasks/benchmark.rake</span>
+<span class="nb">require</span> <span class="s1">'benchmark'</span>
+<span class="nb">require</span> <span class="s1">'faraday'</span>
+
+<span class="n">present_words</span> <span class="o">=</span> <span class="no">File</span><span class="p">.</span><span class="nf">readlines</span><span class="p">(</span><span class="s1">'lib/tasks/present_words.txt'</span><span class="p">).</span><span class="nf">map</span><span class="p">{</span> <span class="o">|</span><span class="n">word</span><span class="o">|</span> <span class="n">word</span><span class="p">.</span><span class="nf">chomp</span> <span class="p">}</span>
+<span class="n">url</span> <span class="o">=</span> <span class="s1">'http://localhost:3000/v1/articles'</span>
+
+<span class="n">namespace</span> <span class="ss">:benchmark</span> <span class="k">do</span>
+  <span class="n">task</span> <span class="ss">method: :environment</span> <span class="k">do</span>
+    <span class="nb">puts</span> <span class="s2">"</span><span class="se">\n</span><span class="s2">########## Method - Gem Benchmark ###########"</span>
+    <span class="no">Benchmark</span><span class="p">.</span><span class="nf">bm</span> <span class="k">do</span> <span class="o">|</span><span class="n">benchmark</span><span class="o">|</span>
+      <span class="n">benchmark</span><span class="p">.</span><span class="nf">report</span><span class="p">(</span><span class="s1">'bad '</span><span class="p">)</span> <span class="k">do</span>
+        <span class="n">present_words</span><span class="p">.</span><span class="nf">each</span> <span class="k">do</span> <span class="o">|</span><span class="n">word</span><span class="o">|</span>
+          <span class="no">Article</span><span class="p">.</span><span class="nf">bad_search</span><span class="p">(</span><span class="n">word</span><span class="p">).</span><span class="nf">count</span>
+        <span class="k">end</span>
+      <span class="k">end</span>
+      <span class="n">benchmark</span><span class="p">.</span><span class="nf">report</span><span class="p">(</span><span class="s1">'good'</span><span class="p">)</span> <span class="k">do</span>
+        <span class="n">present_words</span><span class="p">.</span><span class="nf">each</span> <span class="k">do</span> <span class="o">|</span><span class="n">word</span><span class="o">|</span>
+          <span class="no">Article</span><span class="p">.</span><span class="nf">good_search</span><span class="p">(</span><span class="n">word</span><span class="p">).</span><span class="nf">count</span>
+        <span class="k">end</span>
+      <span class="k">end</span>
+    <span class="k">end</span>
+  <span class="k">end</span>
+
+  <span class="n">task</span> <span class="ss">request: :environment</span> <span class="k">do</span>
+    <span class="nb">puts</span> <span class="s2">"</span><span class="se">\n</span><span class="s2">########## Request - Gem Benchmark ##########"</span>
+    <span class="no">Benchmark</span><span class="p">.</span><span class="nf">bm</span> <span class="k">do</span> <span class="o">|</span><span class="n">benchmark</span><span class="o">|</span>
+      <span class="n">benchmark</span><span class="p">.</span><span class="nf">report</span><span class="p">(</span><span class="s1">'bad '</span><span class="p">)</span> <span class="k">do</span>
+        <span class="n">present_words</span><span class="p">.</span><span class="nf">each</span> <span class="k">do</span> <span class="o">|</span><span class="n">word</span><span class="o">|</span>
+          <span class="no">Faraday</span><span class="p">.</span><span class="nf">get</span><span class="p">(</span><span class="n">url</span><span class="p">,</span> <span class="p">{</span> <span class="ss">q: </span><span class="n">word</span> <span class="p">},</span> <span class="p">{</span> <span class="s1">'Accept'</span> <span class="o">=&gt;</span> <span class="s1">'application/json'</span> <span class="p">})</span>
+        <span class="k">end</span>
+      <span class="k">end</span>
+      <span class="n">benchmark</span><span class="p">.</span><span class="nf">report</span><span class="p">(</span><span class="s1">'good'</span><span class="p">)</span> <span class="k">do</span>
+        <span class="n">present_words</span><span class="p">.</span><span class="nf">each</span> <span class="k">do</span> <span class="o">|</span><span class="n">word</span><span class="o">|</span>
+          <span class="no">Faraday</span><span class="p">.</span><span class="nf">get</span><span class="p">(</span><span class="n">url</span><span class="p">,</span> <span class="p">{</span> <span class="ss">q: </span><span class="n">word</span><span class="p">,</span> <span class="ss">good_search: </span><span class="s1">'ok'</span> <span class="p">},</span> <span class="p">{</span> <span class="s1">'Accept'</span> <span class="o">=&gt;</span> <span class="s1">'application/json'</span> <span class="p">})</span>
+        <span class="k">end</span>
+      <span class="k">end</span>
+    <span class="k">end</span>
+  <span class="k">end</span>
+
+  <span class="n">task</span> <span class="ss">all: :environment</span> <span class="k">do</span>
+    <span class="no">Rake</span><span class="o">::</span><span class="no">Task</span><span class="p">[</span><span class="s1">'benchmark:method'</span><span class="p">].</span><span class="nf">execute</span>
+    <span class="no">Rake</span><span class="o">::</span><span class="no">Task</span><span class="p">[</span><span class="s1">'benchmark:request'</span><span class="p">].</span><span class="nf">execute</span>
+  <span class="k">end</span>
+<span class="k">end</span>
+</code></pre></div></div>
+
+<p>Inclui a execução de ambos os testes (método e requisição JSON) no Makefile do projeto, assim basta
+executar em seu terminal <code class="language-plaintext highlighter-rouge">make benchmark</code>. A seguir os resultados que obtive:</p>
+
+<div class="language-bash highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="c"># em um terminal</span>
+<span class="nv">$ </span>make up
+
+<span class="c"># em outro terminal</span>
+<span class="nv">$ </span>make benchmark
+docker-compose <span class="nb">exec </span>api bundle <span class="nb">exec </span>rails benchmark:all
+
+<span class="c">########## Method - Gem Benchmark ###########</span>
+       user     system      total        real
+bad   0.314819   0.029698   0.344517 <span class="o">(</span>  4.853793<span class="o">)</span>
+good  0.340305   0.011930   0.352235 <span class="o">(</span>  0.483992<span class="o">)</span>
+
+<span class="c">########## Request - Gem Benchmark ##########</span>
+       user     system      total        real
+bad   0.399208   0.109991   0.509199 <span class="o">(</span> 12.725288<span class="o">)</span>
+good  0.378955   0.143361   0.522316 <span class="o">(</span>  4.883817<span class="o">)</span>
+</code></pre></div></div>
+
+<p>Este relatório mostra, em segundos, o tempo de CPU do usuário, o tempo de CPU do sistema, a soma
+dos dois anteriores e o tempo real decorrido. Como dependemos do Rails e do PostgreSQL devemos
+considerar a última coluna, o tempo real medido. Para reafirmar isso implementei “na mão” outro
+benchmark com uso de <code class="language-plaintext highlighter-rouge">Process.clock_gettime(Process::CLOCK_MONOTONIC)</code> no lugar de gema
+<a href="https://github.com/ruby/benchmark" target="_blank">Benchmark</a>, podendo ser executado com <code class="language-plaintext highlighter-rouge">make benchmark-manual</code>.
+Note a aproximação dos resultados:</p>
+
+<div class="language-bash highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="nv">$ </span>make benchmark-manual
+docker-compose <span class="nb">exec </span>api bundle <span class="nb">exec </span>rails manual_benchmark:all
+
+<span class="c">######### Method - Manual Benchmark #########</span>
+context       average       total
+  bad         0.0101s       4.8883s
+  good        0.0010s       0.4901s
+
+<span class="c">######### Request - Manual Benchmark ########</span>
+context       average       total
+  bad         0.0253s       12.2896s
+  good        0.0095s       4.5954s
+</code></pre></div></div>
+
+<p>Dessa forma, podemos observar o poder de <strong><em>tsvector</em></strong> + <strong><em>GIN index</em></strong>. Quando comparado com <code class="language-plaintext highlighter-rouge">ilike</code>
+o ganho de tempo foi, aproximadamente, de 90% com o método e de 62% com a requisição.</p>
+
+        
+      </section>
+
+      <footer class="page__meta">
+        
+        
+  
+
+
+  
+
+  <p class="page__taxonomy">
+    <strong><i class="fas fa-fw fa-tags" aria-hidden="true"></i> Tags: </strong>
+    <span itemprop="keywords">
+    
+      <a href="/tags/#config" class="page__taxonomy-item" rel="tag">Config</a><span class="sep">, </span>
+    
+      <a href="/tags/#optimization" class="page__taxonomy-item" rel="tag">Optimization</a><span class="sep">, </span>
+    
+      <a href="/tags/#postgresql" class="page__taxonomy-item" rel="tag">PostgreSQL</a><span class="sep">, </span>
+    
+      <a href="/tags/#rails" class="page__taxonomy-item" rel="tag">Rails</a><span class="sep">, </span>
+    
+      <a href="/tags/#ruby" class="page__taxonomy-item" rel="tag">Ruby</a>
+    
+    </span>
+  </p>
+
+
+
+
+  
+
+
+  
+
+  <p class="page__taxonomy">
+    <strong><i class="fas fa-fw fa-folder-open" aria-hidden="true"></i> Categorias: </strong>
+    <span itemprop="keywords">
+    
+      <a href="/categories/#blog" class="page__taxonomy-item" rel="tag">blog</a>
+    
+    </span>
+  </p>
+
+
+        
+
+  <p class="page__date"><strong><i class="fas fa-fw fa-calendar-alt" aria-hidden="true"></i> Atualizado em:</strong> <time datetime="2021-04-08T19:18:53-03:00">2021-04-08</time></p>
+
+
+      </footer>
+
+      <section class="page__share">
+  
+    <h4 class="page__share-title">Compartilhe</h4>
+  
+
+  <a href="https://twitter.com/intent/tweet?via=leminski_se&text=Busca+em+texto+otimizada+com+a+Gem+pg_search+-+Parte+II%20https%3A%2F%2Fcallmarx.github.io%2Fblog%2F2021%2F04%2F08%2Fbusca-texto-otimizada-com-pg-search-p2.html" class="btn btn--twitter" onclick="window.open(this.href, 'window', 'left=20,top=20,width=500,height=500,toolbar=1,resizable=0'); return false;" title="Compartilhe Twitter"><i class="fab fa-fw fa-twitter" aria-hidden="true"></i><span> Twitter</span></a>
+
+  <a href="https://www.facebook.com/sharer/sharer.php?u=https%3A%2F%2Fcallmarx.github.io%2Fblog%2F2021%2F04%2F08%2Fbusca-texto-otimizada-com-pg-search-p2.html" class="btn btn--facebook" onclick="window.open(this.href, 'window', 'left=20,top=20,width=500,height=500,toolbar=1,resizable=0'); return false;" title="Compartilhe Facebook"><i class="fab fa-fw fa-facebook" aria-hidden="true"></i><span> Facebook</span></a>
+
+  <a href="https://www.linkedin.com/shareArticle?mini=true&url=https%3A%2F%2Fcallmarx.github.io%2Fblog%2F2021%2F04%2F08%2Fbusca-texto-otimizada-com-pg-search-p2.html" class="btn btn--linkedin" onclick="window.open(this.href, 'window', 'left=20,top=20,width=500,height=500,toolbar=1,resizable=0'); return false;" title="Compartilhe LinkedIn"><i class="fab fa-fw fa-linkedin" aria-hidden="true"></i><span> LinkedIn</span></a>
+</section>
+
+
+      
+  <nav class="pagination">
+    
+      <a href="/blog/2021/01/17/busca-texto-otimizada-com-pg-search-p1.html" class="pagination--pager" title="Busca em texto otimizada com a Gem pg_search - Parte I
+">Anterior</a>
+    
+    
+      <a href="/blog/2021/04/25/spellcheck_pt-br_no_vim.html" class="pagination--pager" title="Hoje eu aprendi: configurar verificador ortográfico PT-BR no editor Vim
+">Próxima</a>
+    
+  </nav>
+
+    </div>
+
+    
+  </article>
+
+  
+  
+    <div class="page__related">
+      <h4 class="page__related-title">Talvez você também goste</h4>
+      <div class="grid__wrapper">
+        
+          
+
+
+
+<div class="grid__item">
+  <article class="archive__item" itemscope itemtype="https://schema.org/CreativeWork">
+    
+    <h2 class="archive__item-title no_toc" itemprop="headline">
+      
+        <a href="/blog/2022/06/29/tutorial-rails7-hotwire-parte-3.html" rel="permalink">Tutorial: Rails7, Tailwind e Hotwire - Parte 3
+</a>
+      
+    </h2>
+    
+
+  <p class="page__meta">
+    
+      
+      <span class="page__meta-date">
+        <i class="far fa-fw fa-calendar-alt" aria-hidden="true"></i>
+        
+        <time datetime="2022-06-29T21:34:03-03:00">2022-06-29</time>
+      </span>
+    
+
+    <span class="page__meta-sep"></span>
+
+    
+      
+      
+
+      <span class="page__meta-readtime">
+        <i class="far fa-fw fa-clock" aria-hidden="true"></i>
+        
+          18 minuto(s) de leitura
+        
+      </span>
+    
+  </p>
+
+
+    <p class="archive__item-excerpt" itemprop="description">
+
+Na parte anterior
+deste tutorial eu expliquei como utilizar a renderização parcial de html com turbo_stream do
+Hotwire Turbo, o que nos permitiu mostrar os cards
+recém inseridos ou excluídos do nosso humilde protótipo de Kanban. Agora ...</p>
+  </article>
+</div>
+
+        
+          
+
+
+
+<div class="grid__item">
+  <article class="archive__item" itemscope itemtype="https://schema.org/CreativeWork">
+    
+    <h2 class="archive__item-title no_toc" itemprop="headline">
+      
+        <a href="/blog/2022/06/08/dotfiles.html" rel="permalink">Hoje eu aprendi: Vale a pena configurar seus dotfiles
+</a>
+      
+    </h2>
+    
+
+  <p class="page__meta">
+    
+      
+      <span class="page__meta-date">
+        <i class="far fa-fw fa-calendar-alt" aria-hidden="true"></i>
+        
+        <time datetime="2022-06-08T16:58:19-03:00">2022-06-08</time>
+      </span>
+    
+
+    <span class="page__meta-sep"></span>
+
+    
+      
+      
+
+      <span class="page__meta-readtime">
+        <i class="far fa-fw fa-clock" aria-hidden="true"></i>
+        
+          5 minuto(s) de leitura
+        
+      </span>
+    
+  </p>
+
+
+    <p class="archive__item-excerpt" itemprop="description">
+
+Depois de mais de 3 anos usando Vim como IDE (Integrated Development Environment), migrando no
+caminho para o Neovim com o shell zsh, o gerenciador
+Oh My Zsh e o tema
+Powerlevel10k, percebi como eu
+dependia dessas configurações e como ...</p>
+  </article>
+</div>
+
+        
+          
+
+
+
+<div class="grid__item">
+  <article class="archive__item" itemscope itemtype="https://schema.org/CreativeWork">
+    
+    <h2 class="archive__item-title no_toc" itemprop="headline">
+      
+        <a href="/blog/2021/12/19/tutorial-rails7-hotwire-parte-2.html" rel="permalink">Tutorial: Rails7, Tailwind e Hotwire - Parte 2
+</a>
+      
+    </h2>
+    
+
+  <p class="page__meta">
+    
+      
+      <span class="page__meta-date">
+        <i class="far fa-fw fa-calendar-alt" aria-hidden="true"></i>
+        
+        <time datetime="2021-12-19T14:42:03-03:00">2021-12-19</time>
+      </span>
+    
+
+    <span class="page__meta-sep"></span>
+
+    
+      
+      
+
+      <span class="page__meta-readtime">
+        <i class="far fa-fw fa-clock" aria-hidden="true"></i>
+        
+          14 minuto(s) de leitura
+        
+      </span>
+    
+  </p>
+
+
+    <p class="archive__item-excerpt" itemprop="description">
+
+Na parte anterior
+deste tutorial eu expliquei como customizar e utilizar o Tailwind sem uma linha sequer de CSS e
+JavaScript. Agora vou abordar um pouco sobre o pacote
+Hotwire Turbo.
+</p>
+  </article>
+</div>
+
+        
+          
+
+
+
+<div class="grid__item">
+  <article class="archive__item" itemscope itemtype="https://schema.org/CreativeWork">
+    
+    <h2 class="archive__item-title no_toc" itemprop="headline">
+      
+        <a href="/blog/2021/12/09/tutorial-rails7-hotwire-parte-1.html" rel="permalink">Tutorial: Rails7, Tailwind e Hotwire - Parte 1
+</a>
+      
+    </h2>
+    
+
+  <p class="page__meta">
+    
+      
+      <span class="page__meta-date">
+        <i class="far fa-fw fa-calendar-alt" aria-hidden="true"></i>
+        
+        <time datetime="2021-12-09T11:12:54-03:00">2021-12-09</time>
+      </span>
+    
+
+    <span class="page__meta-sep"></span>
+
+    
+      
+      
+
+      <span class="page__meta-readtime">
+        <i class="far fa-fw fa-clock" aria-hidden="true"></i>
+        
+          13 minuto(s) de leitura
+        
+      </span>
+    
+  </p>
+
+
+    <p class="archive__item-excerpt" itemprop="description">
+
+Na parte anterior deste
+tutorial, expliquei como configurar o Rails 7, com suas novas opções e como “dockerizei” os bancos
+de dados PostgreSQL e Redis. Agora vou abordar um pouco sobre Tailwind.
+</p>
+  </article>
+</div>
+
+        
+      </div>
+    </div>
+  
+  
+</div>
+
+    </div>
+
+    
+      <div class="search-content">
+        <div class="search-content__inner-wrap"><form class="search-content__form" onkeydown="return event.key != 'Enter';">
+    <label class="sr-only" for="search">
+      Enter your search term...
+    </label>
+    <input type="search" id="search" class="search-input" tabindex="-1" placeholder="Pesquisar..." />
+  </form>
+  <div id="results" class="results"></div></div>
+
+      </div>
+    
+
+    <div id="footer" class="page__footer">
+      <footer>
+        <!-- start custom footer snippets -->
+
+<!-- end custom footer snippets -->
+        <div class="page__footer-follow">
+  <ul class="social-icons">
+    
+      
+        
+          <li><a href="https://github.com/callmarx" rel="nofollow noopener noreferrer"><i class="fab fa-fw fa-github" aria-hidden="true"></i> GitHub</a></li>
+        
+      
+        
+          <li><a href="https://www.linkedin.com/in/eugenio-augusto-jimenes/" rel="nofollow noopener noreferrer"><i class="fab fa-fw fa-linkedin" aria-hidden="true"></i> LinkedIn</a></li>
+        
+      
+    
+
+    
+      <li><a href="/feed.xml"><i class="fas fa-fw fa-rss-square" aria-hidden="true"></i> Feed</a></li>
+    
+  </ul>
+</div>
+
+<div class="page__footer-copyright">&copy; 2022 CallMarx. Desenvolvido com o <a href=/code-of-conduct/><b>Código de Conduta</b></a> para comunidade de código aberto, sob a licença <a href=/mit-license/><b>MIT</b></a>, framework <a href="https://jekyllrb.com" rel="nofollow"><b>Jekyll</b></a> e tema <a href="https://github.com/mmistakes/minimal-mistakes" rel="nofollow"><b>Minimal Mistakes</b></a>.</div>
+
+      </footer>
+    </div>
+
+    
+  <script src="/assets/js/main.min.js"></script>
+
+
+
+
+<script src="/assets/js/lunr/lunr.min.js"></script>
+<script src="/assets/js/lunr/lunr-store.js"></script>
+<script src="/assets/js/lunr/lunr-en.js"></script>
+
+
+
+
+
+
+
+  </body>
+</html>

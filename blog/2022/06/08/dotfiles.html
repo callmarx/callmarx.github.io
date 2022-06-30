@@ -1,0 +1,764 @@
+<!doctype html>
+<!--
+  Minimal Mistakes Jekyll Theme 4.24.0 by Michael Rose
+  Copyright 2013-2020 Michael Rose - mademistakes.com | @mmistakes
+  Free for personal and commercial use under the MIT license
+  https://github.com/mmistakes/minimal-mistakes/blob/master/LICENSE
+-->
+<html lang="pt" class="no-js">
+  <head>
+    <meta charset="utf-8">
+
+<!-- begin _includes/seo.html --><title>Hoje eu aprendi: Vale a pena configurar seus dotfiles - CallMarx</title>
+<meta name="description" content="Porque eu (finalmente) configurei meus “dotfiles”.">
+
+
+  <meta name="author" content="Eugenio Augusto Jimenes">
+  
+  <meta property="article:author" content="Eugenio Augusto Jimenes">
+  
+
+
+<meta property="og:type" content="article">
+<meta property="og:locale" content="pt_BR">
+<meta property="og:site_name" content="CallMarx">
+<meta property="og:title" content="Hoje eu aprendi: Vale a pena configurar seus dotfiles">
+<meta property="og:url" content="https://callmarx.github.io/blog/2022/06/08/dotfiles.html">
+
+
+  <meta property="og:description" content="Porque eu (finalmente) configurei meus “dotfiles”.">
+
+
+
+  <meta property="og:image" content="https://callmarx.github.io/assets/posts/dotfiles.png">
+
+
+
+  <meta name="twitter:site" content="@leminski_se">
+  <meta name="twitter:title" content="Hoje eu aprendi: Vale a pena configurar seus dotfiles">
+  <meta name="twitter:description" content="Porque eu (finalmente) configurei meus “dotfiles”.">
+  <meta name="twitter:url" content="https://callmarx.github.io/blog/2022/06/08/dotfiles.html">
+
+  
+    <meta name="twitter:card" content="summary_large_image">
+    <meta name="twitter:image" content="https://callmarx.github.io/assets/posts/dotfiles.png">
+  
+
+  
+
+
+
+  <meta property="article:published_time" content="2022-06-08T16:58:19-03:00">
+
+
+
+
+
+
+<link rel="canonical" href="https://callmarx.github.io/blog/2022/06/08/dotfiles.html">
+
+
+
+
+<script type="application/ld+json">
+  {
+    "@context": "https://schema.org",
+    
+      "@type": "Person",
+      "name": null,
+      "url": "https://callmarx.github.io/"
+    
+  }
+</script>
+
+
+
+
+
+
+
+<!-- end _includes/seo.html -->
+
+
+
+  <link href="/feed.xml" type="application/atom+xml" rel="alternate" title="CallMarx Feed">
+
+
+<!-- https://t.co/dKP3o1e -->
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+<script>
+  document.documentElement.className = document.documentElement.className.replace(/\bno-js\b/g, '') + ' js ';
+</script>
+
+<!-- For all browsers -->
+<link rel="stylesheet" href="/assets/css/main.css">
+<link rel="preload" href="https://cdn.jsdelivr.net/npm/@fortawesome/fontawesome-free@5/css/all.min.css" as="style" onload="this.onload=null;this.rel='stylesheet'">
+<noscript><link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@fortawesome/fontawesome-free@5/css/all.min.css"></noscript>
+
+
+
+    <!-- start custom head snippets -->
+
+<!-- insert favicons. use https://realfavicongenerator.net/ -->
+
+<!-- end custom head snippets -->
+
+  </head>
+
+  <body class="layout--single">
+    <nav class="skip-links">
+  <ul>
+    <li><a href="#site-nav" class="screen-reader-shortcut">Skip to primary navigation</a></li>
+    <li><a href="#main" class="screen-reader-shortcut">Skip to content</a></li>
+    <li><a href="#footer" class="screen-reader-shortcut">Skip to footer</a></li>
+  </ul>
+</nav>
+
+    <!--[if lt IE 9]>
+<div class="notice--danger align-center" style="margin: 0;">You are using an <strong>outdated</strong> browser. Please <a href="https://browsehappy.com/">upgrade your browser</a> to improve your experience.</div>
+<![endif]-->
+
+    
+
+<div class="masthead">
+  <div class="masthead__inner-wrap">
+    <div class="masthead__menu">
+      <nav id="site-nav" class="greedy-nav">
+        
+        <a class="site-title" href="/">
+          CallMarx
+          
+        </a>
+        <ul class="visible-links"><li class="masthead__menu-item">
+              <a href="/tags/">Posts por tags</a>
+            </li><li class="masthead__menu-item">
+              <a href="/about/">Sobre mim</a>
+            </li></ul>
+        
+        <button class="search__toggle" type="button">
+          <span class="visually-hidden">Buscar</span>
+          <i class="fas fa-search"></i>
+        </button>
+        
+        <button class="greedy-nav__toggle hidden" type="button">
+          <span class="visually-hidden">Toggle menu</span>
+          <div class="navicon"></div>
+        </button>
+        <ul class="hidden-links hidden"></ul>
+      </nav>
+    </div>
+  </div>
+</div>
+
+
+    <div class="initial-content">
+      
+
+
+
+<div id="main" role="main">
+  
+  <div class="sidebar sticky">
+  
+
+
+<div itemscope itemtype="https://schema.org/Person">
+
+  
+    <div class="author__avatar">
+      
+        <img src="/assets/eu-e-nila.webp" alt="Eugenio Augusto Jimenes" itemprop="image">
+      
+    </div>
+  
+
+  <div class="author__content">
+    
+      <h3 class="author__name" itemprop="name">Eugenio Augusto Jimenes</h3>
+    
+    
+      <div class="author__bio" itemprop="description">
+        <p>Nerd, disléxico, viciado-hipster em café, desenvolvedor, linux fanboy e esquerdopata convicto - CallMarx, sacou?</p>
+
+      </div>
+    
+  </div>
+
+  <div class="author__urls-wrapper">
+    <button class="btn btn--inverse">Contatos</button>
+    <ul class="author__urls social-icons">
+      
+        <li itemprop="homeLocation" itemscope itemtype="https://schema.org/Place">
+          <i class="fas fa-fw fa-map-marker-alt" aria-hidden="true"></i> <span itemprop="name">São Paulo - SP</span>
+        </li>
+      
+
+      
+        
+          
+            <li><a href="mailto:eugeniojimenes@gmail" rel="nofollow noopener noreferrer"><i class="fas fa-fw fa-envelope-square" aria-hidden="true"></i><span class="label">Email</span></a></li>
+          
+        
+          
+            <li><a href="https://github.com/callmarx" rel="nofollow noopener noreferrer"><i class="fab fa-fw fa-github" aria-hidden="true"></i><span class="label">GitHub</span></a></li>
+          
+        
+          
+            <li><a href="https://twitter.com/leminski_se" rel="nofollow noopener noreferrer"><i class="fab fa-fw fa-twitter" aria-hidden="true"></i><span class="label">Twitter</span></a></li>
+          
+        
+          
+            <li><a href="https://www.linkedin.com/in/eugenio-augusto-jimenes/" rel="nofollow noopener noreferrer"><i class="fab fa-fw fa-linkedin" aria-hidden="true"></i><span class="label">LinkedIn</span></a></li>
+          
+        
+      
+
+      
+
+      
+
+      
+
+      
+
+      
+
+      
+
+      
+
+      
+
+      
+
+      
+
+      
+
+      
+
+      
+
+      
+
+      
+
+      
+
+      
+
+      
+
+      
+
+      
+
+      
+
+      
+
+      
+
+      
+
+      <!--
+  <li>
+    <a href="http://link-to-whatever-social-network.com/user/" itemprop="sameAs" rel="nofollow noopener noreferrer">
+      <i class="fas fa-fw" aria-hidden="true"></i> Custom Social Profile Link
+    </a>
+  </li>
+-->
+    </ul>
+  </div>
+</div>
+
+  
+  </div>
+
+
+
+  <article class="page" itemscope itemtype="https://schema.org/CreativeWork">
+    <meta itemprop="headline" content="Hoje eu aprendi: Vale a pena configurar seus dotfiles">
+    <meta itemprop="description" content="Depois de mais de 3 anos usando Vim como IDE (Integrated Development Environment), migrando nocaminho para o Neovim com o shell zsh, o gerenciadorOh My Zsh e o temaPowerlevel10k, percebi como eudependia dessas configurações e como as mesmas estavam totalmente desorganizadas. Resolvi então,seguir os passos dos grandes mestres e criar o meurepositório dotfiles.">
+    <meta itemprop="datePublished" content="2022-06-08T16:58:19-03:00">
+    
+
+    <div class="page__inner-wrap">
+      
+        <header>
+          <h1 id="page-title" class="page__title" itemprop="headline">Hoje eu aprendi: Vale a pena configurar seus dotfiles
+</h1>
+          
+
+  <p class="page__meta">
+    
+      
+      <span class="page__meta-date">
+        <i class="far fa-calendar-alt" aria-hidden="true"></i>
+        
+        <time datetime="2022-06-08T16:58:19-03:00">2022-06-08</time>
+      </span>
+    
+
+    <span class="page__meta-sep"></span>
+
+    
+      
+      
+
+      <span class="page__meta-readtime">
+        <i class="far fa-clock" aria-hidden="true"></i>
+        
+          5 minuto(s) de leitura
+        
+      </span>
+    
+  </p>
+
+
+        </header>
+      
+
+      <section class="page__content" itemprop="text">
+        
+        <p><img src="/assets/posts/dotfiles.png" alt="dotfiles" class="align-center" /></p>
+
+<p>Depois de mais de 3 anos usando Vim como IDE (<em>Integrated Development Environment</em>), migrando no
+caminho para o <a href="https://neovim.io/" target="_blank">Neovim</a> com o <em>shell</em> <code class="language-plaintext highlighter-rouge">zsh</code>, o gerenciador
+<a href="https://github.com/ohmyzsh/ohmyzsh" target="_blank"><em>Oh My Zsh</em></a> e o tema
+<a href="https://github.com/romkatv/powerlevel10k" target="_blank"><em>Powerlevel10k</em></a>, percebi como eu
+dependia dessas configurações e como as mesmas estavam <del>totalmente</del> desorganizadas. Resolvi então,
+seguir os passos dos <a href="https://github.com/tpope" target="_blank">grandes mestres</a> e criar o meu
+repositório <a href="https://github.com/callmarx/dotfiles" target="_blank"><em>dotfiles</em></a>.
+<!-- excerpt-separator --></p>
+
+<h2 id="o-que-são-dotfiles">O que são “dotfiles”?</h2>
+<p>No linux (mais especificamente em todos os sistemas baseados em Unix), todo arquivo cujo nome
+comece com o caracter ponto é tratado, automaticamente, como um arquivo oculto. Muitos programas
+(navegador, editor de texto, player de vídeo/áudio etc) armazenam as configurações do usuário em
+arquivos de texto puro, ou seja, editáveis e esses arquivos normalmente são <em>dotfiles</em>.</p>
+
+<p>Por exemplo, na pasta <em>home</em> de um usuário comum em uma instalação Linux, podemos encontrar algo
+como:</p>
+<ul>
+  <li><code class="language-plaintext highlighter-rouge">~/.bashrc</code> sobre as configurações do <em>shell bash</em></li>
+  <li><code class="language-plaintext highlighter-rouge">~/.python_history</code> que é o histórico de comandos feitos no terminal <em>python</em>,</li>
+  <li><code class="language-plaintext highlighter-rouge">~/.gitconfig</code> onde fica as configurações do <em>git</em></li>
+</ul>
+
+<p class="notice--info"><strong>OBS</strong>: Há inclusive pastas inteiras, com diversos arquivos, para as configurações de um único
+programa. Você pode ver isso na pasta <code class="language-plaintext highlighter-rouge">~/.config</code>, por exemplo, ou ainda na pasta <code class="language-plaintext highlighter-rouge">~/.mozilla</code>,
+caso utilize o navegador <em>Firefox</em>.</p>
+
+<h2 id="instalar-linux-é-legal-mas-cansa">Instalar Linux é legal, mas cansa.</h2>
+<p>Depois de 10 anos usando Linux (e a propósito, eu uso <em>Arch Linux</em>, pra não deixar o
+<a href="https://knowyourmeme.com/memes/btw-i-use-arch" target="_blank">meme</a> morrer), a “pira” de ficar
+sempre instalando e configurando <del>para mostrar que eu uso Arch</del>, uma hora cansa. Quando lidamos
+também com o ambiente de desenvolvimento, o trabalho é dobrado: configurar o <em>git</em>, emulador de
+terminal, <em>IDE</em> etc. Mas meu maior motivador para criar o
+<a href="https://github.com/callmarx/dotfiles" target="_blank">meu próprio repositório</a> foi o <em>Vim</em>.</p>
+
+<p>Com a volta <del>infelizmente</del> do trabalho presencial, precisei desaposentar meu notebook. Como
+troquei a SSD, precisei reinstalar o Linux e configurar todo meu ambiente. Isso me fez, inclusive,
+perceber como determinadas configurações do meu <em>Neovim</em> estavam uma completa bagunça: <em>plugins</em> que
+não usava mais, arquivos muito longos, edições que fiz no passado e não lembrava mais porque eu fiz.
+Criar o seu próprio <em>dotfiles</em> não é apenas ter um repositório “de backup”, mas uma espaço de
+documentação e organização.</p>
+
+<h2 id="quanto-antes-começar-antes-acaba">Quanto antes começar, antes acaba</h2>
+<p>Não pretendia explicar aqui como criar o seu repositório <em>dotfiles</em>, com um passo-a-passo ou algo
+assim, mas expor minha experiência e, quem sabe, motivá-lo a fazer o seu. Trata-se de algo muito
+pessoal já que guarda as suas configurações, suas preferências. Segue abaixo alguns tutoriais que
+me ajudaram bastante:</p>
+<ul>
+  <li><a href="https://dotfiles.github.io/" target="_blank">GitHub does dotfiles</a>: Site que reúne uma série
+de guias e tutoriais para criar o seu dotfiles no github.</li>
+  <li><a href="https://www.freecodecamp.org/news/dotfiles-what-is-a-dot-file-and-how-to-create-it-in-mac-and-linux/" target="_blank">Dotfiles – What is a Dotfile and How to Create it in Mac and Linux</a>:
+Tutorial do FreeCodeCamp. Dá um passo-a-passo inicial bem razoável e explica, entre
+outras coisas, a questão de links simbólicos, dos quais você precisará para fazer com que seus
+programas olhem para os arquivos do seu repositório.</li>
+  <li><a href="https://youtu.be/r_MpUP6aKiQ" target="_blank">~/.dotfiles in 100 Seconds</a>: Vídeo bem simples
+e leve do <a href="https://fireship.io/" target="_blank">Fireship</a>, explicando (em 100 segundos) o que é
+e porque fazer.</li>
+  <li><a href="https://www.youtube.com/watch?v=ctH-a-1eUME&amp;list=PLhoH5vyxr6Qq41NFL4GvhFp-WLd5xzIzZ" target="_blank">Neovim IDE from Scratch</a>:
+Uma <strong>fantástica</strong> lista de vídeos explicando do zero como configurar o <em>Neovim</em> com a linguagem
+<em>lua</em>. Me ajudou demais!</li>
+</ul>
+
+<p class="notice--warning"><strong>Cuidado</strong>: Não recomendo utilizar o dotfiles de terceiros, mas fique a vontade para consultar o que
+fiz (e pretendo continuar atualizando), disponível
+<a href="https://github.com/callmarx/dotfiles" target="_blank">aqui</a>.</p>
+
+<div class="tenor-gif-embed" data-postid="16087071" data-share-method="host" data-aspect-ratio="1.78771" data-width="100%">
+  <a href="https://tenor.com/view/mood-heart-beat-wolf-of-wall-street-matthew-mcconaughey-good-one-gif-16087071">Mood Heart Beat GIF</a>from <a href="https://tenor.com/search/mood-gifs"></a>
+</div>
+<script type="text/javascript" async="" src="https://tenor.com/embed.js"></script>
+
+<p>Por agora, é isso.</p>
+
+        
+      </section>
+
+      <footer class="page__meta">
+        
+        
+  
+
+
+  
+
+  <p class="page__taxonomy">
+    <strong><i class="fas fa-fw fa-tags" aria-hidden="true"></i> Tags: </strong>
+    <span itemprop="keywords">
+    
+      <a href="/tags/#config" class="page__taxonomy-item" rel="tag">Config</a><span class="sep">, </span>
+    
+      <a href="/tags/#dotfiles" class="page__taxonomy-item" rel="tag">dotfiles</a><span class="sep">, </span>
+    
+      <a href="/tags/#hoje-eu-aprendi" class="page__taxonomy-item" rel="tag">Hoje-eu-aprendi</a><span class="sep">, </span>
+    
+      <a href="/tags/#linux" class="page__taxonomy-item" rel="tag">Linux</a><span class="sep">, </span>
+    
+      <a href="/tags/#neovim" class="page__taxonomy-item" rel="tag">Neovim</a><span class="sep">, </span>
+    
+      <a href="/tags/#vim" class="page__taxonomy-item" rel="tag">Vim</a>
+    
+    </span>
+  </p>
+
+
+
+
+  
+
+
+  
+
+  <p class="page__taxonomy">
+    <strong><i class="fas fa-fw fa-folder-open" aria-hidden="true"></i> Categorias: </strong>
+    <span itemprop="keywords">
+    
+      <a href="/categories/#blog" class="page__taxonomy-item" rel="tag">blog</a>
+    
+    </span>
+  </p>
+
+
+        
+
+  <p class="page__date"><strong><i class="fas fa-fw fa-calendar-alt" aria-hidden="true"></i> Atualizado em:</strong> <time datetime="2022-06-08T16:58:19-03:00">2022-06-08</time></p>
+
+
+      </footer>
+
+      <section class="page__share">
+  
+    <h4 class="page__share-title">Compartilhe</h4>
+  
+
+  <a href="https://twitter.com/intent/tweet?via=leminski_se&text=Hoje+eu+aprendi%3A+Vale+a+pena+configurar+seus+dotfiles%20https%3A%2F%2Fcallmarx.github.io%2Fblog%2F2022%2F06%2F08%2Fdotfiles.html" class="btn btn--twitter" onclick="window.open(this.href, 'window', 'left=20,top=20,width=500,height=500,toolbar=1,resizable=0'); return false;" title="Compartilhe Twitter"><i class="fab fa-fw fa-twitter" aria-hidden="true"></i><span> Twitter</span></a>
+
+  <a href="https://www.facebook.com/sharer/sharer.php?u=https%3A%2F%2Fcallmarx.github.io%2Fblog%2F2022%2F06%2F08%2Fdotfiles.html" class="btn btn--facebook" onclick="window.open(this.href, 'window', 'left=20,top=20,width=500,height=500,toolbar=1,resizable=0'); return false;" title="Compartilhe Facebook"><i class="fab fa-fw fa-facebook" aria-hidden="true"></i><span> Facebook</span></a>
+
+  <a href="https://www.linkedin.com/shareArticle?mini=true&url=https%3A%2F%2Fcallmarx.github.io%2Fblog%2F2022%2F06%2F08%2Fdotfiles.html" class="btn btn--linkedin" onclick="window.open(this.href, 'window', 'left=20,top=20,width=500,height=500,toolbar=1,resizable=0'); return false;" title="Compartilhe LinkedIn"><i class="fab fa-fw fa-linkedin" aria-hidden="true"></i><span> LinkedIn</span></a>
+</section>
+
+
+      
+  <nav class="pagination">
+    
+      <a href="/blog/2021/12/19/tutorial-rails7-hotwire-parte-2.html" class="pagination--pager" title="Tutorial: Rails7, Tailwind e Hotwire - Parte 2
+">Anterior</a>
+    
+    
+      <a href="/blog/2022/06/29/tutorial-rails7-hotwire-parte-3.html" class="pagination--pager" title="Tutorial: Rails7, Tailwind e Hotwire - Parte 3
+">Próxima</a>
+    
+  </nav>
+
+    </div>
+
+    
+  </article>
+
+  
+  
+    <div class="page__related">
+      <h4 class="page__related-title">Talvez você também goste</h4>
+      <div class="grid__wrapper">
+        
+          
+
+
+
+<div class="grid__item">
+  <article class="archive__item" itemscope itemtype="https://schema.org/CreativeWork">
+    
+    <h2 class="archive__item-title no_toc" itemprop="headline">
+      
+        <a href="/blog/2022/06/29/tutorial-rails7-hotwire-parte-3.html" rel="permalink">Tutorial: Rails7, Tailwind e Hotwire - Parte 3
+</a>
+      
+    </h2>
+    
+
+  <p class="page__meta">
+    
+      
+      <span class="page__meta-date">
+        <i class="far fa-fw fa-calendar-alt" aria-hidden="true"></i>
+        
+        <time datetime="2022-06-29T21:34:03-03:00">2022-06-29</time>
+      </span>
+    
+
+    <span class="page__meta-sep"></span>
+
+    
+      
+      
+
+      <span class="page__meta-readtime">
+        <i class="far fa-fw fa-clock" aria-hidden="true"></i>
+        
+          18 minuto(s) de leitura
+        
+      </span>
+    
+  </p>
+
+
+    <p class="archive__item-excerpt" itemprop="description">
+
+Na parte anterior
+deste tutorial eu expliquei como utilizar a renderização parcial de html com turbo_stream do
+Hotwire Turbo, o que nos permitiu mostrar os cards
+recém inseridos ou excluídos do nosso humilde protótipo de Kanban. Agora ...</p>
+  </article>
+</div>
+
+        
+          
+
+
+
+<div class="grid__item">
+  <article class="archive__item" itemscope itemtype="https://schema.org/CreativeWork">
+    
+    <h2 class="archive__item-title no_toc" itemprop="headline">
+      
+        <a href="/blog/2021/12/19/tutorial-rails7-hotwire-parte-2.html" rel="permalink">Tutorial: Rails7, Tailwind e Hotwire - Parte 2
+</a>
+      
+    </h2>
+    
+
+  <p class="page__meta">
+    
+      
+      <span class="page__meta-date">
+        <i class="far fa-fw fa-calendar-alt" aria-hidden="true"></i>
+        
+        <time datetime="2021-12-19T14:42:03-03:00">2021-12-19</time>
+      </span>
+    
+
+    <span class="page__meta-sep"></span>
+
+    
+      
+      
+
+      <span class="page__meta-readtime">
+        <i class="far fa-fw fa-clock" aria-hidden="true"></i>
+        
+          17 minuto(s) de leitura
+        
+      </span>
+    
+  </p>
+
+
+    <p class="archive__item-excerpt" itemprop="description">
+
+Na parte anterior
+deste tutorial eu expliquei como customizar e utilizar o Tailwind sem uma linha sequer de CSS e
+JavaScript. Agora vou abordar um pouco sobre o pacote
+Hotwire Turbo.
+</p>
+  </article>
+</div>
+
+        
+          
+
+
+
+<div class="grid__item">
+  <article class="archive__item" itemscope itemtype="https://schema.org/CreativeWork">
+    
+    <h2 class="archive__item-title no_toc" itemprop="headline">
+      
+        <a href="/blog/2021/12/09/tutorial-rails7-hotwire-parte-1.html" rel="permalink">Tutorial: Rails7, Tailwind e Hotwire - Parte 1
+</a>
+      
+    </h2>
+    
+
+  <p class="page__meta">
+    
+      
+      <span class="page__meta-date">
+        <i class="far fa-fw fa-calendar-alt" aria-hidden="true"></i>
+        
+        <time datetime="2021-12-09T11:12:54-03:00">2021-12-09</time>
+      </span>
+    
+
+    <span class="page__meta-sep"></span>
+
+    
+      
+      
+
+      <span class="page__meta-readtime">
+        <i class="far fa-fw fa-clock" aria-hidden="true"></i>
+        
+          18 minuto(s) de leitura
+        
+      </span>
+    
+  </p>
+
+
+    <p class="archive__item-excerpt" itemprop="description">
+
+Na parte anterior deste
+tutorial, expliquei como configurar o Rails 7, com suas novas opções e como “dockerizei” os bancos
+de dados PostgreSQL e Redis. Agora vou abordar um pouco sobre Tailwind.
+</p>
+  </article>
+</div>
+
+        
+          
+
+
+
+<div class="grid__item">
+  <article class="archive__item" itemscope itemtype="https://schema.org/CreativeWork">
+    
+    <h2 class="archive__item-title no_toc" itemprop="headline">
+      
+        <a href="/blog/2021/12/07/tutorial-rails7-hotwire.html" rel="permalink">Tutorial: Rails7, Tailwind e Hotwire
+</a>
+      
+    </h2>
+    
+
+  <p class="page__meta">
+    
+      
+      <span class="page__meta-date">
+        <i class="far fa-fw fa-calendar-alt" aria-hidden="true"></i>
+        
+        <time datetime="2021-12-07T17:48:12-03:00">2021-12-07</time>
+      </span>
+    
+
+    <span class="page__meta-sep"></span>
+
+    
+      
+      
+
+      <span class="page__meta-readtime">
+        <i class="far fa-fw fa-clock" aria-hidden="true"></i>
+        
+          8 minuto(s) de leitura
+        
+      </span>
+    
+  </p>
+
+
+    <p class="archive__item-excerpt" itemprop="description">
+
+
+Depois de meses desenvolvendo em Typescript com NestJS
+por demanda do meu atual trabalho, consegui um tempinho para meu tão amado Ruby on Rails. Melhor
+ainda agora, como não trabalho oficialmente com Rails, posso me dar o luxo de me a...</p>
+  </article>
+</div>
+
+        
+      </div>
+    </div>
+  
+  
+</div>
+
+    </div>
+
+    
+      <div class="search-content">
+        <div class="search-content__inner-wrap"><form class="search-content__form" onkeydown="return event.key != 'Enter';">
+    <label class="sr-only" for="search">
+      Enter your search term...
+    </label>
+    <input type="search" id="search" class="search-input" tabindex="-1" placeholder="Pesquisar..." />
+  </form>
+  <div id="results" class="results"></div></div>
+
+      </div>
+    
+
+    <div id="footer" class="page__footer">
+      <footer>
+        <!-- start custom footer snippets -->
+
+<!-- end custom footer snippets -->
+        <div class="page__footer-follow">
+  <ul class="social-icons">
+    
+      
+        
+          <li><a href="https://github.com/callmarx" rel="nofollow noopener noreferrer"><i class="fab fa-fw fa-github" aria-hidden="true"></i> GitHub</a></li>
+        
+      
+        
+          <li><a href="https://www.linkedin.com/in/eugenio-augusto-jimenes/" rel="nofollow noopener noreferrer"><i class="fab fa-fw fa-linkedin" aria-hidden="true"></i> LinkedIn</a></li>
+        
+      
+    
+
+    
+      <li><a href="/feed.xml"><i class="fas fa-fw fa-rss-square" aria-hidden="true"></i> Feed</a></li>
+    
+  </ul>
+</div>
+
+<div class="page__footer-copyright">&copy; 2022 CallMarx. Desenvolvido com o <a href=/code-of-conduct/><b>Código de Conduta</b></a> para comunidade de código aberto, sob a licença <a href=/mit-license/><b>MIT</b></a>, framework <a href="https://jekyllrb.com" rel="nofollow"><b>Jekyll</b></a> e tema <a href="https://github.com/mmistakes/minimal-mistakes" rel="nofollow"><b>Minimal Mistakes</b></a>.</div>
+
+      </footer>
+    </div>
+
+    
+  <script src="/assets/js/main.min.js"></script>
+
+
+
+
+<script src="/assets/js/lunr/lunr.min.js"></script>
+<script src="/assets/js/lunr/lunr-store.js"></script>
+<script src="/assets/js/lunr/lunr-en.js"></script>
+
+
+
+
+
+
+
+  </body>
+</html>

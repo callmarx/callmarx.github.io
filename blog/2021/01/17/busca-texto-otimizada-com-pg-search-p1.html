@@ -1,0 +1,860 @@
+<!doctype html>
+<!--
+  Minimal Mistakes Jekyll Theme 4.24.0 by Michael Rose
+  Copyright 2013-2020 Michael Rose - mademistakes.com | @mmistakes
+  Free for personal and commercial use under the MIT license
+  https://github.com/mmistakes/minimal-mistakes/blob/master/LICENSE
+-->
+<html lang="pt" class="no-js">
+  <head>
+    <meta charset="utf-8">
+
+<!-- begin _includes/seo.html --><title>Busca em texto otimizada com a Gem pg_search - Parte I - CallMarx</title>
+<meta name="description" content="Destrinchando a funcionalidade “Full Text Searching” do PostgreSQL com a Gem pg_search em uma aplicação Ruby on Rails - Parte I">
+
+
+  <meta name="author" content="Eugenio Augusto Jimenes">
+  
+  <meta property="article:author" content="Eugenio Augusto Jimenes">
+  
+
+
+<meta property="og:type" content="article">
+<meta property="og:locale" content="pt_BR">
+<meta property="og:site_name" content="CallMarx">
+<meta property="og:title" content="Busca em texto otimizada com a Gem pg_search - Parte I">
+<meta property="og:url" content="https://callmarx.github.io/blog/2021/01/17/busca-texto-otimizada-com-pg-search-p1.html">
+
+
+  <meta property="og:description" content="Destrinchando a funcionalidade “Full Text Searching” do PostgreSQL com a Gem pg_search em uma aplicação Ruby on Rails - Parte I">
+
+
+
+  <meta property="og:image" content="https://callmarx.github.io/assets/posts/text-search.webp">
+
+
+
+  <meta name="twitter:site" content="@leminski_se">
+  <meta name="twitter:title" content="Busca em texto otimizada com a Gem pg_search - Parte I">
+  <meta name="twitter:description" content="Destrinchando a funcionalidade “Full Text Searching” do PostgreSQL com a Gem pg_search em uma aplicação Ruby on Rails - Parte I">
+  <meta name="twitter:url" content="https://callmarx.github.io/blog/2021/01/17/busca-texto-otimizada-com-pg-search-p1.html">
+
+  
+    <meta name="twitter:card" content="summary_large_image">
+    <meta name="twitter:image" content="https://callmarx.github.io/assets/posts/text-search.webp">
+  
+
+  
+
+
+
+  <meta property="article:published_time" content="2021-01-17T22:58:53-03:00">
+
+
+
+
+
+
+<link rel="canonical" href="https://callmarx.github.io/blog/2021/01/17/busca-texto-otimizada-com-pg-search-p1.html">
+
+
+
+
+<script type="application/ld+json">
+  {
+    "@context": "https://schema.org",
+    
+      "@type": "Person",
+      "name": null,
+      "url": "https://callmarx.github.io/"
+    
+  }
+</script>
+
+
+
+
+
+
+
+<!-- end _includes/seo.html -->
+
+
+
+  <link href="/feed.xml" type="application/atom+xml" rel="alternate" title="CallMarx Feed">
+
+
+<!-- https://t.co/dKP3o1e -->
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+<script>
+  document.documentElement.className = document.documentElement.className.replace(/\bno-js\b/g, '') + ' js ';
+</script>
+
+<!-- For all browsers -->
+<link rel="stylesheet" href="/assets/css/main.css">
+<link rel="preload" href="https://cdn.jsdelivr.net/npm/@fortawesome/fontawesome-free@5/css/all.min.css" as="style" onload="this.onload=null;this.rel='stylesheet'">
+<noscript><link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@fortawesome/fontawesome-free@5/css/all.min.css"></noscript>
+
+
+
+    <!-- start custom head snippets -->
+
+<!-- insert favicons. use https://realfavicongenerator.net/ -->
+
+<!-- end custom head snippets -->
+
+  </head>
+
+  <body class="layout--single">
+    <nav class="skip-links">
+  <ul>
+    <li><a href="#site-nav" class="screen-reader-shortcut">Skip to primary navigation</a></li>
+    <li><a href="#main" class="screen-reader-shortcut">Skip to content</a></li>
+    <li><a href="#footer" class="screen-reader-shortcut">Skip to footer</a></li>
+  </ul>
+</nav>
+
+    <!--[if lt IE 9]>
+<div class="notice--danger align-center" style="margin: 0;">You are using an <strong>outdated</strong> browser. Please <a href="https://browsehappy.com/">upgrade your browser</a> to improve your experience.</div>
+<![endif]-->
+
+    
+
+<div class="masthead">
+  <div class="masthead__inner-wrap">
+    <div class="masthead__menu">
+      <nav id="site-nav" class="greedy-nav">
+        
+        <a class="site-title" href="/">
+          CallMarx
+          
+        </a>
+        <ul class="visible-links"><li class="masthead__menu-item">
+              <a href="/tags/">Posts por tags</a>
+            </li><li class="masthead__menu-item">
+              <a href="/about/">Sobre mim</a>
+            </li></ul>
+        
+        <button class="search__toggle" type="button">
+          <span class="visually-hidden">Buscar</span>
+          <i class="fas fa-search"></i>
+        </button>
+        
+        <button class="greedy-nav__toggle hidden" type="button">
+          <span class="visually-hidden">Toggle menu</span>
+          <div class="navicon"></div>
+        </button>
+        <ul class="hidden-links hidden"></ul>
+      </nav>
+    </div>
+  </div>
+</div>
+
+
+    <div class="initial-content">
+      
+
+
+
+<div id="main" role="main">
+  
+  <div class="sidebar sticky">
+  
+
+
+<div itemscope itemtype="https://schema.org/Person">
+
+  
+    <div class="author__avatar">
+      
+        <img src="/assets/eu-e-nila.webp" alt="Eugenio Augusto Jimenes" itemprop="image">
+      
+    </div>
+  
+
+  <div class="author__content">
+    
+      <h3 class="author__name" itemprop="name">Eugenio Augusto Jimenes</h3>
+    
+    
+      <div class="author__bio" itemprop="description">
+        <p>Nerd, disléxico, viciado-hipster em café, desenvolvedor, linux fanboy e esquerdopata convicto - CallMarx, sacou?</p>
+
+      </div>
+    
+  </div>
+
+  <div class="author__urls-wrapper">
+    <button class="btn btn--inverse">Contatos</button>
+    <ul class="author__urls social-icons">
+      
+        <li itemprop="homeLocation" itemscope itemtype="https://schema.org/Place">
+          <i class="fas fa-fw fa-map-marker-alt" aria-hidden="true"></i> <span itemprop="name">São Paulo - SP</span>
+        </li>
+      
+
+      
+        
+          
+            <li><a href="mailto:eugeniojimenes@gmail" rel="nofollow noopener noreferrer"><i class="fas fa-fw fa-envelope-square" aria-hidden="true"></i><span class="label">Email</span></a></li>
+          
+        
+          
+            <li><a href="https://github.com/callmarx" rel="nofollow noopener noreferrer"><i class="fab fa-fw fa-github" aria-hidden="true"></i><span class="label">GitHub</span></a></li>
+          
+        
+          
+            <li><a href="https://twitter.com/leminski_se" rel="nofollow noopener noreferrer"><i class="fab fa-fw fa-twitter" aria-hidden="true"></i><span class="label">Twitter</span></a></li>
+          
+        
+          
+            <li><a href="https://www.linkedin.com/in/eugenio-augusto-jimenes/" rel="nofollow noopener noreferrer"><i class="fab fa-fw fa-linkedin" aria-hidden="true"></i><span class="label">LinkedIn</span></a></li>
+          
+        
+      
+
+      
+
+      
+
+      
+
+      
+
+      
+
+      
+
+      
+
+      
+
+      
+
+      
+
+      
+
+      
+
+      
+
+      
+
+      
+
+      
+
+      
+
+      
+
+      
+
+      
+
+      
+
+      
+
+      
+
+      
+
+      <!--
+  <li>
+    <a href="http://link-to-whatever-social-network.com/user/" itemprop="sameAs" rel="nofollow noopener noreferrer">
+      <i class="fas fa-fw" aria-hidden="true"></i> Custom Social Profile Link
+    </a>
+  </li>
+-->
+    </ul>
+  </div>
+</div>
+
+  
+  </div>
+
+
+
+  <article class="page" itemscope itemtype="https://schema.org/CreativeWork">
+    <meta itemprop="headline" content="Busca em texto otimizada com a Gem pg_search - Parte I">
+    <meta itemprop="description" content="Naufragando pela internet me deparei com a Gem PgSearchque tira proveito das funcionalidades deFull Text Searching do PostgreSQL.O conceito Full Text Searchingrefere a técnicas e estrateǵias computacionais para otimizar a pesquisa de palavras, e até frases,em longos e múltiplos textos armazenados em bancos de dados. Trata-se de uma ampla área de estudoe pesquisa dentro da Ciências da Computação, desde de 1990.">
+    <meta itemprop="datePublished" content="2021-01-17T22:58:53-03:00">
+    
+
+    <div class="page__inner-wrap">
+      
+        <header>
+          <h1 id="page-title" class="page__title" itemprop="headline">Busca em texto otimizada com a Gem pg_search - Parte I
+</h1>
+          
+
+  <p class="page__meta">
+    
+      
+      <span class="page__meta-date">
+        <i class="far fa-calendar-alt" aria-hidden="true"></i>
+        
+        <time datetime="2021-01-17T22:58:53-03:00">2021-01-17</time>
+      </span>
+    
+
+    <span class="page__meta-sep"></span>
+
+    
+      
+      
+
+      <span class="page__meta-readtime">
+        <i class="far fa-clock" aria-hidden="true"></i>
+        
+          8 minuto(s) de leitura
+        
+      </span>
+    
+  </p>
+
+
+        </header>
+      
+
+      <section class="page__content" itemprop="text">
+        
+        <p><img src="/assets/posts/text-search.webp" alt="Full Text Searching" /></p>
+
+<p>Naufragando pela internet me deparei com a <a href="https://github.com/Casecommons/pg_search" target="_blank">Gem PgSearch</a>
+que tira proveito das funcionalidades de
+<a href="https://www.postgresql.org/docs/current/textsearch-intro.html" target="_blank">Full Text Searching do PostgreSQL</a>.
+O conceito <a href="https://en.wikipedia.org/wiki/Full-text_search" target="_blank">Full Text Searching</a>
+refere a técnicas e estrateǵias computacionais para otimizar a pesquisa de palavras, e até frases,
+em longos e múltiplos textos armazenados em bancos de dados. Trata-se de uma ampla área de estudo
+e pesquisa dentro da Ciências da Computação, desde de 1990.
+<!-- excerpt-separator --></p>
+
+<p>Mas confesso: tenho preconceitos com NoSQL.</p>
+
+<p>A proposta do banco de dados relacional é bem intuitiva, como diz na
+<a href="https://pt.wikipedia.org/wiki/Banco_de_dados_relacional" target="_blank">wikipédia brazuca</a>:</p>
+<blockquote>
+  <p>“é um banco de dados que modela os dados de uma forma que eles sejam percebidos pelo usuário
+como tabelas, ou mais formalmente relações”</p>
+</blockquote>
+
+<p>Na democracia das planilhas de excel gigantes, abstrair o conceito de tabelas é bem complicado.
+Quando traduzimos a lógica de negócio a uma aplicação, atender as demandas de uma empresa, por
+exemplo, entidades como usuário, produto, conta, perfil etc são intuitivamente aplicadas como
+classes dentro de uma programação orientada à objetos e, mais comumente armazenadas como tabelas.
+Afinal, quando falamos de PostgreSQL, MySQL ou SejaláoqueforSQL, estamos tratando de um
+<a href="https://pt.wikipedia.org/wiki/Sistema_de_gerenciamento_de_banco_de_dados" target="_blank">sistema gerenciador de banco de dados objeto-relacional (SGBD)</a>.
+Objeto-relacional, né?! Mas vamos ao que interessa, apesar de encher meu coração tecer <del>meu ódio
+à modinha</del> meus receios à NoSQL. Meu foco aqui será mais sobre o uso e vantagens dessa Gem.</p>
+
+<h2 id="postgresql-seu-lindo">PostgreSQL, seu lindo!</h2>
+
+<p><img src="/assets/posts/elephants-love.webp" alt="PostgreSQL, seu lindo!" class="align-left" /></p>
+
+<p>Fanboy que sou desse SGBD, qualquer desculpa é válida para estudar e aproveitar ainda mais essa
+poderosa ferramenta. Vamos então explorar as funcionalidades que ele nos oferece para <em>Full Text
+Searching</em>.</p>
+
+<p>Os códigos a seguir foram executados em um Docker de PostgreSQL, para fazer o mesmo utilize os
+seguintes comandos:</p>
+
+<div class="language-bash highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="nv">$ </span>docker run <span class="nt">--rm</span> <span class="nt">--name</span> testing-textsearch <span class="nt">-p</span> 5432:5432 <span class="se">\</span>
+<span class="nt">-e</span> <span class="nv">POSTGRES_USER</span><span class="o">=</span><span class="nb">test</span> <span class="nt">-e</span> <span class="nv">POSTGRES_PASSWORD</span><span class="o">=</span><span class="nb">test</span> <span class="se">\</span>
+<span class="nt">-e</span> <span class="nv">POSTGRES_DB</span><span class="o">=</span>textsearchdb <span class="se">\</span>
+<span class="nt">-d</span> postgres:latest
+
+<span class="nv">$ </span>docker <span class="nb">exec</span> <span class="nt">-it</span> testing-textsearch psql <span class="nt">-d</span> textsearchdb <span class="nt">-U</span> <span class="nb">test</span>
+</code></pre></div></div>
+
+<p>Você deve obter o terminal psql com algo como:</p>
+
+<div class="language-sql highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="n">psql</span> <span class="p">(</span><span class="mi">13</span><span class="p">.</span><span class="mi">1</span> <span class="p">(</span><span class="n">Debian</span> <span class="mi">13</span><span class="p">.</span><span class="mi">1</span><span class="o">-</span><span class="mi">1</span><span class="p">.</span><span class="n">pgdg100</span><span class="o">+</span><span class="mi">1</span><span class="p">))</span>
+<span class="k">Type</span> <span class="nv">"help"</span> <span class="k">for</span> <span class="n">help</span><span class="p">.</span>
+
+<span class="n">textsearchdb</span><span class="o">=#</span>
+</code></pre></div></div>
+
+<p>Vamos começar com a função ts_vector</p>
+
+<div class="language-sql highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="n">textsearchdb</span><span class="o">=#</span> <span class="k">SELECT</span> <span class="n">to_tsvector</span><span class="p">(</span><span class="s1">'english'</span><span class="p">,</span> <span class="s1">'Life is like riding a bicycle.
+To keep your balance, you must keep moving.'</span><span class="p">);</span>
+                                    <span class="n">to_tsvector</span>
+<span class="c1">-----------------------------------------------------------------------------------</span>
+ <span class="s1">'balanc'</span><span class="p">:</span><span class="mi">10</span> <span class="s1">'bicycl'</span><span class="p">:</span><span class="mi">6</span> <span class="s1">'keep'</span><span class="p">:</span><span class="mi">8</span><span class="p">,</span><span class="mi">13</span> <span class="s1">'life'</span><span class="p">:</span><span class="mi">1</span> <span class="s1">'like'</span><span class="p">:</span><span class="mi">3</span> <span class="s1">'move'</span><span class="p">:</span><span class="mi">14</span> <span class="s1">'must'</span><span class="p">:</span><span class="mi">12</span> <span class="s1">'ride'</span><span class="p">:</span><span class="mi">4</span>
+<span class="p">(</span><span class="mi">1</span> <span class="k">row</span><span class="p">)</span>
+</code></pre></div></div>
+
+<p>Temos o texto “<em>Life is like riding a bicycle. To keep your balance, you must keep moving</em>”,
+normalmente referido como <em>document</em> dentro da área de <em>Full Text Searching</em>. Esse documento é
+analisado e convertido em um tipo de dados especial chamado de <em>tsvector</em>, que é basicamente
+<a href="https://radames.manosso.nom.br/linguagem/gramatica/morfologia/lexema/" target="_blank">lexemas</a>,
+palavras-chave normalizadas contidas no documento. No caso, usamos o dicionário do idioma inglês
+para normalizar as palavras, minimizando-as em sua raiz. Por isso a palavra “<em>balance</em>” foi
+reduzida à “<em>balanc</em>”, “<em>riding</em>” à “<em>ride</em>”, “<em>moving</em>” à “<em>move</em>” etc. A numeração ao lado de
+cada lexema é a sua posição no texto (documento), termos e palavras muito comuns como ‘<em>is</em>’,
+‘<em>to</em>’, ‘<em>you</em>’ etc, são removidos para reduzir o tamanho dos dados e a chance de falsos positivos.</p>
+
+<p>Para verificar se uma ou mais palavras existem dentro de um documento utilizamos a função
+<code class="language-plaintext highlighter-rouge">to_tsquery</code>. Da mesma forma que <code class="language-plaintext highlighter-rouge">to_tsvector</code>, ela também normaliza o que será buscando
+antes de fazer a busca.</p>
+
+<div class="language-sql highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="n">textsearchdb</span><span class="o">=#</span> <span class="k">SELECT</span> <span class="n">to_tsquery</span><span class="p">(</span><span class="s1">'english'</span><span class="p">,</span> <span class="s1">'keep &amp; moves'</span><span class="p">);</span>
+   <span class="n">to_tsquery</span>
+<span class="c1">-----------------</span>
+ <span class="s1">'keep'</span> <span class="o">&amp;</span> <span class="s1">'move'</span>
+<span class="p">(</span><span class="mi">1</span> <span class="k">row</span><span class="p">)</span>
+</code></pre></div></div>
+
+<p>Com o operador <code class="language-plaintext highlighter-rouge">@@</code> podemos verificar se um <code class="language-plaintext highlighter-rouge">tsquery</code> esta presente em um <code class="language-plaintext highlighter-rouge">tsvector</code>,
+ou melhor dizendo, se uma palavra (ou mais com operadores booleanos <code class="language-plaintext highlighter-rouge">|</code> e <code class="language-plaintext highlighter-rouge">&amp;</code>) normalizada
+encontra-se em um documento.</p>
+
+<div class="language-sql highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="n">textsearchdb</span><span class="o">=#</span> <span class="k">SELECT</span>
+  <span class="n">to_tsvector</span><span class="p">(</span><span class="s1">'english'</span><span class="p">,</span> <span class="s1">'Life is like riding a bicycle.
+    To keep your balance, you must keep moving.'</span><span class="p">)</span> <span class="o">@@</span>
+  <span class="n">to_tsquery</span><span class="p">(</span><span class="s1">'english'</span><span class="p">,</span> <span class="s1">'keep &amp; moves'</span><span class="p">);</span>
+ <span class="o">?</span><span class="k">column</span><span class="o">?</span>
+<span class="c1">----------</span>
+ <span class="n">t</span>
+<span class="p">(</span><span class="mi">1</span> <span class="k">row</span><span class="p">)</span>
+
+<span class="n">textsearchdb</span><span class="o">=#</span> <span class="k">SELECT</span>
+  <span class="n">to_tsvector</span><span class="p">(</span><span class="s1">'english'</span><span class="p">,</span> <span class="s1">'Life is like riding a bicycle.
+    To keep your balance, you must keep moving.'</span><span class="p">)</span> <span class="o">@@</span>
+  <span class="n">to_tsquery</span><span class="p">(</span><span class="s1">'english'</span><span class="p">,</span> <span class="s1">'unpresent'</span><span class="p">);</span>
+ <span class="o">?</span><span class="k">column</span><span class="o">?</span>
+<span class="c1">----------</span>
+ <span class="n">f</span>
+<span class="p">(</span><span class="mi">1</span> <span class="k">row</span><span class="p">)</span>
+</code></pre></div></div>
+
+<p class="notice--info"><strong>Obs:</strong> As letras ‘t’ e ‘f’ aqui significam, respectivamente, à <em>true</em> e <em>false</em>.</p>
+
+<p>Com a função <code class="language-plaintext highlighter-rouge">ts_rank</code> podemos classificar os resultados da busca, podendo ordenar da mais alta
+para a mais baixa quando buscamos um termo em múltiplos documentos.</p>
+
+<div class="language-sql highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="n">textsearchdb</span><span class="o">=#</span> <span class="k">SELECT</span>
+  <span class="n">ts_rank</span><span class="p">(</span>
+    <span class="n">to_tsvector</span><span class="p">(</span><span class="s1">'english'</span><span class="p">,</span> <span class="s1">'
+      Life is like riding a bicycle. To keep your balance, you must
+      keep moving.
+    '</span><span class="p">),</span>
+    <span class="n">to_tsquery</span><span class="p">(</span><span class="s1">'english'</span><span class="p">,</span> <span class="s1">'keep'</span><span class="p">)</span>
+   <span class="p">);</span>
+   <span class="n">ts_rank</span>
+<span class="c1">-------------</span>
+ <span class="mi">0</span><span class="p">.</span><span class="mi">075990885</span>
+<span class="p">(</span><span class="mi">1</span> <span class="k">row</span><span class="p">)</span>
+
+<span class="n">textsearchdb</span><span class="o">=#</span> <span class="k">SELECT</span>
+  <span class="n">ts_rank</span><span class="p">(</span>
+    <span class="n">to_tsvector</span><span class="p">(</span><span class="s1">'english'</span><span class="p">,</span> <span class="s1">'
+      Making mistakes is a natural part of the language learning process.
+      The key is to learn from these mistakes. Do not be afraid to try out
+      new things in English but always remember to reflect on them and decide
+      what was successful and what you need to keep working on.
+    '</span><span class="p">),</span>
+    <span class="n">to_tsquery</span><span class="p">(</span><span class="s1">'english'</span><span class="p">,</span> <span class="s1">'keep'</span><span class="p">)</span>
+<span class="p">);</span>
+  <span class="n">ts_rank</span>
+<span class="c1">------------</span>
+ <span class="mi">0</span><span class="p">.</span><span class="mi">06079271</span>
+<span class="p">(</span><span class="mi">1</span> <span class="k">row</span><span class="p">)</span>
+
+<span class="n">textsearchdb</span><span class="o">=#</span> <span class="k">SELECT</span>
+  <span class="n">ts_rank</span><span class="p">(</span>
+    <span class="n">to_tsvector</span><span class="p">(</span><span class="s1">'english'</span><span class="p">,</span> <span class="s1">'
+      If you really want to eat, keep climbing. The fruits are on the top of
+      the tree. Stretch your hands and keep stretching them. Success is on
+      the top, keep going.
+    '</span><span class="p">),</span>
+    <span class="n">to_tsquery</span><span class="p">(</span><span class="s1">'english'</span><span class="p">,</span> <span class="s1">'keep'</span><span class="p">)</span>
+   <span class="p">);</span>
+   <span class="n">ts_rank</span>
+<span class="c1">-------------</span>
+ <span class="mi">0</span><span class="p">.</span><span class="mi">082745634</span>
+<span class="p">(</span><span class="mi">1</span> <span class="k">row</span><span class="p">)</span>
+</code></pre></div></div>
+
+<p>Há uma série de fatores que influenciam essa pontuação, como a posição do termo no documento, a
+quantidade de palavras que o documento tem, quantas vezes o termo aparece e mais outras tantas.
+Vale ressaltar que existem inúmeras estratégias de ranqueamento que dependem do contexto e
+objetivo, como colocar na conta o tempo de modificação e/ou criação do texto, partes mais
+importantes que outras como o título em relação ao conteúdo de um post, por exemplo.</p>
+
+<p>Bem, isso foi apenas uma introdução das funcionalidades de
+<a href="https://www.postgresql.org/docs/current/textsearch-intro.html" target="_blank">Full Text Searching do PostgreSQL</a>,
+na próxima parte vou mostrar como aplicá-las com a
+<a href="https://github.com/Casecommons/pg_search" target="_blank">Gem PgSearch</a> em projetinho Ruby on
+Rails.</p>
+
+<p><a href="/blog/2021/04/08/busca-texto-otimizada-com-pg-search-p2.html" target="_blank">Link para parte II</a></p>
+
+        
+      </section>
+
+      <footer class="page__meta">
+        
+        
+  
+
+
+  
+
+  <p class="page__taxonomy">
+    <strong><i class="fas fa-fw fa-tags" aria-hidden="true"></i> Tags: </strong>
+    <span itemprop="keywords">
+    
+      <a href="/tags/#config" class="page__taxonomy-item" rel="tag">Config</a><span class="sep">, </span>
+    
+      <a href="/tags/#optimization" class="page__taxonomy-item" rel="tag">Optimization</a><span class="sep">, </span>
+    
+      <a href="/tags/#postgresql" class="page__taxonomy-item" rel="tag">PostgreSQL</a><span class="sep">, </span>
+    
+      <a href="/tags/#rails" class="page__taxonomy-item" rel="tag">Rails</a><span class="sep">, </span>
+    
+      <a href="/tags/#ruby" class="page__taxonomy-item" rel="tag">Ruby</a>
+    
+    </span>
+  </p>
+
+
+
+
+  
+
+
+  
+
+  <p class="page__taxonomy">
+    <strong><i class="fas fa-fw fa-folder-open" aria-hidden="true"></i> Categorias: </strong>
+    <span itemprop="keywords">
+    
+      <a href="/categories/#blog" class="page__taxonomy-item" rel="tag">blog</a>
+    
+    </span>
+  </p>
+
+
+        
+
+  <p class="page__date"><strong><i class="fas fa-fw fa-calendar-alt" aria-hidden="true"></i> Atualizado em:</strong> <time datetime="2021-01-17T22:58:53-03:00">2021-01-17</time></p>
+
+
+      </footer>
+
+      <section class="page__share">
+  
+    <h4 class="page__share-title">Compartilhe</h4>
+  
+
+  <a href="https://twitter.com/intent/tweet?via=leminski_se&text=Busca+em+texto+otimizada+com+a+Gem+pg_search+-+Parte+I%20https%3A%2F%2Fcallmarx.github.io%2Fblog%2F2021%2F01%2F17%2Fbusca-texto-otimizada-com-pg-search-p1.html" class="btn btn--twitter" onclick="window.open(this.href, 'window', 'left=20,top=20,width=500,height=500,toolbar=1,resizable=0'); return false;" title="Compartilhe Twitter"><i class="fab fa-fw fa-twitter" aria-hidden="true"></i><span> Twitter</span></a>
+
+  <a href="https://www.facebook.com/sharer/sharer.php?u=https%3A%2F%2Fcallmarx.github.io%2Fblog%2F2021%2F01%2F17%2Fbusca-texto-otimizada-com-pg-search-p1.html" class="btn btn--facebook" onclick="window.open(this.href, 'window', 'left=20,top=20,width=500,height=500,toolbar=1,resizable=0'); return false;" title="Compartilhe Facebook"><i class="fab fa-fw fa-facebook" aria-hidden="true"></i><span> Facebook</span></a>
+
+  <a href="https://www.linkedin.com/shareArticle?mini=true&url=https%3A%2F%2Fcallmarx.github.io%2Fblog%2F2021%2F01%2F17%2Fbusca-texto-otimizada-com-pg-search-p1.html" class="btn btn--linkedin" onclick="window.open(this.href, 'window', 'left=20,top=20,width=500,height=500,toolbar=1,resizable=0'); return false;" title="Compartilhe LinkedIn"><i class="fab fa-fw fa-linkedin" aria-hidden="true"></i><span> LinkedIn</span></a>
+</section>
+
+
+      
+  <nav class="pagination">
+    
+      <a href="/blog/2020/12/17/controller-magro-model-gordo-n-perca-foco.html" class="pagination--pager" title="Controller magro e model gordo, mas não perca o foco
+">Anterior</a>
+    
+    
+      <a href="/blog/2021/04/08/busca-texto-otimizada-com-pg-search-p2.html" class="pagination--pager" title="Busca em texto otimizada com a Gem pg_search - Parte II
+">Próxima</a>
+    
+  </nav>
+
+    </div>
+
+    
+  </article>
+
+  
+  
+    <div class="page__related">
+      <h4 class="page__related-title">Talvez você também goste</h4>
+      <div class="grid__wrapper">
+        
+          
+
+
+
+<div class="grid__item">
+  <article class="archive__item" itemscope itemtype="https://schema.org/CreativeWork">
+    
+    <h2 class="archive__item-title no_toc" itemprop="headline">
+      
+        <a href="/blog/2022/06/29/tutorial-rails7-hotwire-parte-3.html" rel="permalink">Tutorial: Rails7, Tailwind e Hotwire - Parte 3
+</a>
+      
+    </h2>
+    
+
+  <p class="page__meta">
+    
+      
+      <span class="page__meta-date">
+        <i class="far fa-fw fa-calendar-alt" aria-hidden="true"></i>
+        
+        <time datetime="2022-06-29T21:34:03-03:00">2022-06-29</time>
+      </span>
+    
+
+    <span class="page__meta-sep"></span>
+
+    
+      
+      
+
+      <span class="page__meta-readtime">
+        <i class="far fa-fw fa-clock" aria-hidden="true"></i>
+        
+          18 minuto(s) de leitura
+        
+      </span>
+    
+  </p>
+
+
+    <p class="archive__item-excerpt" itemprop="description">
+
+Na parte anterior
+deste tutorial eu expliquei como utilizar a renderização parcial de html com turbo_stream do
+Hotwire Turbo, o que nos permitiu mostrar os cards
+recém inseridos ou excluídos do nosso humilde protótipo de Kanban. Agora ...</p>
+  </article>
+</div>
+
+        
+          
+
+
+
+<div class="grid__item">
+  <article class="archive__item" itemscope itemtype="https://schema.org/CreativeWork">
+    
+    <h2 class="archive__item-title no_toc" itemprop="headline">
+      
+        <a href="/blog/2022/06/08/dotfiles.html" rel="permalink">Hoje eu aprendi: Vale a pena configurar seus dotfiles
+</a>
+      
+    </h2>
+    
+
+  <p class="page__meta">
+    
+      
+      <span class="page__meta-date">
+        <i class="far fa-fw fa-calendar-alt" aria-hidden="true"></i>
+        
+        <time datetime="2022-06-08T16:58:19-03:00">2022-06-08</time>
+      </span>
+    
+
+    <span class="page__meta-sep"></span>
+
+    
+      
+      
+
+      <span class="page__meta-readtime">
+        <i class="far fa-fw fa-clock" aria-hidden="true"></i>
+        
+          5 minuto(s) de leitura
+        
+      </span>
+    
+  </p>
+
+
+    <p class="archive__item-excerpt" itemprop="description">
+
+Depois de mais de 3 anos usando Vim como IDE (Integrated Development Environment), migrando no
+caminho para o Neovim com o shell zsh, o gerenciador
+Oh My Zsh e o tema
+Powerlevel10k, percebi como eu
+dependia dessas configurações e como ...</p>
+  </article>
+</div>
+
+        
+          
+
+
+
+<div class="grid__item">
+  <article class="archive__item" itemscope itemtype="https://schema.org/CreativeWork">
+    
+    <h2 class="archive__item-title no_toc" itemprop="headline">
+      
+        <a href="/blog/2021/12/19/tutorial-rails7-hotwire-parte-2.html" rel="permalink">Tutorial: Rails7, Tailwind e Hotwire - Parte 2
+</a>
+      
+    </h2>
+    
+
+  <p class="page__meta">
+    
+      
+      <span class="page__meta-date">
+        <i class="far fa-fw fa-calendar-alt" aria-hidden="true"></i>
+        
+        <time datetime="2021-12-19T14:42:03-03:00">2021-12-19</time>
+      </span>
+    
+
+    <span class="page__meta-sep"></span>
+
+    
+      
+      
+
+      <span class="page__meta-readtime">
+        <i class="far fa-fw fa-clock" aria-hidden="true"></i>
+        
+          14 minuto(s) de leitura
+        
+      </span>
+    
+  </p>
+
+
+    <p class="archive__item-excerpt" itemprop="description">
+
+Na parte anterior
+deste tutorial eu expliquei como customizar e utilizar o Tailwind sem uma linha sequer de CSS e
+JavaScript. Agora vou abordar um pouco sobre o pacote
+Hotwire Turbo.
+</p>
+  </article>
+</div>
+
+        
+          
+
+
+
+<div class="grid__item">
+  <article class="archive__item" itemscope itemtype="https://schema.org/CreativeWork">
+    
+    <h2 class="archive__item-title no_toc" itemprop="headline">
+      
+        <a href="/blog/2021/12/09/tutorial-rails7-hotwire-parte-1.html" rel="permalink">Tutorial: Rails7, Tailwind e Hotwire - Parte 1
+</a>
+      
+    </h2>
+    
+
+  <p class="page__meta">
+    
+      
+      <span class="page__meta-date">
+        <i class="far fa-fw fa-calendar-alt" aria-hidden="true"></i>
+        
+        <time datetime="2021-12-09T11:12:54-03:00">2021-12-09</time>
+      </span>
+    
+
+    <span class="page__meta-sep"></span>
+
+    
+      
+      
+
+      <span class="page__meta-readtime">
+        <i class="far fa-fw fa-clock" aria-hidden="true"></i>
+        
+          13 minuto(s) de leitura
+        
+      </span>
+    
+  </p>
+
+
+    <p class="archive__item-excerpt" itemprop="description">
+
+Na parte anterior deste
+tutorial, expliquei como configurar o Rails 7, com suas novas opções e como “dockerizei” os bancos
+de dados PostgreSQL e Redis. Agora vou abordar um pouco sobre Tailwind.
+</p>
+  </article>
+</div>
+
+        
+      </div>
+    </div>
+  
+  
+</div>
+
+    </div>
+
+    
+      <div class="search-content">
+        <div class="search-content__inner-wrap"><form class="search-content__form" onkeydown="return event.key != 'Enter';">
+    <label class="sr-only" for="search">
+      Enter your search term...
+    </label>
+    <input type="search" id="search" class="search-input" tabindex="-1" placeholder="Pesquisar..." />
+  </form>
+  <div id="results" class="results"></div></div>
+
+      </div>
+    
+
+    <div id="footer" class="page__footer">
+      <footer>
+        <!-- start custom footer snippets -->
+
+<!-- end custom footer snippets -->
+        <div class="page__footer-follow">
+  <ul class="social-icons">
+    
+      
+        
+          <li><a href="https://github.com/callmarx" rel="nofollow noopener noreferrer"><i class="fab fa-fw fa-github" aria-hidden="true"></i> GitHub</a></li>
+        
+      
+        
+          <li><a href="https://www.linkedin.com/in/eugenio-augusto-jimenes/" rel="nofollow noopener noreferrer"><i class="fab fa-fw fa-linkedin" aria-hidden="true"></i> LinkedIn</a></li>
+        
+      
+    
+
+    
+      <li><a href="/feed.xml"><i class="fas fa-fw fa-rss-square" aria-hidden="true"></i> Feed</a></li>
+    
+  </ul>
+</div>
+
+<div class="page__footer-copyright">&copy; 2022 CallMarx. Desenvolvido com o <a href=/code-of-conduct/><b>Código de Conduta</b></a> para comunidade de código aberto, sob a licença <a href=/mit-license/><b>MIT</b></a>, framework <a href="https://jekyllrb.com" rel="nofollow"><b>Jekyll</b></a> e tema <a href="https://github.com/mmistakes/minimal-mistakes" rel="nofollow"><b>Minimal Mistakes</b></a>.</div>
+
+      </footer>
+    </div>
+
+    
+  <script src="/assets/js/main.min.js"></script>
+
+
+
+
+<script src="/assets/js/lunr/lunr.min.js"></script>
+<script src="/assets/js/lunr/lunr-store.js"></script>
+<script src="/assets/js/lunr/lunr-en.js"></script>
+
+
+
+
+
+
+
+  </body>
+</html>

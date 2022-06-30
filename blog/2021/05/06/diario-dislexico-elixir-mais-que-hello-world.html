@@ -1,0 +1,977 @@
+<!doctype html>
+<!--
+  Minimal Mistakes Jekyll Theme 4.24.0 by Michael Rose
+  Copyright 2013-2020 Michael Rose - mademistakes.com | @mmistakes
+  Free for personal and commercial use under the MIT license
+  https://github.com/mmistakes/minimal-mistakes/blob/master/LICENSE
+-->
+<html lang="pt" class="no-js">
+  <head>
+    <meta charset="utf-8">
+
+<!-- begin _includes/seo.html --><title>Diário disléxico - Elixir: Um pouco mais que um “Hello World” - CallMarx</title>
+<meta name="description" content="Começando pelo básico: curiosidades, instalação, configuração e o clássico “Hello World”.">
+
+
+  <meta name="author" content="Eugenio Augusto Jimenes">
+  
+  <meta property="article:author" content="Eugenio Augusto Jimenes">
+  
+
+
+<meta property="og:type" content="article">
+<meta property="og:locale" content="pt_BR">
+<meta property="og:site_name" content="CallMarx">
+<meta property="og:title" content="Diário disléxico - Elixir: Um pouco mais que um “Hello World”">
+<meta property="og:url" content="https://callmarx.github.io/blog/2021/05/06/diario-dislexico-elixir-mais-que-hello-world.html">
+
+
+  <meta property="og:description" content="Começando pelo básico: curiosidades, instalação, configuração e o clássico “Hello World”.">
+
+
+
+  <meta property="og:image" content="https://callmarx.github.io/assets/posts/elixir-logo.webp">
+
+
+
+  <meta name="twitter:site" content="@leminski_se">
+  <meta name="twitter:title" content="Diário disléxico - Elixir: Um pouco mais que um “Hello World”">
+  <meta name="twitter:description" content="Começando pelo básico: curiosidades, instalação, configuração e o clássico “Hello World”.">
+  <meta name="twitter:url" content="https://callmarx.github.io/blog/2021/05/06/diario-dislexico-elixir-mais-que-hello-world.html">
+
+  
+    <meta name="twitter:card" content="summary_large_image">
+    <meta name="twitter:image" content="https://callmarx.github.io/assets/posts/elixir-logo.webp">
+  
+
+  
+
+
+
+  <meta property="article:published_time" content="2021-05-06T22:26:09-03:00">
+
+
+
+
+
+
+<link rel="canonical" href="https://callmarx.github.io/blog/2021/05/06/diario-dislexico-elixir-mais-que-hello-world.html">
+
+
+
+
+<script type="application/ld+json">
+  {
+    "@context": "https://schema.org",
+    
+      "@type": "Person",
+      "name": null,
+      "url": "https://callmarx.github.io/"
+    
+  }
+</script>
+
+
+
+
+
+
+
+<!-- end _includes/seo.html -->
+
+
+
+  <link href="/feed.xml" type="application/atom+xml" rel="alternate" title="CallMarx Feed">
+
+
+<!-- https://t.co/dKP3o1e -->
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+<script>
+  document.documentElement.className = document.documentElement.className.replace(/\bno-js\b/g, '') + ' js ';
+</script>
+
+<!-- For all browsers -->
+<link rel="stylesheet" href="/assets/css/main.css">
+<link rel="preload" href="https://cdn.jsdelivr.net/npm/@fortawesome/fontawesome-free@5/css/all.min.css" as="style" onload="this.onload=null;this.rel='stylesheet'">
+<noscript><link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@fortawesome/fontawesome-free@5/css/all.min.css"></noscript>
+
+
+
+    <!-- start custom head snippets -->
+
+<!-- insert favicons. use https://realfavicongenerator.net/ -->
+
+<!-- end custom head snippets -->
+
+  </head>
+
+  <body class="layout--single">
+    <nav class="skip-links">
+  <ul>
+    <li><a href="#site-nav" class="screen-reader-shortcut">Skip to primary navigation</a></li>
+    <li><a href="#main" class="screen-reader-shortcut">Skip to content</a></li>
+    <li><a href="#footer" class="screen-reader-shortcut">Skip to footer</a></li>
+  </ul>
+</nav>
+
+    <!--[if lt IE 9]>
+<div class="notice--danger align-center" style="margin: 0;">You are using an <strong>outdated</strong> browser. Please <a href="https://browsehappy.com/">upgrade your browser</a> to improve your experience.</div>
+<![endif]-->
+
+    
+
+<div class="masthead">
+  <div class="masthead__inner-wrap">
+    <div class="masthead__menu">
+      <nav id="site-nav" class="greedy-nav">
+        
+        <a class="site-title" href="/">
+          CallMarx
+          
+        </a>
+        <ul class="visible-links"><li class="masthead__menu-item">
+              <a href="/tags/">Posts por tags</a>
+            </li><li class="masthead__menu-item">
+              <a href="/about/">Sobre mim</a>
+            </li></ul>
+        
+        <button class="search__toggle" type="button">
+          <span class="visually-hidden">Buscar</span>
+          <i class="fas fa-search"></i>
+        </button>
+        
+        <button class="greedy-nav__toggle hidden" type="button">
+          <span class="visually-hidden">Toggle menu</span>
+          <div class="navicon"></div>
+        </button>
+        <ul class="hidden-links hidden"></ul>
+      </nav>
+    </div>
+  </div>
+</div>
+
+
+    <div class="initial-content">
+      
+
+
+
+<div id="main" role="main">
+  
+  <div class="sidebar sticky">
+  
+
+
+<div itemscope itemtype="https://schema.org/Person">
+
+  
+    <div class="author__avatar">
+      
+        <img src="/assets/eu-e-nila.webp" alt="Eugenio Augusto Jimenes" itemprop="image">
+      
+    </div>
+  
+
+  <div class="author__content">
+    
+      <h3 class="author__name" itemprop="name">Eugenio Augusto Jimenes</h3>
+    
+    
+      <div class="author__bio" itemprop="description">
+        <p>Nerd, disléxico, viciado-hipster em café, desenvolvedor, linux fanboy e esquerdopata convicto - CallMarx, sacou?</p>
+
+      </div>
+    
+  </div>
+
+  <div class="author__urls-wrapper">
+    <button class="btn btn--inverse">Contatos</button>
+    <ul class="author__urls social-icons">
+      
+        <li itemprop="homeLocation" itemscope itemtype="https://schema.org/Place">
+          <i class="fas fa-fw fa-map-marker-alt" aria-hidden="true"></i> <span itemprop="name">São Paulo - SP</span>
+        </li>
+      
+
+      
+        
+          
+            <li><a href="mailto:eugeniojimenes@gmail" rel="nofollow noopener noreferrer"><i class="fas fa-fw fa-envelope-square" aria-hidden="true"></i><span class="label">Email</span></a></li>
+          
+        
+          
+            <li><a href="https://github.com/callmarx" rel="nofollow noopener noreferrer"><i class="fab fa-fw fa-github" aria-hidden="true"></i><span class="label">GitHub</span></a></li>
+          
+        
+          
+            <li><a href="https://twitter.com/leminski_se" rel="nofollow noopener noreferrer"><i class="fab fa-fw fa-twitter" aria-hidden="true"></i><span class="label">Twitter</span></a></li>
+          
+        
+          
+            <li><a href="https://www.linkedin.com/in/eugenio-augusto-jimenes/" rel="nofollow noopener noreferrer"><i class="fab fa-fw fa-linkedin" aria-hidden="true"></i><span class="label">LinkedIn</span></a></li>
+          
+        
+      
+
+      
+
+      
+
+      
+
+      
+
+      
+
+      
+
+      
+
+      
+
+      
+
+      
+
+      
+
+      
+
+      
+
+      
+
+      
+
+      
+
+      
+
+      
+
+      
+
+      
+
+      
+
+      
+
+      
+
+      
+
+      <!--
+  <li>
+    <a href="http://link-to-whatever-social-network.com/user/" itemprop="sameAs" rel="nofollow noopener noreferrer">
+      <i class="fas fa-fw" aria-hidden="true"></i> Custom Social Profile Link
+    </a>
+  </li>
+-->
+    </ul>
+  </div>
+</div>
+
+  
+  </div>
+
+
+
+  <article class="page" itemscope itemtype="https://schema.org/CreativeWork">
+    <meta itemprop="headline" content="Diário disléxico - Elixir: Um pouco mais que um “Hello World”">
+    <meta itemprop="description" content="Para além de instalar e codar o clássico “Hello World”, vamos explorar os passos iniciais com atecnologia. Entender os data types, as operações básicas e algumas curiosidades.">
+    <meta itemprop="datePublished" content="2021-05-06T22:26:09-03:00">
+    
+
+    <div class="page__inner-wrap">
+      
+        <header>
+          <h1 id="page-title" class="page__title" itemprop="headline">Diário disléxico - Elixir: Um pouco mais que um “Hello World”
+</h1>
+          
+
+  <p class="page__meta">
+    
+      
+      <span class="page__meta-date">
+        <i class="far fa-calendar-alt" aria-hidden="true"></i>
+        
+        <time datetime="2021-05-06T22:26:09-03:00">2021-05-06</time>
+      </span>
+    
+
+    <span class="page__meta-sep"></span>
+
+    
+      
+      
+
+      <span class="page__meta-readtime">
+        <i class="far fa-clock" aria-hidden="true"></i>
+        
+          14 minuto(s) de leitura
+        
+      </span>
+    
+  </p>
+
+
+        </header>
+      
+
+      <section class="page__content" itemprop="text">
+        
+        <div class="tenor-gif-embed" data-postid="13830351" data-share-method="host" data-width="100%" data-aspect-ratio="2.4057971014492754"><a href="https://tenor.com/view/hello-sexy-hi-hello-mr-bean-gif-13830351"></a></div>
+<script type="text/javascript" async="" src="https://tenor.com/embed.js"></script>
+
+<p><br /></p>
+
+<p>Para além de instalar e codar o clássico “Hello World”, vamos explorar os passos iniciais com a
+tecnologia. Entender os <em>data types</em>, as operações básicas e algumas curiosidades.
+<!-- excerpt-separator --></p>
+
+<h1 id="um-pouco-de-história">Um pouco de história</h1>
+<p>Elixir é uma linguagem de programação dinâmica, funcional e concorrente, compilada e executada na
+máquina virtual Erlang (BEAM - <em>Bogdan/Björn’s Erlang Abstract Machine</em>). Criada em 2012 pelo
+brasileiro <a href="https://github.com/josevalim" target="_blank">José Valim</a> em um projeto de pesquisa e
+desenvolvimento da empresa <a href="http://blog.plataformatec.com.br" target="_blank">Plataformatec</a>,
+hoje uma subsidiária do Nubank.</p>
+
+<p><br />
+<img src="/assets/posts/erlang-logo.webp" alt="Erlang logo" class="align-left" />
+Mas e esse tal de <a href="https://en.wikipedia.org/wiki/Erlang_(programming_language)" target="_blank">Erlang</a>?
+Trata-se de uma linguagem também funcional e concorrente criada pela empresa Ericson em 1986.
+Projetada para lidar com as demandas de telecomunicações, ou seja, alta capacidade de resposta,
+escalabilidade e disponibilidade constante. Afinal uma ligação não podia (e ainda não pode) ser
+afetada pelas outras, um imprevisto ou atualização não pode derrubar o sistema telefônico. Com o
+avanço da internet e a sofisticação das aplicações como redes sociais, jogos multiplayer, sistemas
+de gerenciamento de conteúdo (CMS - <em>Content Management Systems</em>), compartilhamento e execução
+online de arquivos multimídia, entre outros exemplos, a necessidade de alta-performance e o chamado
+<em>non-stop system</em> deixou de ser exclusividade para as telecoms. Por isso o Elixir foi desenvolvido
+<a href="https://vimeo.com/53221562" target="_blank">sob a tecnologia</a> da Ericson</p>
+
+<p>Isto pode ser visto não apenas com a popularidade do Elixir, mas como do próprio Erlang, utilizado
+por exemplo no desenvolvimento do WhatsApp, por grandes empresas como MasterCard, Nintendo, Amazon e
+<a href="https://www.erlang-solutions.com/blog/which-companies-are-using-erlang-and-why-mytopdogstatus" target="_blank">entre outros</a>.
+No lado do Elixir, mesmo sendo uma tecnologia mais recente, temos casos de sucesso com as empresas
+Pinterest, Financial Times, Discord (sim, aquele mesmo que você pra conversar com os amiguinhos em
+jogos online), PepsiCo, Toyota Connected <a href="https://www.monterail.com/blog/famous-companies-using-elixir" target="_blank">etc</a>.</p>
+
+<h1 id="instalação-e-configuração">Instalação e configuração</h1>
+<p>Inicialmente pensei em utilizar algum gerenciador de versão como faço com Ruby através do RVM, mas
+optei, por agora, em instalar diretamente no meu Linux, no caso Arch Linux. Para outros sistemas
+operacionais veja em <a href="https://elixir-lang.org/install.html" target="_blank">https://elixir-lang.org/install.html</a>.</p>
+
+<div class="language-bash highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="c"># instalação</span>
+<span class="nv">$ </span><span class="nb">sudo </span>pacman <span class="nt">-S</span> elixir
+</code></pre></div></div>
+
+<p>Você deve obter algo como:</p>
+
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>$ elixir -v
+Erlang/OTP 23 [erts-11.2] [source] [64-bit] [smp:12:12] [ds:12:12:10] [async-threads:1] [hipe]
+
+Elixir 1.11.3 (compiled with Erlang/OTP 23)
+</code></pre></div></div>
+
+<p>Além do comando <code class="language-plaintext highlighter-rouge">elixir</code> temos o <code class="language-plaintext highlighter-rouge">iex</code>, que é o <em>Elixir’s interactive shell</em>, e o <code class="language-plaintext highlighter-rouge">mix</code>,
+que é o <em>build tool</em> da linguagem. Aparentemente equivalentes ao <code class="language-plaintext highlighter-rouge">irb</code> e <code class="language-plaintext highlighter-rouge">bundle</code> do Ruby.</p>
+
+<div class="language-elixir highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="err">$</span> <span class="n">iex</span>
+<span class="no">Erlang</span><span class="o">/</span><span class="no">OTP</span> <span class="mi">23</span> <span class="p">[</span><span class="n">erts</span><span class="o">-</span><span class="mf">11.2</span><span class="p">]</span> <span class="p">[</span><span class="n">source</span><span class="p">]</span> <span class="p">[</span><span class="mi">64</span><span class="o">-</span><span class="n">bit</span><span class="p">]</span> <span class="p">[</span><span class="ss">smp:</span><span class="mi">12</span><span class="p">:</span><span class="mi">12</span><span class="p">]</span> <span class="p">[</span><span class="ss">ds:</span><span class="mi">12</span><span class="p">:</span><span class="mi">12</span><span class="p">:</span><span class="mi">10</span><span class="p">]</span> <span class="p">[</span><span class="n">async</span><span class="o">-</span><span class="ss">threads:</span><span class="mi">1</span><span class="p">]</span> <span class="p">[</span><span class="n">hipe</span><span class="p">]</span>
+
+<span class="no">Interactive</span> <span class="no">Elixir</span> <span class="p">(</span><span class="mf">1.11</span><span class="o">.</span><span class="mi">3</span><span class="p">)</span> <span class="o">-</span> <span class="n">press</span> <span class="no">Ctrl</span><span class="o">+</span><span class="no">C</span> <span class="n">to</span> <span class="k">exit</span> <span class="p">(</span><span class="n">type</span> <span class="n">h</span><span class="p">()</span> <span class="no">ENTER</span> <span class="n">for</span> <span class="n">help</span><span class="p">)</span>
+<span class="n">iex</span><span class="o">&gt;</span> <span class="mi">1</span> <span class="o">+</span> <span class="mi">1</span>
+<span class="mi">2</span>
+<span class="n">iex</span><span class="o">&gt;</span> <span class="mi">2</span> <span class="o">&lt;</span> <span class="mi">3</span>
+<span class="no">true</span>
+<span class="n">iex</span><span class="o">&gt;</span> <span class="mi">8</span> <span class="o">==</span> <span class="mf">8.0</span>
+<span class="no">true</span>
+<span class="n">iex</span><span class="o">&gt;</span> <span class="mi">8</span> <span class="o">===</span> <span class="mf">8.0</span>
+<span class="no">false</span>
+<span class="n">iex</span><span class="o">&gt;</span> <span class="no">true</span> <span class="o">==</span> <span class="ss">:true</span>
+<span class="no">true</span>
+<span class="n">iex</span><span class="o">&gt;</span> <span class="no">String</span><span class="o">.</span><span class="n">split</span><span class="p">(</span><span class="s2">"Duas palavras"</span><span class="p">,</span> <span class="s2">" "</span><span class="p">)</span>
+<span class="p">[</span><span class="s2">"Duas"</span><span class="p">,</span> <span class="s2">"palavras"</span><span class="p">]</span>
+</code></pre></div></div>
+<p class="notice--warning"><strong>Obs</strong>: Mais a diante explico melhor, e com mais exemplos, as interações do console acima. Caso
+esteja perdido <del>como eu fiquei</del> para sair do <code class="language-plaintext highlighter-rouge">iex</code>, basta dar CTRL+C duas vezes.</p>
+
+<p>Existem diversas funcionalidades contempladas pelo <code class="language-plaintext highlighter-rouge">mix</code> como podemos ver em
+<a href="https://hexdocs.pm/mix/Mix.html" target="_blank">https://hexdocs.pm/mix/Mix.html</a>. Para esta primeira parte utilizei para criar
+um projeto.</p>
+
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>$ mix new hello
+* creating README.md
+* creating .formatter.exs
+* creating .gitignore
+* creating mix.exs
+* creating lib
+* creating lib/hello.ex
+* creating test
+* creating test/test_helper.exs
+* creating test/hello_test.exs
+
+Your Mix project was created successfully.
+You can use "mix" to compile it, test it, and more:
+
+    cd hello
+    mix test
+
+Run "mix help" for more commands.
+</code></pre></div></div>
+
+<p>Este comando gera uma estrutura de pastas e arquivos para abranger testes, dependências, ambiente e
+versão.</p>
+
+<p class="notice--info"><strong>Curiosidade</strong>: Arquivos de extensão <code class="language-plaintext highlighter-rouge">.ex</code> são compilados pelo Elixir para arquivos <code class="language-plaintext highlighter-rouge">.beam</code>,
+que é o <em>bytecode</em> interpretado pela máquina virtual do Erlang, enquanto os de
+extensão <code class="language-plaintext highlighter-rouge">.exs</code> rodam como <em>script</em>, ou seja, compilados e disponibilizados em memória RAM.</p>
+
+<h1 id="um-pouco-sobre-tipos-de-dados-e-operações-básicas">Um pouco sobre tipos de dados e operações básicas</h1>
+
+<p>Através do <code class="language-plaintext highlighter-rouge">iex</code> podemos brincar com algumas operações matemáticas, nada muito diferente das
+outras linguagens.</p>
+
+<div class="language-elixir highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="n">iex</span><span class="o">&gt;</span> <span class="mi">7</span> <span class="o">+</span> <span class="mi">2</span>
+<span class="mi">9</span>
+<span class="n">iex</span><span class="o">&gt;</span> <span class="mi">8</span> <span class="o">*</span> <span class="mi">3</span>
+<span class="mi">24</span>
+<span class="n">iex</span><span class="o">&gt;</span> <span class="mi">12</span><span class="o">/</span><span class="mi">3</span>
+<span class="mf">4.0</span>
+<span class="n">iex</span><span class="o">&gt;</span> <span class="n">div</span><span class="p">(</span><span class="mi">33</span><span class="p">,</span> <span class="mi">3</span><span class="p">)</span>
+<span class="mi">11</span>
+<span class="n">iex</span><span class="o">&gt;</span> <span class="n">div</span> <span class="mi">33</span><span class="p">,</span> <span class="mi">4</span>
+<span class="mi">8</span>
+<span class="n">iex</span><span class="o">&gt;</span> <span class="n">rem</span><span class="p">(</span><span class="mi">33</span><span class="p">,</span> <span class="mi">4</span><span class="p">)</span>
+<span class="mi">1</span>
+<span class="n">iex</span><span class="o">&gt;</span> <span class="n">rem</span> <span class="mi">4</span><span class="p">,</span> <span class="mi">2</span>
+<span class="mi">0</span>
+</code></pre></div></div>
+<p class="notice--info"><strong>Curiosidade</strong>: Podemos notar que a divisão com <code class="language-plaintext highlighter-rouge">/</code> retorna um <em>float</em>, mesmo sendo inteira.
+Alguns funções gerais já são disponibilizadas globalmente e, da mesma forma que o Ruby, os
+parenteses de uma chamada de função não é obrigatório.</p>
+
+<p>Os tipos básicos de dados são: <em>integers</em>, <em>floats</em>, <em>strings</em>, <em>booleans</em>, <em>atoms</em>, <em>lists</em>,
+<em>tuples</em> e <em>maps</em>. Suporta também notações de atalho para inserir números binários, octais e
+hexadecimais, além de notação científica para <em>floats</em>. <em>Atoms</em> talvez seja “o novo” aqui, trata-se
+de uma constante cujo valor é o próprio nome, parecido com o <em>symbol</em> do Ruby e outras linguagens.
+<em>Booleans</em> também são considerados como <em>atoms</em>.</p>
+
+<div class="language-elixir highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="n">iex</span><span class="o">&gt;</span> <span class="mi">6</span>                          <span class="c1"># integer</span>
+<span class="mi">6</span>
+<span class="n">iex</span><span class="o">&gt;</span> <span class="mh">0x1F</span>                       <span class="c1"># integer</span>
+<span class="mi">31</span>
+<span class="n">iex</span><span class="o">&gt;</span> <span class="mf">1.8</span>                        <span class="c1"># float</span>
+<span class="mf">1.8</span>
+<span class="n">iex</span><span class="o">&gt;</span> <span class="mf">1.0e-10</span>                    <span class="c1"># floats are 64-bit double precision</span>
+<span class="mf">1.0e-10</span>
+<span class="n">iex</span><span class="o">&gt;</span> <span class="s2">"Hello World"</span>              <span class="c1"># string</span>
+<span class="s2">"Hello World"</span>
+<span class="n">iex</span><span class="o">&gt;</span> <span class="no">true</span>                       <span class="c1"># boolean</span>
+<span class="no">true</span>
+<span class="n">iex</span><span class="o">&gt;</span> <span class="no">false</span>                      <span class="c1"># boolean</span>
+<span class="no">false</span>
+<span class="n">iex</span><span class="o">&gt;</span> <span class="ss">:atom</span>                      <span class="c1"># atom / symbol</span>
+<span class="ss">:atom</span>
+<span class="n">iex</span><span class="o">&gt;</span> <span class="ss">:true</span>                      <span class="c1"># atom / symbol</span>
+<span class="no">true</span>
+<span class="n">iex</span><span class="o">&gt;</span> <span class="no">false</span> <span class="o">==</span> <span class="ss">:false</span>            <span class="c1"># boolean is a atom</span>
+<span class="no">true</span>
+<span class="n">iex</span><span class="o">&gt;</span> <span class="n">is_atom</span><span class="p">(</span><span class="no">true</span><span class="p">)</span>
+<span class="no">true</span>
+<span class="n">iex</span><span class="o">&gt;</span> <span class="n">is_boolean</span><span class="p">(</span><span class="ss">:true</span><span class="p">)</span>
+<span class="no">true</span>
+<span class="n">iex</span><span class="o">&gt;</span> <span class="p">[</span><span class="mi">1</span><span class="p">,</span> <span class="mi">2</span><span class="p">,</span> <span class="mi">3</span><span class="p">]</span>                  <span class="c1"># list</span>
+<span class="p">[</span><span class="mi">1</span><span class="p">,</span> <span class="mi">2</span><span class="p">,</span> <span class="mi">3</span><span class="p">]</span>
+<span class="n">iex</span><span class="o">&gt;</span> <span class="p">{</span><span class="mi">4</span><span class="p">,</span> <span class="mi">5</span><span class="p">,</span> <span class="mi">6</span><span class="p">}</span>                  <span class="c1"># tuple</span>
+<span class="p">{</span><span class="mi">4</span><span class="p">,</span> <span class="mi">5</span><span class="p">,</span> <span class="mi">6</span><span class="p">}</span>
+<span class="n">iex</span><span class="o">&gt;</span> <span class="n">map</span> <span class="o">=</span> <span class="p">%{</span><span class="ss">:a</span> <span class="o">=&gt;</span> <span class="mi">1</span><span class="p">,</span> <span class="mi">2</span> <span class="o">=&gt;</span> <span class="ss">:b</span><span class="p">}</span>  <span class="c1"># map</span>
+<span class="p">%{</span><span class="mi">2</span> <span class="o">=&gt;</span> <span class="ss">:b</span><span class="p">,</span> <span class="ss">:a</span> <span class="o">=&gt;</span> <span class="mi">1</span><span class="p">}</span>
+<span class="n">iex</span><span class="o">&gt;</span> <span class="n">map</span><span class="p">[</span><span class="ss">:a</span><span class="p">]</span>
+<span class="mi">1</span>
+<span class="n">iex</span><span class="o">&gt;</span> <span class="n">map</span><span class="p">[</span><span class="mi">2</span><span class="p">]</span>
+<span class="ss">:b</span>
+<span class="n">iex</span><span class="o">&gt;</span> <span class="n">map</span><span class="p">[</span><span class="ss">:c</span><span class="p">]</span>
+<span class="no">nil</span>
+</code></pre></div></div>
+
+<p><em>Strings</em> são definidas por aspas duplas, sequências de escape como quebra de linha, o <code class="language-plaintext highlighter-rouge">\n</code>,
+também são aceitas e o mesmo açúcar sintático para interpolação do Ruby é utilizado. Algo que me
+chamou a atenção é que para o Elixir, internamente, <code class="language-plaintext highlighter-rouge">strings</code> são binários.</p>
+
+<div class="language-elixir highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="n">iex</span><span class="o">&gt;</span> <span class="n">string</span> <span class="o">=</span> <span class="ss">:world</span>
+<span class="n">iex</span><span class="o">&gt;</span> <span class="s2">"hello </span><span class="si">#{</span><span class="n">string</span><span class="si">}</span><span class="s2">"</span>
+<span class="s2">"hello world"</span>
+<span class="n">iex</span><span class="o">&gt;</span> <span class="s2">"hello
+...&gt; world"</span>
+<span class="s2">"hello</span><span class="se">\n</span><span class="s2">world"</span>
+<span class="n">iex</span><span class="o">&gt;</span> <span class="s2">"hello</span><span class="se">\n</span><span class="s2">world"</span>
+<span class="s2">"hello</span><span class="se">\n</span><span class="s2">world"</span>
+<span class="n">iex</span><span class="o">&gt;</span> <span class="no">IO</span><span class="o">.</span><span class="n">puts</span><span class="p">(</span><span class="s2">"hello</span><span class="se">\n</span><span class="s2">world"</span><span class="p">)</span>
+<span class="n">hello</span>
+<span class="n">world</span>
+<span class="ss">:ok</span>
+<span class="n">iex</span><span class="o">&gt;</span> <span class="n">is_binary</span><span class="p">(</span><span class="s2">"I'm a binary guy"</span><span class="p">)</span>
+<span class="no">true</span>
+<span class="n">iex</span><span class="o">&gt;</span> <span class="n">byte_size</span><span class="p">(</span><span class="s2">"I'm a binary guy"</span><span class="p">)</span>
+<span class="mi">16</span>
+</code></pre></div></div>
+<p class="notice--info"><strong>Curiosidade</strong>: Através de <code class="language-plaintext highlighter-rouge">IO.puts</code> podemos ver a saída de uma <em>string</em> com a quebra literal
+de linha. O módulo <code class="language-plaintext highlighter-rouge">IO</code> traz diversas funções de entrada e saída - <em>Input &amp; Output</em>, irei
+abordar mais sobre isso nos próximos posts.</p>
+
+<p>Sobre <em>lists</em>, <em>tuples</em> e <em>maps</em> eu pretendo explicar mais a fundo nas próximas partes. Tratam-se
+de estruturas de dados com diversas operações e peculiaridades. Os dados em Elixir (e na maioria
+das linguagens funcionais) são imutáveis, ou seja, uma vez declarados não podem ser alterados. Uma
+concatenação de duas <em>lists</em>, por exemplo, não as altera, mas cria uma nova em memória. Por isso
+que não vemos aqui o conceito direto de <em>array</em>, quer seria uma especie de lista com valores
+acessíveis (indexáveis) e mutáveis, logo não imutáveis.</p>
+
+<h1 id="e-vamos-pro-hello-world">E vamos pro “Hello World”</h1>
+<div class="tenor-gif-embed" data-postid="5220607" data-share-method="host" data-width="100%" data-aspect-ratio="1.3333333333333333"><a href="https://tenor.com/view/thumbsup-cool-great-nice-notbad-gif-5220607"></a></div>
+<script type="text/javascript" async="" src="https://tenor.com/embed.js"></script>
+
+<p><br />
+Acessando nosso projeto, criado com <code class="language-plaintext highlighter-rouge">mix new hello</code>, temos a seguinte base no arquivo <code class="language-plaintext highlighter-rouge">hello/lib/hello.ex</code>:</p>
+
+<div class="language-elixir highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="k">defmodule</span> <span class="no">Hello</span> <span class="k">do</span>
+  <span class="nv">@moduledoc</span> <span class="sd">"""
+  Documentation for `Hello`.
+  """</span>
+
+  <span class="nv">@doc</span> <span class="sd">"""
+  Hello world.
+
+  ## Examples
+
+      iex&gt; Hello.hello()
+      :world
+
+  """</span>
+  <span class="k">def</span> <span class="n">hello</span> <span class="k">do</span>
+    <span class="ss">:world</span>
+  <span class="k">end</span>
+<span class="k">end</span>
+</code></pre></div></div>
+
+<p>As tags <em>@moduledoc</em> e <em>@doc</em> são para documentar módulos e funções, respectivamente. São ignoradas
+na compilação do mesmo modo que os comentários (feito com <code class="language-plaintext highlighter-rouge">#</code> no começo da linha). A diferença é
+que o conteúdo dessas tags, delimitado por 3 aspas duplas, são renderizados pela <em>help</em> do <code class="language-plaintext highlighter-rouge">iex</code>
+quando invocada para o módulo e/ou função. Também serve para gerar a documentação geral do projeto
+em HTML e EPUB através da dependência <a href="https://github.com/elixir-lang/ex_doc" target="_blank">ExDoc</a>.</p>
+
+<p>O curioso aqui é que ao criamos um projeto, o comando <code class="language-plaintext highlighter-rouge">mix</code>, por padrão, já cria uma função de
+“Hello World”. Para executar basta utilizar o <code class="language-plaintext highlighter-rouge">iex</code> com a opção <code class="language-plaintext highlighter-rouge">-S mix</code> dentro da pasta do
+projeto para compila-lo.</p>
+
+<div class="language-bash highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="c"># Execute dentro da pasta do projeto</span>
+<span class="nv">$ </span>iex <span class="nt">-S</span> mix
+Erlang/OTP 23 <span class="o">[</span>erts-11.2.1] <span class="o">[</span><span class="nb">source</span><span class="o">]</span> <span class="o">[</span>64-bit] <span class="o">[</span>smp:12:12] <span class="o">[</span>ds:12:12:10] <span class="o">[</span>async-threads:1] <span class="o">[</span>hipe]
+
+Compiling 1 file <span class="o">(</span>.ex<span class="o">)</span>
+Generated hello app
+Interactive Elixir <span class="o">(</span>1.11.3<span class="o">)</span> - press Ctrl+C to <span class="nb">exit</span> <span class="o">(</span><span class="nb">type </span>h<span class="o">()</span> ENTER <span class="k">for </span><span class="nb">help</span><span class="o">)</span>
+iex&gt; Hello.hello<span class="o">()</span>
+:world
+</code></pre></div></div>
+
+<p>A chamada de <code class="language-plaintext highlighter-rouge">Hello.hello()</code> retorna o <em>atom</em> <code class="language-plaintext highlighter-rouge">:world</code>. Da mesma forma que o Ruby, o Elixir
+omite o <em>“return”</em> de uma função, considera o último valor apresentado como o retorno.</p>
+
+<p>Como isso veio fácil demais, vamos incrementar um pouco:</p>
+
+<div class="language-elixir highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="k">defmodule</span> <span class="no">Hello</span> <span class="k">do</span>
+  <span class="k">def</span> <span class="n">hello</span><span class="p">(</span><span class="n">name</span><span class="p">),</span> <span class="k">do</span><span class="p">:</span> <span class="s2">"Hello </span><span class="si">#{</span><span class="n">name</span><span class="si">}</span><span class="s2">"</span>
+  <span class="k">def</span> <span class="n">hello</span><span class="p">(</span><span class="n">name1</span><span class="p">,</span> <span class="n">name2</span><span class="p">),</span> <span class="k">do</span><span class="p">:</span> <span class="s2">"Hello </span><span class="si">#{</span><span class="n">name1</span><span class="si">}</span><span class="s2"> and </span><span class="si">#{</span><span class="n">name2</span><span class="si">}</span><span class="s2">"</span>
+  <span class="k">def</span> <span class="n">hello</span><span class="p">,</span> <span class="k">do</span><span class="p">:</span> <span class="s2">"Hello World"</span>
+<span class="k">end</span>
+</code></pre></div></div>
+
+<p>Bem, já temos algumas coisas interessantes aqui. Primeiro vemos que é possível omitir o <code class="language-plaintext highlighter-rouge">end</code>
+de uma função, simplificando-a em uma linha. Segundo, é mais maluco pra mim quando eu vi, é que
+podemos ter múltiplas funções com mesmo nome e quantidades diferentes de argumentos.
+Isto porque o Elixir refere as funções por nome + aridade (quantidade de argumentos).</p>
+
+<p class="notice--warning"><strong>Obs</strong>: É possível ainda ter mais de uma função com o mesmo nome e aridade, diferenciando-as pela
+condição feita com os argumentos em cada uma. Isso faz com que tenha bem menos <em>if/else</em> em seus
+códigos Elixir.</p>
+
+<p>Para executar as alterações basta rodar o <code class="language-plaintext highlighter-rouge">recompile</code> no terminal <code class="language-plaintext highlighter-rouge">iex</code> aberto anteriormente</p>
+
+<div class="language-bash highlighter-rouge"><div class="highlight"><pre class="highlight"><code>iex&gt; recompile
+Compiling 1 file <span class="o">(</span>.ex<span class="o">)</span>
+:ok
+iex&gt; Hello.hello
+<span class="s2">"Hello World"</span>
+iex&gt; Hello.hello<span class="o">(</span><span class="s2">"Eugenio"</span><span class="o">)</span>
+<span class="s2">"Hello Eugenio"</span>
+iex&gt; Hello.hello <span class="s2">"Eugenio"</span>, <span class="s2">"Nila"</span>
+<span class="s2">"Hello Eugenio and Nila"</span>
+</code></pre></div></div>
+
+<p>Por agora, é isso.</p>
+
+<div class="tenor-gif-embed" data-postid="8843762" data-share-method="host" data-width="100%" data-aspect-ratio="1.25"><a href="https://tenor.com/view/noice-nice-click-gif-8843762"></a></div>
+<script type="text/javascript" async="" src="https://tenor.com/embed.js"></script>
+
+
+        
+      </section>
+
+      <footer class="page__meta">
+        
+        
+  
+
+
+  
+
+  <p class="page__taxonomy">
+    <strong><i class="fas fa-fw fa-tags" aria-hidden="true"></i> Tags: </strong>
+    <span itemprop="keywords">
+    
+      <a href="/tags/#elixir" class="page__taxonomy-item" rel="tag">Elixir</a><span class="sep">, </span>
+    
+      <a href="/tags/#learn" class="page__taxonomy-item" rel="tag">Learn</a>
+    
+    </span>
+  </p>
+
+
+
+
+  
+
+
+  
+
+  <p class="page__taxonomy">
+    <strong><i class="fas fa-fw fa-folder-open" aria-hidden="true"></i> Categorias: </strong>
+    <span itemprop="keywords">
+    
+      <a href="/categories/#blog" class="page__taxonomy-item" rel="tag">blog</a>
+    
+    </span>
+  </p>
+
+
+        
+
+  <p class="page__date"><strong><i class="fas fa-fw fa-calendar-alt" aria-hidden="true"></i> Atualizado em:</strong> <time datetime="2021-05-06T22:26:09-03:00">2021-05-06</time></p>
+
+
+      </footer>
+
+      <section class="page__share">
+  
+    <h4 class="page__share-title">Compartilhe</h4>
+  
+
+  <a href="https://twitter.com/intent/tweet?via=leminski_se&text=Di%C3%A1rio+disl%C3%A9xico+-+Elixir%3A+Um+pouco+mais+que+um+%22Hello+World%22%20https%3A%2F%2Fcallmarx.github.io%2Fblog%2F2021%2F05%2F06%2Fdiario-dislexico-elixir-mais-que-hello-world.html" class="btn btn--twitter" onclick="window.open(this.href, 'window', 'left=20,top=20,width=500,height=500,toolbar=1,resizable=0'); return false;" title="Compartilhe Twitter"><i class="fab fa-fw fa-twitter" aria-hidden="true"></i><span> Twitter</span></a>
+
+  <a href="https://www.facebook.com/sharer/sharer.php?u=https%3A%2F%2Fcallmarx.github.io%2Fblog%2F2021%2F05%2F06%2Fdiario-dislexico-elixir-mais-que-hello-world.html" class="btn btn--facebook" onclick="window.open(this.href, 'window', 'left=20,top=20,width=500,height=500,toolbar=1,resizable=0'); return false;" title="Compartilhe Facebook"><i class="fab fa-fw fa-facebook" aria-hidden="true"></i><span> Facebook</span></a>
+
+  <a href="https://www.linkedin.com/shareArticle?mini=true&url=https%3A%2F%2Fcallmarx.github.io%2Fblog%2F2021%2F05%2F06%2Fdiario-dislexico-elixir-mais-que-hello-world.html" class="btn btn--linkedin" onclick="window.open(this.href, 'window', 'left=20,top=20,width=500,height=500,toolbar=1,resizable=0'); return false;" title="Compartilhe LinkedIn"><i class="fab fa-fw fa-linkedin" aria-hidden="true"></i><span> LinkedIn</span></a>
+</section>
+
+
+      
+  <nav class="pagination">
+    
+      <a href="/blog/2021/04/27/diario-de-um-dislexico_aprendendo-elixir.html" class="pagination--pager" title="Diário de um disléxico: Aprendendo Elixir
+">Anterior</a>
+    
+    
+      <a href="/blog/2021/05/14/diario-dislexico-elixir-pattern-matching.html" class="pagination--pager" title="Diário disléxico - Elixir: preciso falar sobre “Pattern Matching”
+">Próxima</a>
+    
+  </nav>
+
+    </div>
+
+    
+  </article>
+
+  
+  
+    <div class="page__related">
+      <h4 class="page__related-title">Talvez você também goste</h4>
+      <div class="grid__wrapper">
+        
+          
+
+
+
+<div class="grid__item">
+  <article class="archive__item" itemscope itemtype="https://schema.org/CreativeWork">
+    
+    <h2 class="archive__item-title no_toc" itemprop="headline">
+      
+        <a href="/blog/2022/06/29/tutorial-rails7-hotwire-parte-3.html" rel="permalink">Tutorial: Rails7, Tailwind e Hotwire - Parte 3
+</a>
+      
+    </h2>
+    
+
+  <p class="page__meta">
+    
+      
+      <span class="page__meta-date">
+        <i class="far fa-fw fa-calendar-alt" aria-hidden="true"></i>
+        
+        <time datetime="2022-06-29T21:34:03-03:00">2022-06-29</time>
+      </span>
+    
+
+    <span class="page__meta-sep"></span>
+
+    
+      
+      
+
+      <span class="page__meta-readtime">
+        <i class="far fa-fw fa-clock" aria-hidden="true"></i>
+        
+          18 minuto(s) de leitura
+        
+      </span>
+    
+  </p>
+
+
+    <p class="archive__item-excerpt" itemprop="description">
+
+Na parte anterior
+deste tutorial eu expliquei como utilizar a renderização parcial de html com turbo_stream do
+Hotwire Turbo, o que nos permitiu mostrar os cards
+recém inseridos ou excluídos do nosso humilde protótipo de Kanban. Agora ...</p>
+  </article>
+</div>
+
+        
+          
+
+
+
+<div class="grid__item">
+  <article class="archive__item" itemscope itemtype="https://schema.org/CreativeWork">
+    
+    <h2 class="archive__item-title no_toc" itemprop="headline">
+      
+        <a href="/blog/2022/06/08/dotfiles.html" rel="permalink">Hoje eu aprendi: Vale a pena configurar seus dotfiles
+</a>
+      
+    </h2>
+    
+
+  <p class="page__meta">
+    
+      
+      <span class="page__meta-date">
+        <i class="far fa-fw fa-calendar-alt" aria-hidden="true"></i>
+        
+        <time datetime="2022-06-08T16:58:19-03:00">2022-06-08</time>
+      </span>
+    
+
+    <span class="page__meta-sep"></span>
+
+    
+      
+      
+
+      <span class="page__meta-readtime">
+        <i class="far fa-fw fa-clock" aria-hidden="true"></i>
+        
+          5 minuto(s) de leitura
+        
+      </span>
+    
+  </p>
+
+
+    <p class="archive__item-excerpt" itemprop="description">
+
+Depois de mais de 3 anos usando Vim como IDE (Integrated Development Environment), migrando no
+caminho para o Neovim com o shell zsh, o gerenciador
+Oh My Zsh e o tema
+Powerlevel10k, percebi como eu
+dependia dessas configurações e como ...</p>
+  </article>
+</div>
+
+        
+          
+
+
+
+<div class="grid__item">
+  <article class="archive__item" itemscope itemtype="https://schema.org/CreativeWork">
+    
+    <h2 class="archive__item-title no_toc" itemprop="headline">
+      
+        <a href="/blog/2021/12/19/tutorial-rails7-hotwire-parte-2.html" rel="permalink">Tutorial: Rails7, Tailwind e Hotwire - Parte 2
+</a>
+      
+    </h2>
+    
+
+  <p class="page__meta">
+    
+      
+      <span class="page__meta-date">
+        <i class="far fa-fw fa-calendar-alt" aria-hidden="true"></i>
+        
+        <time datetime="2021-12-19T14:42:03-03:00">2021-12-19</time>
+      </span>
+    
+
+    <span class="page__meta-sep"></span>
+
+    
+      
+      
+
+      <span class="page__meta-readtime">
+        <i class="far fa-fw fa-clock" aria-hidden="true"></i>
+        
+          14 minuto(s) de leitura
+        
+      </span>
+    
+  </p>
+
+
+    <p class="archive__item-excerpt" itemprop="description">
+
+Na parte anterior
+deste tutorial eu expliquei como customizar e utilizar o Tailwind sem uma linha sequer de CSS e
+JavaScript. Agora vou abordar um pouco sobre o pacote
+Hotwire Turbo.
+</p>
+  </article>
+</div>
+
+        
+          
+
+
+
+<div class="grid__item">
+  <article class="archive__item" itemscope itemtype="https://schema.org/CreativeWork">
+    
+    <h2 class="archive__item-title no_toc" itemprop="headline">
+      
+        <a href="/blog/2021/12/09/tutorial-rails7-hotwire-parte-1.html" rel="permalink">Tutorial: Rails7, Tailwind e Hotwire - Parte 1
+</a>
+      
+    </h2>
+    
+
+  <p class="page__meta">
+    
+      
+      <span class="page__meta-date">
+        <i class="far fa-fw fa-calendar-alt" aria-hidden="true"></i>
+        
+        <time datetime="2021-12-09T11:12:54-03:00">2021-12-09</time>
+      </span>
+    
+
+    <span class="page__meta-sep"></span>
+
+    
+      
+      
+
+      <span class="page__meta-readtime">
+        <i class="far fa-fw fa-clock" aria-hidden="true"></i>
+        
+          13 minuto(s) de leitura
+        
+      </span>
+    
+  </p>
+
+
+    <p class="archive__item-excerpt" itemprop="description">
+
+Na parte anterior deste
+tutorial, expliquei como configurar o Rails 7, com suas novas opções e como “dockerizei” os bancos
+de dados PostgreSQL e Redis. Agora vou abordar um pouco sobre Tailwind.
+</p>
+  </article>
+</div>
+
+        
+      </div>
+    </div>
+  
+  
+</div>
+
+    </div>
+
+    
+      <div class="search-content">
+        <div class="search-content__inner-wrap"><form class="search-content__form" onkeydown="return event.key != 'Enter';">
+    <label class="sr-only" for="search">
+      Enter your search term...
+    </label>
+    <input type="search" id="search" class="search-input" tabindex="-1" placeholder="Pesquisar..." />
+  </form>
+  <div id="results" class="results"></div></div>
+
+      </div>
+    
+
+    <div id="footer" class="page__footer">
+      <footer>
+        <!-- start custom footer snippets -->
+
+<!-- end custom footer snippets -->
+        <div class="page__footer-follow">
+  <ul class="social-icons">
+    
+      
+        
+          <li><a href="https://github.com/callmarx" rel="nofollow noopener noreferrer"><i class="fab fa-fw fa-github" aria-hidden="true"></i> GitHub</a></li>
+        
+      
+        
+          <li><a href="https://www.linkedin.com/in/eugenio-augusto-jimenes/" rel="nofollow noopener noreferrer"><i class="fab fa-fw fa-linkedin" aria-hidden="true"></i> LinkedIn</a></li>
+        
+      
+    
+
+    
+      <li><a href="/feed.xml"><i class="fas fa-fw fa-rss-square" aria-hidden="true"></i> Feed</a></li>
+    
+  </ul>
+</div>
+
+<div class="page__footer-copyright">&copy; 2022 CallMarx. Desenvolvido com o <a href=/code-of-conduct/><b>Código de Conduta</b></a> para comunidade de código aberto, sob a licença <a href=/mit-license/><b>MIT</b></a>, framework <a href="https://jekyllrb.com" rel="nofollow"><b>Jekyll</b></a> e tema <a href="https://github.com/mmistakes/minimal-mistakes" rel="nofollow"><b>Minimal Mistakes</b></a>.</div>
+
+      </footer>
+    </div>
+
+    
+  <script src="/assets/js/main.min.js"></script>
+
+
+
+
+<script src="/assets/js/lunr/lunr.min.js"></script>
+<script src="/assets/js/lunr/lunr-store.js"></script>
+<script src="/assets/js/lunr/lunr-en.js"></script>
+
+
+
+
+
+
+
+  </body>
+</html>
