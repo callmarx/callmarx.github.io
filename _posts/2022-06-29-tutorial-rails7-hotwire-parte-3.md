@@ -1,7 +1,7 @@
 ---
 layout: single
 title:  "Tutorial: Rails7, Tailwind e Hotwire - Parte 3"
-date:   2022-06-27 14:42:03 -0300
+date:   2022-06-29 21:34:03 -0300
 tags: Tutorial Rails Ruby Tailwind Hotwire
 description: >-
 n  Parte 3: Modal para inserção e edição com Stimulus. Rails 7 com esbuild, tailwind e
@@ -9,7 +9,7 @@ n  Parte 3: Modal para inserção e edição com Stimulus. Rails 7 com esbuild, 
   persistência simultânea via websockets.
 categories: blog
 header:
-  og_image: assets/posts/hotwire-turbo.webp
+  og_image: assets/posts/stimulus-logo.webp
 ---
 
 ![Hotwire Stimulus Logo](/assets/posts/stimulus-logo.webp){: .align-center}
